@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Producto {
+  id                    Int      @id @default(autoincrement())
+  nombre                String   @unique
+  precio_centavos       Int
+  precioActual_centavos Int
+  tags                  Tag[]
+  descripcion           String
+  descripcionBreve      String?
+  imagenesDescripcion   Imagen[] @relation(name: "imagenes_descripcion")
+  imagenPortada         Imagen   @relation(name: "imagen_portada", fields: [imagenPortadaId], references: [id], map: "imagen_portada_fk")
+  videos                Video[]
+  fechaLanzamiento      DateTime
+
+  desarrollador   Empresa @relation(name: "desarrollador", references: [id], map: "desarrollador_empresa_fk", fields: [desarrolladorId])
+  editor          Empresa @relation(name: "editor", references: [id], map: "editor_empresa_fk", fields: [editorId])
+  desarrolladorId Int
+  editorId        Int
+  imagenPortadaId Int     @unique
+}
+
+model Empresa {
+  id            Int        @id @default(autoincrement())
+  nombre        String     @unique
+  publicados    Producto[] @relation(name: "editor")
+  desarrollados Producto[] @relation(name: "desarrollador")
+}
+
+model Tag {
+  id        Int        @id @default(autoincrement())
+  nombre    String     @unique
+  productos Producto[]
+}
+
+model Video {
+  id          Int         @id @default(autoincrement())
+  fuente      FuenteVideo
+  descripcion String
+  url         String
+  producto    Producto?   @relation(fields: [productoId], references: [id])
+  productoId  Int?
+
+  @@unique([fuente, url])
+}
+
+model Imagen {
+  id                    Int       @id @default(autoincrement())
+  url                   String
+  alt                   String
+  productosDescripcion  Producto? @relation(fields: [productoDescripcionId], references: [id], map: "producto_descripcion_fk", name: "imagenes_descripcion")
+  productoDescripcionId Int?
+  productoPortada       Producto? @relation(map: "producto_portada_fk", name: "imagen_portada")
+}
+
+enum FuenteVideo {
+  YOUTUBE
+  CLOUDINARY
+}
