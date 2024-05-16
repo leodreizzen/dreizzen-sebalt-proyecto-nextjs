@@ -14,60 +14,61 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
-model Producto {
-  id                    Int      @id @default(autoincrement())
-  nombre                String   @unique
-  precio_centavos       Int
-  precioActual_centavos Int
-  tags                  Tag[]
-  descripcion           String
-  descripcionBreve      String?
-  imagenesDescripcion   Imagen[] @relation(name: "imagenes_descripcion")
-  imagenPortada         Imagen   @relation(name: "imagen_portada", fields: [imagenPortadaId], references: [id], map: "imagen_portada_fk")
-  videos                Video[]
-  fechaLanzamiento      DateTime
+model Product {
+  id                  Int      @id @default(autoincrement())
+  nombre              String   @unique
+  originalPrice_cents Int
+  currentPrice_cents  Int
+  tags                Tag[]
+  description         String
+  shortDescription    String?
+  descriptionImages   Image[]  @relation(name: "description_images")
+  coverImage          Image    @relation(name: "cover_image", fields: [coverImageId], references: [id], map: "cover_image_fk")
+  videos              Video[]
+  launchDate          DateTime
 
-  desarrollador   Empresa @relation(name: "desarrollador", references: [id], map: "desarrollador_empresa_fk", fields: [desarrolladorId])
-  editor          Empresa @relation(name: "editor", references: [id], map: "editor_empresa_fk", fields: [editorId])
-  desarrolladorId Int
-  editorId        Int
-  imagenPortadaId Int     @unique
+  developer    Company @relation(name: "developer", references: [id], map: "developer_company_fk", fields: [developerId])
+  publisher    Company @relation(name: "publisher", references: [id], map: "publisher_company_fk", fields: [publisherId])
+  developerId  Int
+  publisherId  Int
+  coverImageId Int     @unique
 }
 
-model Empresa {
-  id            Int        @id @default(autoincrement())
-  nombre        String     @unique
-  publicados    Producto[] @relation(name: "editor")
-  desarrollados Producto[] @relation(name: "desarrollador")
+model Company {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  published Product[] @relation(name: "publisher")
+  developed Product[] @relation(name: "developer")
 }
 
 model Tag {
-  id        Int        @id @default(autoincrement())
-  nombre    String     @unique
-  productos Producto[]
+  id         Int       @id @default(autoincrement())
+  name       String    @unique
+  inDropdown Boolean
+  products   Product[]
 }
 
 model Video {
   id          Int         @id @default(autoincrement())
-  fuente      FuenteVideo
-  descripcion String
+  source      VideoSource
+  description String
   url         String
-  producto    Producto?   @relation(fields: [productoId], references: [id])
-  productoId  Int?
+  product     Product?    @relation(fields: [productId], references: [id])
+  productId   Int?
 
-  @@unique([fuente, url])
+  @@unique([source, url])
 }
 
-model Imagen {
-  id                    Int       @id @default(autoincrement())
-  url                   String
-  alt                   String
-  productosDescripcion  Producto? @relation(fields: [productoDescripcionId], references: [id], map: "producto_descripcion_fk", name: "imagenes_descripcion")
-  productoDescripcionId Int?
-  productoPortada       Producto? @relation(map: "producto_portada_fk", name: "imagen_portada")
+model Image {
+  id                   Int      @id @default(autoincrement())
+  url                  String
+  alt                  String
+  productDescription   Product? @relation(fields: [productDescriptionId], references: [id], map: "product_description_fk", name: "description_images")
+  productDescriptionId Int?     @map("productDescriptionId")
+  productCover         Product? @relation(map: "product_cover_fk", name: "cover_image")
 }
 
-enum FuenteVideo {
+enum VideoSource {
   YOUTUBE
   CLOUDINARY
 }
