@@ -64,9 +64,13 @@ export const productPlaceholders: ProductDTO[] = [
             {
                 id: 1,
                 source: VideoSource.YOUTUBE,
-                description: "Product 1 video",
+                alt: "Product 1 video",
                 url: "https://www.youtube.com/watch?v=nq3GI-fK8fs",
-                productId: null
+                thumbnail: {
+                    id: 8,
+                    url: "https://i3.ytimg.com/vi/nq3GI-fK8fs/hqdefault.jpg",
+                    alt: "Product 1 video thumbnail",
+                }
             }
         ]
     },

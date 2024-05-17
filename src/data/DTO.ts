@@ -20,9 +20,9 @@ export type ImageDTO = {
 export type VideoDTO = {
     id: number;
     source: VideoSource;
-    description: string;
     url: string;
-    productId: number | null;
+    alt: string;
+    thumbnail: ImageDTO;
 }
 
 export enum VideoSource{

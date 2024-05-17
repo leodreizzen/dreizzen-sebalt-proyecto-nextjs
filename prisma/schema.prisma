@@ -49,12 +49,14 @@ model Tag {
 }
 
 model Video {
-  id          Int         @id @default(autoincrement())
-  source      VideoSource
-  description String
-  url         String
-  product     Product?    @relation(fields: [productId], references: [id])
-  productId   Int?
+  id        Int         @id @default(autoincrement())
+  source    VideoSource
+  alt       String
+  url       String
+  product   Product?    @relation(fields: [productId], references: [id])
+  productId Int?
+  thumbnail Image?       @relation(fields: [thumbnailId], references: [id])
+  thumbnailId   Int?         @unique
 
   @@unique([source, url])
 }
@@ -66,6 +68,7 @@ model Image {
   productDescription   Product? @relation(fields: [productDescriptionId], references: [id], map: "product_description_fk", name: "description_images")
   productDescriptionId Int?     @map("productDescriptionId")
   productCover         Product? @relation(map: "product_cover_fk", name: "cover_image")
+  videoThumbnail       Video?   @relation(map: "video_thumbnail_fk")
 }
 
 enum VideoSource {
