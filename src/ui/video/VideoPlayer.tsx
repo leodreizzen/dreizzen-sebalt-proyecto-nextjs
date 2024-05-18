@@ -2,7 +2,6 @@
 import { VideoDTO, VideoSource } from "@/data/DTO";
 import { ReactNode, useEffect, useState } from "react";
 import getCloudinary from "../cloudinary";
-import dynamic from 'next/dynamic'
 import ReactPlayer from "react-player";
 
 import clsx from "clsx";
