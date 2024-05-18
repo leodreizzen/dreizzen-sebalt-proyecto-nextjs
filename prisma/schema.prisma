@@ -51,14 +51,14 @@ model Tag {
 model Video {
   id        Int         @id @default(autoincrement())
   source    VideoSource
+  sourceId  String
   alt       String
-  url       String
   product   Product?    @relation(fields: [productId], references: [id])
   productId Int?
   thumbnail Image?       @relation(fields: [thumbnailId], references: [id])
   thumbnailId   Int?         @unique
 
-  @@unique([source, url])
+  @@unique([source, sourceId])
 }
 
 model Image {

@@ -20,7 +20,7 @@ export type ImageDTO = {
 export type VideoDTO = {
     id: number;
     source: VideoSource;
-    url: string;
+    sourceId: string;
     alt: string;
     thumbnail: ImageDTO;
 }

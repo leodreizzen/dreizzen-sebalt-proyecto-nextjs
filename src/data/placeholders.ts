@@ -65,10 +65,21 @@ export const productPlaceholders: ProductDTO[] = [
                 id: 1,
                 source: VideoSource.YOUTUBE,
                 alt: "Product 1 video",
-                url: "https://www.youtube.com/watch?v=nq3GI-fK8fs",
+                sourceId: "nq3GI-fK8fs",
                 thumbnail: {
                     id: 8,
                     url: "https://i3.ytimg.com/vi/nq3GI-fK8fs/hqdefault.jpg",
+                    alt: "Product 1 video thumbnail",
+                }
+            },
+            {
+                id: 2,
+                source: VideoSource.CLOUDINARY,
+                alt: "Product 1 video",
+                sourceId: "ejlzzt3ad1kxbbmvmgt8",
+                thumbnail: {
+                    id: 9,
+                    url: "https://i.ytimg.com/vi/D9nZ6wzrcBg/maxresdefault.jpg",
                     alt: "Product 1 video thumbnail",
                 }
             }
