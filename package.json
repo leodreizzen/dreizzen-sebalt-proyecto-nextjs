@@ -10,10 +10,16 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@nextui-org/button": "^2.0.31",
+    "@nextui-org/card": "^2.0.28",
+    "@nextui-org/image": "^2.0.27",
+    "@nextui-org/system": "^2.1.2",
+    "@nextui-org/theme": "^2.2.3",
     "@cloudinary/react": "^1.13.0",
     "@cloudinary/url-gen": "^1.19.0",
     "@prisma/client": "^5.14.0",
     "clsx": "^2.1.1",
+    "framer-motion": "^11.2.4",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
