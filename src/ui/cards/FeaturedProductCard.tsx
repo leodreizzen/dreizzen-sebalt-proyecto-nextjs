@@ -7,8 +7,9 @@ import { formatPrice } from "@/util/formatUtils";
 import { ProductDTO } from "@/data/DTO";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
-import {usePress} from "@react-aria/interactions";
+import { usePress } from "@react-aria/interactions";
 import { useRef } from "react";
+import { Chip } from "@nextui-org/chip";
 
 export default function FeaturedProductCard({ product, className }: { product: ProductDTO, className?: string }) {
     const ref = useRef<HTMLDivElement>(null);
@@ -26,8 +27,7 @@ export default function FeaturedProductCard({ product, className }: { product: P
     function handleCardPress() {
         router.push(`/product/${product.id}`)
     }
-
-    //TODO: Agregar chips por género.
+    
     return (
         <>
         <div className={clsx("gap-3", className)}>
@@ -37,8 +37,13 @@ export default function FeaturedProductCard({ product, className }: { product: P
             </CardBody>
             <CardFooter className="bg-content-1 border-default-600 dark:border-default-100">
                 <div className="flex flex-grow gap-2 items-center">
-                    <div className="flex flex-col">
-                        <p className="text-white font-bold text-xl">{product.name}</p>
+                    <div className="flex flex-col justify-start items-start">
+                        <div className="flex gap-2">
+                            <Chip size="sm" color="primary" className="text-white">Deportes</Chip>
+                            <Chip size="sm" color="primary" className="text-white">Futbol</Chip>
+                            <Chip size="sm" color="primary" className="text-white">Femenino</Chip>
+                        </div>
+                        <p className="text-white font-bold text-xl mt-2">{product.name}</p>
                     </div>
                 </div>
                 <p className="text-white mr-4">{formatPrice(product.currentPrice_cents)}</p>
