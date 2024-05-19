@@ -85,5 +85,71 @@ export const productPlaceholders: ProductDTO[] = [
             }
         ]
     },
+    {
+        id: 2,
+        name: "Hollow Knight",
+        description: `
+        Hollow Knight es una aventura de acción clásica en 2D ambientada en un vasto mundo interconectado. Explora cavernas tortuosas, ciudades antiguas y páramos mortales. Combate contra criaturas corrompidas, haz amistad con extraños insectos y resuelve los antiguos misterios que yacen en el corazón de reino.
+        Características del juego
+        Acción clásica de desplazamiento lateral, con todos los avances modernos.
+        Controles para 2D perfectamente ajustados. Esquiva, corre y golpea para abrirte camino incluso frente a los adversarios más mortales.
+        Explora un vasto mundo interconectado de caminos olvidados, vegetación salvaje y ciudades en ruinas.
+        ¡Forja tu propio camino! El mundo de Sacronido es extenso y abierto. Elige qué rutas seguir, a qué enemigos enfrentarte y encuentra tu propio camino.
+        ¡Evoluciona con habilidades nuevas y poderosas! Adquiere hechizos, fuerza y velocidad. Llega a nuevas alturas con las alas etéreas. Avanza rápidamente en un destello fulminante. ¡Acaba con los enemigos con el Alma Ígnea!
+        ¡Equipa amuletos! Antiguas reliquias que proporcionan poderes y habilidades extrañas. ¡Elige las que prefieras y emprende un viaje único!
+        Un inmenso elenco de personajes adorables y extraños que cobran vida gracias a una animación tradicional fotograma a fotograma en 2D.
+        ¡Más de 130 enemigos! ¡30 jefes épicos! Enfréntate a bestias feroces y vence a caballeros antiguos durante tu búsqueda a través del reino. ¡Rastrea hasta el último enemigo y añádelo a tu Diario del Cazador!
+        Entra en sus mentes con el Aguijón Onírico. Descubre un lado nuevo de los personajes con los que te encuentres y de los enemigos a los que te enfrentes.
+        Los bellos paisajes coloreados con una perspectiva extravagante consiguen que este mundo transmita una sensación de profundidad.
+        Registra tu viaje con numerosas herramientas de cartografía. Compra brújulas, plumas, mapas y marcadores para entender mejor los paisajes serpenteantes de Hollow Knight.
+        Una banda sonora íntima e inquietante, compuesta por Christopher Larkin, acompaña al jugador durante su viaje. La música evoca la majestuosidad y tristeza de una civilización llevada a la ruina.
+        Completa Hollow Knight para desbloquear el modo Alma de acero, ¡el desafío definitivo!
+        `,
+        shortDescription: "¡Forja tu propio camino en Hollow Knight! Una aventura épica a través de un vasto reino de insectos y héroes que se encuentra en ruinas. Explora cavernas tortuosas, combate contra criaturas corrompidas y entabla amistad con extraños insectos, todo en un estilo clásico en 2D dibujado a mano.",
+        originalPrice_cents: 740756,
+        currentPrice_cents: 740756,
+        launchDate: new Date(),
+        coverImage: {
+            id: 10,
+            url: "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg?t=1695270428",
+            alt: "Cookie Clicker",
+        },
+        descriptionImages: [
+            {
+                id: 11,
+                url: "https://assets1.ignimgs.com/thumbs/2017/02/12/3-8bca6c464b8df7acc024a45a83443096-1486939880/frame_0001.jpg",
+                alt: "Primera imagen",
+            },
+            {
+                id: 12,
+                url: "https://i.ytimg.com/vi/guiYMjOVnOo/maxresdefault.jpg",
+                alt: "Segunda imagen",
+            },
+            {
+                id: 13,
+                url: "https://oyster.ignimgs.com/mediawiki/apis.ign.com/hollow-knight-wiki/1/13/Hornet_6.png?width=1280",
+                alt: "Tercera imagen",
+            },
+            {
+                id: 14,
+                url: "https://miro.medium.com/v2/da:true/resize:fit:1200/0*MtLRck7UuzvvMuO4",
+                alt: "Cuarta imagen",
+            },
+
+        ],
+        videos: [
+            {
+                id: 3,
+                source: VideoSource.YOUTUBE,
+                alt: "Product 2 video",
+                sourceId: "UAO2urG23S4",
+                thumbnail: {
+                    id: 15,
+                    url: "https://img.youtube.com/vi/UAO2urG23S4/default.jpg",
+                    alt: "Product 2 video thumbnail",
+                }
+            },
+        ]
+    },
 
 ]

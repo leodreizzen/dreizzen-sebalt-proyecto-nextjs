@@ -1,0 +1,9 @@
+.productInfoCarousel .thumbsSwiper .swiper-slide {
+  opacity: 0.4;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.productInfoCarousel .thumbsSwiper .swiper-slide-thumb-active {
+  opacity: 1;
+}
