@@ -25,6 +25,17 @@ export type VideoDTO = {
     thumbnail: ImageDTO;
 }
 
+export type TagDto = {
+    id: number;
+    name: string;
+    inDropdown: boolean
+}
+
+export type FeaturedTagDTO = {
+    tag: TagDto;
+    image: ImageDTO;
+}
+
 export enum VideoSource{
     YOUTUBE,
     CLOUDINARY

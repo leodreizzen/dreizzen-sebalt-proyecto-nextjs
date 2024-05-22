@@ -1,5 +1,5 @@
 import { Product } from "@prisma/client";
-import { ProductDTO, ImageDTO, VideoSource } from "./DTO";
+import { ProductDTO, ImageDTO, VideoSource, TagDto, FeaturedTagDTO } from "./DTO";
 
 export const productPlaceholders: ProductDTO[] = [
     {
@@ -25,7 +25,7 @@ export const productPlaceholders: ProductDTO[] = [
         launchDate: new Date(),
         coverImage: {
             id: 1,
-            url: "https://upload.wikimedia.org/wikipedia/en/thumb/0/06/Cookie_Clicker_logo.png/220px-Cookie_Clicker_logo.png",
+            url: "https://onigamers.com/wp-content/uploads/2021/08/Cookie-Clicker.jpg",
             alt: "Cookie Clicker",
         },
         descriptionImages: [
@@ -111,7 +111,7 @@ export const productPlaceholders: ProductDTO[] = [
         launchDate: new Date(),
         coverImage: {
             id: 10,
-            url: "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg?t=1695270428",
+            url: "https://images3.alphacoders.com/806/806257.jpg",
             alt: "Cookie Clicker",
         },
         descriptionImages: [
@@ -152,4 +152,87 @@ export const productPlaceholders: ProductDTO[] = [
         ]
     },
 
+]
+
+
+export const tagPlaceholders: TagDto[] = [
+    {
+        id: 1,
+        name: "Acción",
+        inDropdown: true
+    },
+    {
+        id: 2,
+        name: "Deportes",
+        inDropdown: true
+    },
+    {
+        id: 3,
+        name: "Aventura",
+        inDropdown: true
+    },
+    {
+        id: 4,
+        name: "Simulación",
+        inDropdown: true
+    },
+    {
+        id: 5,
+        name: "Estrategia",
+        inDropdown: true
+    },
+    {
+        id: 6,
+        name: "Terror",
+        inDropdown: true
+    }
+]
+
+
+export const featuredTagsPlaceholders: FeaturedTagDTO[] = [
+    {
+        tag: tagPlaceholders[0],
+        image: {
+            id: 16,
+            url: "https://image.api.playstation.com/vulcan/ap/rnd/202110/2000/aGhopp3MHppi7kooGE2Dtt8C.png",
+            alt: "Logo de Elden Ring",
+        }
+    }, {
+        tag: tagPlaceholders[1],
+        image: {
+            id: 17,
+            url: "https://image.api.playstation.com/vulcan/ap/rnd/202310/0214/2d303f56b705633886b50c56e34f12de0ff12d0453c10623.png",
+            alt: "Logo de FC24",
+        }
+    }, {
+        tag: tagPlaceholders[2],
+        image: {
+            id: 18,
+            url: "https://cdn.cloudflare.steamstatic.com/steam/apps/72850/header.jpg",
+            alt: "Logo de Skyrim",
+        }
+    },
+    {
+        tag: tagPlaceholders[3],
+        image: {
+            id: 19,
+            url: "https://cdn.cloudflare.steamstatic.com/steam/apps/227300/capsule_616x353.jpg",
+            alt: "Logo de Euro Truck Simulator 2"
+        }
+    },
+    {
+        tag: tagPlaceholders[4],
+        image: {
+            id: 20,
+            url: "https://image.api.playstation.com/gs2-sec/appkgo/prod/CUSA15381_00/1/i_8d2404a5e0689b9e5e8e833773152215e991801c8979def7c86e31ecadfe2e83/i/icon0.png",
+            alt: "Logo de Civilization VI"
+        }
+    }, {
+        tag: tagPlaceholders[5],
+        image: {
+            id: 21,
+            url: "https://assets1.ignimgs.com/2014/06/19/outlast-buttonjpg-b68b20.jpg",
+            alt: "Logo de Outlast"
+        }
+    }
 ]

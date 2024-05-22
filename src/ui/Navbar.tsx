@@ -15,6 +15,7 @@ import SearchBar from "./SearchBar";
 import { usePathname, useSearchParams } from "next/navigation";
 import ShoppingCartButton from "./ShoppingCartButton";
 import { useRouter } from "next/navigation";
+import { tagPlaceholders } from "@/data/placeholders";
 
 type NormalMenuItem = {
   name: string;
@@ -43,6 +44,11 @@ export default function Navbar({ className }: { className?: string }) {
   const currentParams = useSearchParams()
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const genreLinks = tagPlaceholders.filter(tag => tag.inDropdown).map(tag=> ({
+    name: tag.name,
+    extraURL: tag.id.toString(),
+  }))
+
   const menuItems: MenuItem[] = [
     {
       name: "Inicio",
@@ -53,21 +59,14 @@ export default function Navbar({ className }: { className?: string }) {
       name: "Géneros",
       type: "dropdown",
       baseUrl: "/products/featured/tag",
-      children: [
-        { name: "Acción", extraURL: "1" },
-        { name: "Aventura", extraURL: "2" },
-        { name: "Deportes", extraURL: "3" },
-        { name: "Estrategia", extraURL: "4" },
-        { name: "Rol", extraURL: "5" },
-        { name: "Simulación", extraURL: "6" },
-      ]
+      children: genreLinks
     },
     { name: "Más vendidos", type: "normal", pathname: "/products/topsellers" },
     { name: "Ofertas", type: "normal", pathname: "/products/discounts" },
   ]
 
   return (
-    <NextUINavbar onMenuOpenChange={setIsMenuOpen} isMenuOpen={isMenuOpen} className={clsx("bg-navbar-bg w-16", className)}>
+    <NextUINavbar onMenuOpenChange={setIsMenuOpen} isMenuOpen={isMenuOpen} className={clsx("bg-navbar-bg w-16 border-b-1 border-navbar-border", className)}>
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}

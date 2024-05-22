@@ -1,17 +1,46 @@
-import ProductInfoCarousel from "@/ui/carousels/product_info/ProductInfoCarousel";
-import { productPlaceholders } from "@/data/placeholders";
+import { featuredTagsPlaceholders, productPlaceholders } from "@/data/placeholders";
 import FeaturedProductsCarousel from "@/ui/carousels/featured/FeaturedProductsCarousel";
 import GenreCard from "@/ui/cards/GenreCard";
-import FeaturedProductCard from "@/ui/cards/FeaturedProductCard";
+import ListCard from "@/ui/cards/ListCard";
+import { Button } from "@nextui-org/button";
+import Link from "next/link";
 
 export default function Home() {
+  let topSellers = productPlaceholders.concat(productPlaceholders).concat(productPlaceholders).concat(productPlaceholders)
+  topSellers = topSellers.map(product => ({ ...product }))
+  topSellers.forEach((product, index) => product.id = index + 1)
+
   return (
-      <>
-        {/*<ProductInfoCarousel className="w-[800px] h-[600px]" product={productPlaceholders[0]} />*/}
-        <FeaturedProductsCarousel products={productPlaceholders} className="w-[800px] h-[600px]"/>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Consequatur dolore, eos at deleniti quam, magni quae natus atque tempora, nesciunt sapiente distinctio! Vitae enim nisi nostrum aperiam impedit quam harum.
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consectetur architecto ipsam totam, asperiores vero labore molestiae obcaecati laboriosam accusamus aspernatur veniam dolorem mollitia, delectus quos nisi ex quo saepe nemo.
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Mollitia ad animi harum est. Commodi beatae qui, ipsum obcaecati unde odit eligendi quibusdam praesentium cupiditate repudiandae corporis accusantium error dolor dolore?
-      </>
+    <main className="w-full flex flex-col items-center pt-4">
+      <div className="w-[1300px]">
+        <div>
+          <h2 className="text-center text-large pb-2">Destacados</h2>
+        </div>
+        <div className="border-borders px-2 pt-4 rounded-3xl border">
+          <FeaturedProductsCarousel products={productPlaceholders} className="w-full h-[650px] mx-auto" />
+        </div>
+        <div className="flex flex-col mt-10  ">
+          <h2 className="text-center pb-1 text-large">Géneros destacados</h2>
+          <div className="grid grid-cols-3 gap-4 justify-between border border-borders px-10 pb-4 pt-2 rounded-3xl">
+            {featuredTagsPlaceholders.map((genre) =>
+              <GenreCard key={genre.tag.id} genre={genre} className="h-[200px]" />
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="border-borders py-2 mt-8 ">
+        <h2 className="text-center pb-2 text-largeS">Más vendidos</h2>
+        <div className="mx-auto border border-borders flex flex-col items-center rounded-3xl">
+          {
+            topSellers.map(product =>
+              <ListCard className="w-full" product={product} key={product.id} />
+            )
+          }
+          <span className="px-16 w-full">
+            <Button as={Link} className="w-full" href="/products/topsellers">Ver más</Button>
+          </span>
+        </div>
+      </div>
+    </main>
   );
 }
