@@ -21,9 +21,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={clsx(inter.className, "min-h-screen min-w-screen bg-background flex flex-col text-foreground")}>
         <NextUIProvider>
-          {false &&  <Suspense fallback={<div className="bg-navbar-bg h-16 w-full"/>}>
+          <Suspense fallback={<div className="bg-navbar-bg h-16 w-full"/>}>
             <Navbar className = "w-full"/>
-          </Suspense>}
+          </Suspense>
           <div className="w-full flex-grow overflow-auto">
             {children}
           </div>
