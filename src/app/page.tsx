@@ -12,12 +12,12 @@ export default function Home() {
 
   return (
     <main className="w-full flex flex-col items-center pt-4">
-      <div className="w-[1300px]">
+      <div className="w-[1150px]">
         <div>
           <h2 className="text-center text-large pb-2">Destacados</h2>
         </div>
         <div className="border-borders px-2 pt-4 rounded-3xl border">
-          <FeaturedProductsCarousel products={productPlaceholders} className="w-full h-[650px] mx-auto" />
+          <FeaturedProductsCarousel products={productPlaceholders} className="w-full h-[550px] mx-auto" />
         </div>
         <div className="flex flex-col mt-10  ">
           <h2 className="text-center pb-1 text-large">Géneros destacados</h2>

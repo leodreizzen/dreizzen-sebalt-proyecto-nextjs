@@ -43,7 +43,7 @@ export default function FeaturedProductCard({ product, className }: { product: P
                             <Chip size="md" color="primary" className="text-white">Futbol</Chip>
                             <Chip size="md" color="primary" className="text-white">Femenino</Chip>
                         </div>
-                        <p className="text-white font-bold text-4xl mt-2">{product.name}</p>
+                        <p className="text-white font-bold text-4xl mt-1">{product.name}</p>
                     </div>
                 </div>
                 <p className="text-white mr-4 text-large">{formatPrice(product.currentPrice_cents)}</p>
