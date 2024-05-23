@@ -19,7 +19,7 @@ export default function Page({ params }: { params: { id: string } }) {
             <div className="w-full flex">
                 <ProductInfoCarousel product={product} className="w-4/6 border-l border-t border-b rounded-l-xl  border-borders" />
                 <div className="w-2/5 bg-content1">
-                    <div className="overflow-clip w-full h-52 mx-auto aspect-video relative">
+                    <div className="overflow-clip w-full mx-auto aspect-video relative">
                         <Image src={product.coverImage.url} alt={product.coverImage.alt} fill />
                     </div>
                     {
@@ -37,7 +37,7 @@ export default function Page({ params }: { params: { id: string } }) {
             <h1 className="text-large mt-2"> Descripción </h1>
             <div className="bg-content1 p-2">
                 {
-                    textParagraphs.map((paragraph, index) => <p key={index} className="text-justify">{paragraph}</p>)
+                        textParagraphs.map((paragraph, index) => <p key={index} className="text-justify">{paragraph}</p>)
                 }
             </div>
         </main>
