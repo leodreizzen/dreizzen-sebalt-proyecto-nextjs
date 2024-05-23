@@ -7,19 +7,17 @@ export const productPlaceholders: ProductDTO[] = [
         name: "Cookie Clicker",
         description: `
         Cookie Clicker es un juego que consiste en hacer una cantidad obscena de galletas. Para ayudarte en esta empresa, reclutarás a una amplia variedad de serviciales fabricantes, como las entrañables abuelas, las granjas, las fábricas y los portales sobrenaturales.
-
         Cookie Clicker se publicó en 2013 en la web, pero se ha desarrollado muy activamente desde entonces. ¡Si has jugado alguna vez, echa un vistazo a las nuevas funciones!
-        
         Acumula galletas y gástalas para hacer aún más galletas
-        Más de 600 mejoras
-        Más de 500 logros
-        Mima a tu dragón
-        Minijuegos
-        Desbloquea mejoras celestiales permanentes
-        Se guarda en la nube (se acabó lo de borrar galletas por error)
-        Música de C418
+        *Más de 600 mejoras
+        *Más de 500 logros
+        *Mima a tu dragón
+        *Minijuegos
+        *Desbloquea mejoras celestiales permanentes
+        *Se guarda en la nube (se acabó lo de borrar galletas por error)
+        *Música de C418
         `,
-        shortDescription: "¡Un juego incremental en el que hay que hacer galletas! Se publicó en 2013 en la web y se ha desarrollado activamente desde entonces. Esta es la versión oficial para Steam.",
+        shortDescription: "¡Un juego incremental en el que hay que hacer galletas! Se publicó en 2013 en la web y se ha desarrollado activamente desde entonces.",
         originalPrice_cents: 1000,
         currentPrice_cents: 800,
         launchDate: new Date(),
@@ -90,7 +88,7 @@ export const productPlaceholders: ProductDTO[] = [
         name: "Hollow Knight",
         description: `
         Hollow Knight es una aventura de acción clásica en 2D ambientada en un vasto mundo interconectado. Explora cavernas tortuosas, ciudades antiguas y páramos mortales. Combate contra criaturas corrompidas, haz amistad con extraños insectos y resuelve los antiguos misterios que yacen en el corazón de reino.
-        Características del juego
+        Características del juego:
         Acción clásica de desplazamiento lateral, con todos los avances modernos.
         Controles para 2D perfectamente ajustados. Esquiva, corre y golpea para abrirte camino incluso frente a los adversarios más mortales.
         Explora un vasto mundo interconectado de caminos olvidados, vegetación salvaje y ciudades en ruinas.

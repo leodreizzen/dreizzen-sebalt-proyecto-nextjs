@@ -2,28 +2,15 @@
 
 import { Card, CardBody, CardFooter } from "@nextui-org/card";
 import Image from "next/image";
-import ShoppingCartIcon from "../icons/ShoppingCartIcon";
 import { formatPrice } from "@/util/formatUtils";
 import { ProductDTO } from "@/data/DTO";
 import clsx from "clsx";
-import { useRouter } from "next/navigation";
-import { usePress } from "@react-aria/interactions";
-import { useRef } from "react";
 import { Chip } from "@nextui-org/chip";
+import AddToCartButton from "../AddToCartButton";
+import { useRouter } from "next/navigation";
 
 export default function FeaturedProductCard({ product, className }: { product: ProductDTO, className?: string }) {
-    const ref = useRef<HTMLDivElement>(null);
-
-    const {pressProps} = usePress({
-        ref,
-        onPress: handleCartPress
-    })
     const router = useRouter();
-
-    function handleCartPress(){
-        alert("Added to cart")
-    }
-
     function handleCardPress() {
         router.push(`/product/${product.id}`)
     }
@@ -47,10 +34,8 @@ export default function FeaturedProductCard({ product, className }: { product: P
                     </div>
                 </div>
                 <p className="text-white mr-4 text-large">{formatPrice(product.currentPrice_cents)}</p>
-                <div className="flex bg-green-300 p-2 hover:bg-green-400 active:bg-green-600 rounded-lg items-center" {...pressProps} ref={ref}>
-                    <ShoppingCartIcon className="text-black pr-1" />
-                    <p className="text-md text-black">Agregar al carrito</p>
-                </div>
+                <AddToCartButton/>
+
             </CardFooter>
        </Card>
        </div>

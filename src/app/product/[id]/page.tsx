@@ -1,14 +1,45 @@
 import { productPlaceholders } from "@/data/placeholders";
+import AddToCartButton from "@/ui/AddToCartButton";
 import ProductInfoCarousel from "@/ui/carousels/product_info/ProductInfoCarousel";
+import { formatPrice } from "@/util/formatUtils";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 
-export default function Page({params}: {params: {id: string}}){
-    const {id: strId} = params;
+export default function Page({ params }: { params: { id: string } }) {
+    const { id: strId } = params;
     const id = parseInt(strId);
-    const produt = productPlaceholders.find(product => product.id === id);
-    if (!produt)
+    const product = productPlaceholders.find(product => product.id === id);
+    if (!product)
         notFound();
-    else
-        return <ProductInfoCarousel product={produt} className="w-[800px] h-[600px]"/>
-    
+    const textParagraphs = product.description.split("\n");
+
+    return (
+        <main className="w-[1400px] mx-auto">
+            <h1 className="text-3xl font-bold pt-5 pb-4 ">{product.name}</h1>
+            <div className="w-full flex">
+                <ProductInfoCarousel product={product} className="w-4/6 border-l border-t border-b rounded-l-xl  border-borders" />
+                <div className="w-2/5 bg-content1">
+                    <div className="overflow-clip w-full h-52 mx-auto aspect-video relative">
+                        <Image src={product.coverImage.url} alt={product.coverImage.alt} fill />
+                    </div>
+                    {
+                        product.shortDescription ? <p className="py-4 text-justify px-4">{product.shortDescription}</p> : null
+                    }
+                </div>
+            </div>
+            <div className="mt-4 border border-borders w-4/6 flex justify-between items-center p-3 rounded-lg">
+                <span>Comprar <strong>{product.name}</strong></span>
+                <div className="flex items-center">
+                    <p className="text-large pr-3">{formatPrice(product.currentPrice_cents)}</p>
+                    <AddToCartButton />
+                </div>
+            </div>
+            <h1 className="text-large mt-2"> Descripción </h1>
+            <div className="bg-content1 p-2">
+                {
+                    textParagraphs.map((paragraph, index) => <p key={index} className="text-justify">{paragraph}</p>)
+                }
+            </div>
+        </main>
+    )
 }

@@ -18,7 +18,7 @@ const config: Config = {
         "background": "#10101E",
         "primary": "blue",
         "secondary": "green",
-        "content1": "#2E305E",
+        "content1": "#222344",
         "navbar-bg": "black",
         "navbar-border": "#303030",
         "borders": "#334155",

@@ -27,8 +27,8 @@ export default function ProductInfoCarousel({ className, product }: { className?
   }
 
   return (
-    <div className={clsx("p-4 border rounded-md flex flex-col productInfoCarousel", className, { "loading": !initialized })}>
-      <div className='flex w-full flex-grow items-center'>
+    <div className={clsx("p-4 flex flex-col productInfoCarousel", className, { "loading": !initialized })}>
+      <div className='flex w-full items-center'>
         <SwiperLeftButton id={`${uniqueId}-swiper-button-prev`} enabled={activeSlide !== 0} className="mr-1" />
       
         <Swiper
@@ -39,7 +39,7 @@ export default function ProductInfoCarousel({ className, product }: { className?
 
           thumbs={{ swiper: thumbsSwiper, autoScrollOffset: 2 }}
           modules={[FreeMode, Navigation, Thumbs]}
-          className="rounded-lg overflow-clip h-full flex-grow border border-slate-600"
+          className="rounded-lg overflow-clip w-full border border-slate-600 aspect-video"
           onSlidesUpdated={(swiper) => {setSlideCount(swiper.slides.length)}}
           onActiveIndexChange={(swiper) => setActiveSlide(swiper.activeIndex)}
         >
@@ -69,17 +69,17 @@ export default function ProductInfoCarousel({ className, product }: { className?
         freeMode={false}
         watchSlidesProgress={true}
         modules={[FreeMode, Navigation, Thumbs]}
-        className="h-1/5 w-full !pt-3 thumbsSwiper"
+        className="w-full !pt-5 thumbsSwiper"
       >
         {
           product.videos.map((video) => (
-            <SwiperSlide key={video.id} className={clsx({ "!hidden": !initialized }, "border border-slate-600")}>
+            <SwiperSlide key={video.id} className={clsx({ "!hidden": !initialized }, "border border-slate-600, aspect-video")}>
               <Image src={video.thumbnail.url} alt={"Miniatura: " + video.thumbnail.alt} fill={true} /> {/* TODO add sizes*/}
             </SwiperSlide>
           ))
         }
         {product.descriptionImages.map((image) => (
-          <SwiperSlide key={image.id} className={clsx({ "!hidden": !initialized }, "border border-slate-600 ")}>
+          <SwiperSlide key={image.id} className={clsx({ "!hidden": !initialized }, "border border-slate-600, aspect-video")}>
             <Image src={image.url} alt={"Miniatura: " + image.alt} fill={true} /> {/* TODO add sizes*/}
           </SwiperSlide>
         ))}
