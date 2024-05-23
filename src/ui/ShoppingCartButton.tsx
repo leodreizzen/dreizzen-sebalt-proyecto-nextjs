@@ -4,14 +4,17 @@ import ShoppingCartIcon from "./icons/ShoppingCartIcon";
 import { Badge } from "@nextui-org/badge";
 import clsx from "clsx";
 import { ReactNode } from "react";
+import { usePathname } from "next/navigation";
 
 export default function ShoppingCartButton(){
     const cartItems = 1;
+    const pathName = usePathname();
+    const selected = pathName.startsWith("/cart");
 
     return (
-        <Button as={Link} href="/cart" variant="flat" className="min-w-0 bg-transparent border py-1 flex items-center">
+        <Button as={Link} href="/cart" variant="flat" className="min-w-0 bg-transparent py-1 flex items-center">
             <CartItemsBadge items={cartItems}>
-                <ShoppingCartIcon className="mr-1 text-foreground pt-0" width={22} height={22} />
+                <ShoppingCartIcon className={clsx("mr-1 pt-0", {"text-foreground": !selected, "text-primary": selected})} width={22} height={22} />
             </CartItemsBadge>
         </Button>
     )

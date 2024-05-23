@@ -66,8 +66,8 @@ export default function Navbar({ className }: { className?: string }) {
   ]
 
   return (
-    <NextUINavbar onMenuOpenChange={setIsMenuOpen} isMenuOpen={isMenuOpen} className={clsx("bg-navbar-bg w-16 border-b-1 border-navbar-border", className)}>
-      <NavbarContent>
+    <NextUINavbar onMenuOpenChange={setIsMenuOpen} isMenuOpen={isMenuOpen} maxWidth={"full"} className={clsx("bg-navbar-bg h-16 border-b-1 border-navbar-border", className)}>
+      <NavbarContent justify="start">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
           className="sm:hidden"
