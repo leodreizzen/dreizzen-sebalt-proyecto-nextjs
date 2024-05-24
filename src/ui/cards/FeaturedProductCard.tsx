@@ -9,7 +9,7 @@ import { Chip } from "@nextui-org/chip";
 import AddToCartButton from "../AddToCartButton";
 import { useRouter } from "next/navigation";
 
-export default function FeaturedProductCard({ product, className }: { product: ProductDTO, className?: string, size: string }) {
+export default function FeaturedProductCard({ product, className }: { product: ProductDTO, className?: string}) {
 
 
     const router = useRouter();
