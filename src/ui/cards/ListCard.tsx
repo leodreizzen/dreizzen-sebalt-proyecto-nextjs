@@ -33,8 +33,9 @@ export default function ListCard({ product, className }: { product: ProductDTO, 
     return (
         <div className={clsx("h-20", className)}>
             <Card
+                
                 isPressable
-                className={clsx("size-full border-solid border-1 rounded-lg bg-content-1 dark:bg-content-1 text-white")}
+                className={clsx("size-full border-solid border-borders border-1 rounded-lg bg-content-1 dark:bg-content-1 text-white")}
                 shadow="sm"
                 onPress={handleCardPress}
             >

@@ -19,7 +19,7 @@ export default function FeaturedProductCard({ product, className }: { product: P
         <>
         <div className={clsx("gap-3", className)}>
         <Card className={"w-full h-full"} onPress={handleCardPress} isPressable isFooterBlurred>
-            <CardBody className="gap-3">
+            <CardBody className="gap-3 aspect-video">
                 <Image src={product.coverImage.url} alt={product.coverImage.alt} fill={true}/>
             </CardBody>
             <CardFooter className="bg-content-1 border-default-600 dark:border-default-100 h-1/6">
