@@ -14,7 +14,7 @@ export default function ShoppingCartButton(){
     return (
         <Button as={Link} href="/cart" variant="flat" className="min-w-0 bg-transparent py-1 flex items-center">
             <CartItemsBadge items={cartItems}>
-                <ShoppingCartIcon className={clsx("mr-1 pt-0", {"text-foreground": !selected, "text-primary": selected})} width={22} height={22} />
+                <ShoppingCartIcon className={clsx("mr-1 pt-0", {"text-foreground": !selected, "text-primary": selected})} />
             </CartItemsBadge>
         </Button>
     )
