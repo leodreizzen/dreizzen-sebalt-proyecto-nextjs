@@ -1,5 +1,5 @@
 "use client"
-import React, { useId, useState } from 'react';
+import React, { useEffect, useId, useMemo, useState } from 'react';
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 
 import 'swiper/css';
@@ -15,6 +15,14 @@ import Image from 'next/image';
 import VideoPlayer from '../../video/VideoPlayer';
 import SwiperRightButton from '../SwiperRightButton';
 import SwiperLeftButton from '../SwiperLeftButton';
+
+import {useWindowSize} from '@uidotdev/usehooks';
+
+import resolveConfig from 'tailwindcss/resolveConfig';
+import taiwindConfig from '@/../tailwind.config';
+const tailwindConfig = resolveConfig(taiwindConfig)
+
+
 export default function ProductInfoCarousel({ className, product }: { className?: string, product: ProductDTO }) {
   const uniqueId = useId().replaceAll(":", "")
 
@@ -22,6 +30,21 @@ export default function ProductInfoCarousel({ className, product }: { className?
   const [initialized, setInitialized] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
   const [slideCount, setSlideCount] = useState(0);
+  
+  const {width} = useWindowSize(); // necessary as Swiper uses absolute positioning
+
+  function getSlidecount(width: number|null) {
+    if(width === null)
+      return 3;
+    if(width <= Number(tailwindConfig.theme.screens.md.replace('px', '')))
+      return 3;
+    else
+      return 5;
+  }
+
+  let slidesPerView = useMemo(()=>getSlidecount(width), [width])
+  let autoScrollOffset = useMemo(()=>Math.floor(slidesPerView/2) - 1, [slidesPerView])
+
   function handleInit() {
     setInitialized(true);
   }
@@ -37,7 +60,7 @@ export default function ProductInfoCarousel({ className, product }: { className?
             prevEl: `#${uniqueId}-swiper-button-prev`,
           }}
 
-          thumbs={{ swiper: thumbsSwiper, autoScrollOffset: 2 }}
+          thumbs={{ swiper: thumbsSwiper, autoScrollOffset: autoScrollOffset }}
           modules={[FreeMode, Navigation, Thumbs]}
           className="rounded-lg overflow-clip w-full border border-slate-600 aspect-video"
           onSlidesUpdated={(swiper) => {setSlideCount(swiper.slides.length)}}
@@ -65,7 +88,7 @@ export default function ProductInfoCarousel({ className, product }: { className?
         onSwiper={setThumbsSwiper}
         onAfterInit={() => handleInit()}
         spaceBetween={10}
-        slidesPerView={3}
+        slidesPerView={slidesPerView}
         freeMode={false}
         watchSlidesProgress={true}
         modules={[FreeMode, Navigation, Thumbs]}
@@ -73,13 +96,13 @@ export default function ProductInfoCarousel({ className, product }: { className?
       >
         {
           product.videos.map((video) => (
-            <SwiperSlide key={video.id} className={clsx({ "!hidden": !initialized }, "border border-slate-600, aspect-video")}>
+            <SwiperSlide key={video.id} className={clsx({ "!hidden": !initialized }, "border border-borders aspect-video")}>
               <Image src={video.thumbnail.url} alt={"Miniatura: " + video.thumbnail.alt} fill={true} /> {/* TODO add sizes*/}
             </SwiperSlide>
           ))
         }
         {product.descriptionImages.map((image) => (
-          <SwiperSlide key={image.id} className={clsx({ "!hidden": !initialized }, "border border-slate-600, aspect-video")}>
+          <SwiperSlide key={image.id} className={clsx({ "!hidden": !initialized }, "border border-borders aspect-video")}>
             <Image src={image.url} alt={"Miniatura: " + image.alt} fill={true} /> {/* TODO add sizes*/}
           </SwiperSlide>
         ))}

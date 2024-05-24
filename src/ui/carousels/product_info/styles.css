@@ -7,3 +7,6 @@
 .productInfoCarousel .thumbsSwiper .swiper-slide-thumb-active {
   opacity: 1;
 }
+.swiper-slide-thumb-active{
+  @apply border-slate-400
+}
