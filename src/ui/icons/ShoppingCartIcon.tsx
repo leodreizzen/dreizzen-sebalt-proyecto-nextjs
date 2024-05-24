@@ -1,9 +1,8 @@
 import clsx from "clsx";
-import { Ref, forwardRef } from "react";
 
-const ShoppingCartIcon = forwardRef(function ({className}: {className?: string}, ref: Ref<HTMLDivElement>) {
+export default function ShoppingCartIcon({className}: {className?: string}) {
   return (
-    <div className={clsx(className)} ref={ref}>
+    <div className={clsx(className)}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -19,6 +18,6 @@ const ShoppingCartIcon = forwardRef(function ({className}: {className?: string},
       </svg>
     </div>
   )
-})
+}
 
-export default ShoppingCartIcon;
+;
