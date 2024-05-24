@@ -1,6 +1,6 @@
 import {colors, nextui} from '@nextui-org/theme';
 import type { Config } from "tailwindcss";
-
+import containerQueries from "@tailwindcss/container-queries"
 const config: Config = {
   content: [
     "./node_modules/@nextui-org/theme/dist/components/(accordion|badge|button|card|chip|divider|dropdown|image|link|navbar|ripple|spinner|menu|popover).js",
@@ -33,6 +33,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [nextui()],
+  plugins: [nextui(), containerQueries],
 };
 export default config;
