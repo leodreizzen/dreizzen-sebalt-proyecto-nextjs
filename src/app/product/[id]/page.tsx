@@ -19,7 +19,7 @@ export default function Page({ params }: { params: { id: string } }) {
             <h1 className="text-3xl font-bold text-center md:text-start md:pt-5 md:pb-2 lg:pb-3 ">{product.name}</h1>
             <div className="w-full flex flex-col-reverse md:flex-row items-center md:items-stretch">
                 <ProductInfoCarousel product={product} className=" w-full md:w-8/12 border md:border-r-0 rounded-xl md:rounded-r-none border-borders" />
-                <div className="w-full md:w-4/12 mt-2 pt-2 mb:pt-0 mb-4 md:mb-0 md:mt-0 bg-content1 flex flex-col flex-grow justify-between rounded-xl md:rounded-l-none overflow-clip">
+                <div className="w-full md:w-4/12 mt-2 pt-2 md:pt-0 mb-4 md:mb-0 md:mt-0 bg-content1 flex flex-col flex-grow justify-between rounded-xl md:rounded-l-none overflow-clip">
                     <div>
                         <div className="overflow-clip w-8/12 md:w-full mt-2 md:mt-0 mx-auto aspect-video relative">
                             <Image src={product.coverImage.url} alt={product.coverImage.alt} fill />
