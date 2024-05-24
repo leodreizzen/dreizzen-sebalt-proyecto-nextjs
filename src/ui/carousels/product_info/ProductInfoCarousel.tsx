@@ -27,7 +27,7 @@ export default function ProductInfoCarousel({ className, product }: { className?
   }
 
   return (
-    <div className={clsx("p-4 flex flex-col productInfoCarousel", className, { "loading": !initialized })}>
+    <div className={clsx("p-2 sm:p-3 lg:p-4 flex flex-col productInfoCarousel", className, { "loading": !initialized })}>
       <div className='flex w-full items-center'>
         <SwiperLeftButton id={`${uniqueId}-swiper-button-prev`} enabled={activeSlide !== 0} className="mr-1" />
       
@@ -65,11 +65,11 @@ export default function ProductInfoCarousel({ className, product }: { className?
         onSwiper={setThumbsSwiper}
         onAfterInit={() => handleInit()}
         spaceBetween={10}
-        slidesPerView={5}
+        slidesPerView={3}
         freeMode={false}
         watchSlidesProgress={true}
         modules={[FreeMode, Navigation, Thumbs]}
-        className="w-full !pt-5 thumbsSwiper"
+        className="w-full mt-3 md:mt-4 thumbsSwiper"
       >
         {
           product.videos.map((video) => (

@@ -15,13 +15,13 @@ export default function Page({ params }: { params: { id: string } }) {
     const textParagraphs = product.description.split("\n");
 
     return (
-        <main className="w-[1400px] mx-auto">
-            <h1 className="text-3xl font-bold pt-5 pb-4 ">{product.name}</h1>
-            <div className="w-full flex">
-                <ProductInfoCarousel product={product} className="w-4/6 border-l border-t border-b rounded-l-xl  border-borders" />
-                <div className="w-2/5 bg-content1 flex flex-col flex-grow justify-between rounded-r-xl overflow-clip">
+        <main className="sm:w-10/12 md:w-full lg:w-11/12 xl:w-10/12 2xl:w-8/12 mx-auto p-2">
+            <h1 className="text-3xl font-bold text-center md:text-start md:pt-5 md:pb-2 lg:pb-3 ">{product.name}</h1>
+            <div className="w-full flex flex-col-reverse md:flex-row items-center md:items-stretch">
+                <ProductInfoCarousel product={product} className=" w-full md:w-8/12 border md:border-r-0 rounded-xl md:rounded-r-none border-borders" />
+                <div className="w-full md:w-4/12 mt-2 pt-2 mb:pt-0 mb-4 md:mb-0 md:mt-0 bg-content1 flex flex-col flex-grow justify-between rounded-xl md:rounded-l-none overflow-clip">
                     <div>
-                        <div className="overflow-clip w-full mx-auto aspect-video relative">
+                        <div className="overflow-clip w-8/12 md:w-full mt-2 md:mt-0 mx-auto aspect-video relative">
                             <Image src={product.coverImage.url} alt={product.coverImage.alt} fill />
                         </div>
                         {
@@ -36,11 +36,11 @@ export default function Page({ params }: { params: { id: string } }) {
 
                 </div>
             </div>
-            <div className="mt-4 border border-borders w-4/6 flex justify-between items-center p-3 rounded-lg">
+            <div className="mt-4 border border-borders w-full md:w-4/6 flex justify-between items-center p-3 rounded-lg">
                 <span>Comprar <strong>{product.name}</strong></span>
-                <div className="flex items-center">
+                <div className="flex flex-shrink-0 flex-grow items-center justify-end">
                     <p className="text-large pr-3">{formatPrice(product.currentPrice_cents)}</p>
-                    <AddToCartButton />
+                    <AddToCartButton className="flex-shrink-0"/>
                 </div>
             </div>
             <h1 className="text-large mt-2"> Descripción </h1>
