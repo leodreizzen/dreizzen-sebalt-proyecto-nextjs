@@ -8,6 +8,7 @@ export type ProductDTO = {
     launchDate: Date;
     coverImage: ImageDTO;
     descriptionImages: ImageDTO[];
+    tags: TagDto[];
     videos: VideoDTO[];
 }
 

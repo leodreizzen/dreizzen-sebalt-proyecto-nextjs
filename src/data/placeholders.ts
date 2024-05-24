@@ -1,5 +1,38 @@
 import { Product } from "@prisma/client";
 import { ProductDTO, ImageDTO, VideoSource, TagDto, FeaturedTagDTO } from "./DTO";
+export const tagPlaceholders: TagDto[] = [
+    {
+        id: 1,
+        name: "Acción",
+        inDropdown: true
+    },
+    {
+        id: 2,
+        name: "Deportes",
+        inDropdown: true
+    },
+    {
+        id: 3,
+        name: "Aventura",
+        inDropdown: true
+    },
+    {
+        id: 4,
+        name: "Simulación",
+        inDropdown: true
+    },
+    {
+        id: 5,
+        name: "Estrategia",
+        inDropdown: true
+    },
+    {
+        id: 6,
+        name: "Terror",
+        inDropdown: true
+    }
+]
+
 
 export const productPlaceholders: ProductDTO[] = [
     {
@@ -21,6 +54,7 @@ export const productPlaceholders: ProductDTO[] = [
         originalPrice_cents: 1000,
         currentPrice_cents: 800,
         launchDate: new Date(),
+        tags: [tagPlaceholders[0], tagPlaceholders[1], tagPlaceholders[2], tagPlaceholders[3], tagPlaceholders[4], tagPlaceholders[5]],
         coverImage: {
             id: 1,
             url: "https://onigamers.com/wp-content/uploads/2021/08/Cookie-Clicker.jpg",
@@ -107,6 +141,7 @@ export const productPlaceholders: ProductDTO[] = [
         originalPrice_cents: 740756,
         currentPrice_cents: 740756,
         launchDate: new Date(),
+        tags: [tagPlaceholders[0], tagPlaceholders[2], tagPlaceholders[5]],
         coverImage: {
             id: 10,
             url: "https://images3.alphacoders.com/806/806257.jpg",
@@ -152,39 +187,6 @@ export const productPlaceholders: ProductDTO[] = [
 
 ]
 
-
-export const tagPlaceholders: TagDto[] = [
-    {
-        id: 1,
-        name: "Acción",
-        inDropdown: true
-    },
-    {
-        id: 2,
-        name: "Deportes",
-        inDropdown: true
-    },
-    {
-        id: 3,
-        name: "Aventura",
-        inDropdown: true
-    },
-    {
-        id: 4,
-        name: "Simulación",
-        inDropdown: true
-    },
-    {
-        id: 5,
-        name: "Estrategia",
-        inDropdown: true
-    },
-    {
-        id: 6,
-        name: "Terror",
-        inDropdown: true
-    }
-]
 
 
 export const featuredTagsPlaceholders: FeaturedTagDTO[] = [
