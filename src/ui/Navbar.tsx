@@ -98,7 +98,7 @@ export default function Navbar({ className }: { className?: string }) {
         </NavbarItem>
       </NavbarContent>
 
-      <NavbarMenu className="w-full">
+      <NavbarMenu className="w-full gap-4">
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item}-${index}`}>
             <NavbarMenuComponent item={item} selected={isSelected(item, currentPathName, currentParams)} onItemClick={() => setIsMenuOpen(false)} />
@@ -182,7 +182,7 @@ function CollapsibleMenuItem({ item, onChildClick, selected }: { item: DropdownM
         {item.name}
       </Button>
       {
-        isOpen && <div className="flex flex-col">
+        isOpen && <div className="flex flex-col gap-3 mt-2">
           {
             item.children.map((child, index) => (
               <Link href={{

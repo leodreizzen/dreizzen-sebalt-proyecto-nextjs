@@ -43,7 +43,7 @@ export default function Page({ params }: { params: { id: string } }) {
                     <AddToCartButton className="flex-shrink-0"/>
                 </div>
             </div>
-            <h1 className="text-large mt-2"> Descripción </h1>
+            <h1 className="text-large mt-5 md:mt-2"> Descripción </h1>
             <div className="bg-content1 p-2">
                 {
                     textParagraphs.map((paragraph, index) => <p key={index} className="text-justify">{paragraph}</p>)
