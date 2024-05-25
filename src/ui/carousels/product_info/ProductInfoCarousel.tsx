@@ -65,6 +65,8 @@ export default function ProductInfoCarousel({ className, product }: { className?
           className="rounded-lg overflow-clip w-full border border-slate-600 aspect-video"
           onSlidesUpdated={(swiper) => {setSlideCount(swiper.slides.length)}}
           onActiveIndexChange={(swiper) => setActiveSlide(swiper.activeIndex)}
+          noSwiping
+          noSwipingClass='no-swipe'
         >
           {
             product.videos.map((video, i) => (
@@ -75,7 +77,7 @@ export default function ProductInfoCarousel({ className, product }: { className?
           }
 
           {product.descriptionImages.map((image) => (
-            <SwiperSlide key={image.id}>
+            <SwiperSlide key={image.id} className='relative'>
               <Image src={image.url} alt={image.alt} fill={true} /> {/* TODO add sizes*/}
             </SwiperSlide>
           ))}
@@ -93,16 +95,16 @@ export default function ProductInfoCarousel({ className, product }: { className?
         watchSlidesProgress={true}
         modules={[FreeMode, Navigation, Thumbs]}
         className="w-full mt-3 md:mt-4 thumbsSwiper"
-      >
+        >
         {
           product.videos.map((video) => (
-            <SwiperSlide key={video.id} className={clsx({ "!hidden": !initialized }, "border border-borders aspect-video")}>
+            <SwiperSlide key={video.id} className={clsx({ "!hidden": !initialized }, "border border-borders aspect-video relative")}>
               <Image src={video.thumbnail.url} alt={"Miniatura: " + video.thumbnail.alt} fill={true} /> {/* TODO add sizes*/}
             </SwiperSlide>
           ))
         }
         {product.descriptionImages.map((image) => (
-          <SwiperSlide key={image.id} className={clsx({ "!hidden": !initialized }, "border border-borders aspect-video")}>
+          <SwiperSlide key={image.id} className={clsx({ "!hidden": !initialized }, "border border-borders aspect-video relative")}>
             <Image src={image.url} alt={"Miniatura: " + image.alt} fill={true} /> {/* TODO add sizes*/}
           </SwiperSlide>
         ))}

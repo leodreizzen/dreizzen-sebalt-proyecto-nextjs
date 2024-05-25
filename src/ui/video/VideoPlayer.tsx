@@ -11,12 +11,13 @@ export default function VideoPlayer({video, active=true, muted, autoplay, classN
     let url
     switch(video.source){
         case VideoSource.YOUTUBE:
-            url = `https://www.youtube.com/watch/${video.sourceId}`;
+            url = `https://www.youtube.com/watch?v=${video.sourceId}`;
             break;
         case VideoSource.CLOUDINARY:
             url = getCloudinary().video(video.sourceId).quality("auto").format("auto").toURL();
             break;
     }
+    console.log(url)
 
     function handlePlay(){
         setPlaying(true);
@@ -47,7 +48,7 @@ export default function VideoPlayer({video, active=true, muted, autoplay, classN
 
 
     return (
-        <div className={clsx(className) }>
+        <div className={clsx(className, playing && "no-swipe") }>
             <ReactPlayer url={url}
                 width="100%"
                 height="100%"
@@ -63,6 +64,12 @@ export default function VideoPlayer({video, active=true, muted, autoplay, classN
                             playerVars: {
                                 controls: 2,
                                 rel: 0,
+                            }
+                        },
+                        file:{
+                            attributes: {
+                                controlsList: "nodownload noplaybackrate",
+                                disablePictureInPicture: true
                             }
                         }
                     }
