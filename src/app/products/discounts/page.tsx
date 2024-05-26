@@ -7,7 +7,9 @@ import SearchBoxFilters from "@/ui/search/SearchBoxFilters";
 import SearchBoxList from "@/ui/search/SearchBoxList";
 
 export default function Page({ searchParams } : { searchParams: { query?: string; page?: string } }) {
-    const products = productPlaceholders.concat(productPlaceholders).concat(productPlaceholders);
+    let products = productPlaceholders.concat(productPlaceholders).concat(productPlaceholders);
+    products = products.map(product => ({ ...product }));
+    products.forEach((product, index) => product.id = index + 1);
     const query = searchParams.query || "";
     const currentPage = Number(searchParams?.page) || 1;
 

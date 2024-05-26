@@ -9,7 +9,9 @@ export default async function SearchBoxList({
     currentPage: number;
   }) {
     /* Cambiar por el fetch de la base de datos */
-    const products = productPlaceholders.concat(productPlaceholders).concat(productPlaceholders);
+    let products = productPlaceholders.concat(productPlaceholders).concat(productPlaceholders);
+    products = products.map(product => ({ ...product }));
+    products.forEach((product, index) => product.id = index + 1);
     if (currentPage === 1) products.splice(0, 3);
     else products.splice(3, 3);
   
