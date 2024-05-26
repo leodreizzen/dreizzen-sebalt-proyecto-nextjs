@@ -42,9 +42,10 @@ type MenuItem = NormalMenuItem | DropdownMenuItem;
 export default function Navbar({ className }: { className?: string }) {
   const currentPathName = usePathname()
   const currentParams = useSearchParams()
+  const [searchOpen, setSearchOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const genreLinks = tagPlaceholders.filter(tag => tag.inDropdown).map(tag=> ({
+  const genreLinks = tagPlaceholders.filter(tag => tag.inDropdown).map(tag => ({
     name: tag.name,
     extraURL: tag.id.toString(),
   }))
@@ -66,20 +67,26 @@ export default function Navbar({ className }: { className?: string }) {
   ]
 
   return (
-    <NextUINavbar onMenuOpenChange={setIsMenuOpen} isMenuOpen={isMenuOpen} maxWidth={"full"} className={clsx("bg-navbar-bg h-16 border-b-1 border-navbar-border", className)}>
-      <NavbarContent justify="start">
+    <NextUINavbar
+      onMenuOpenChange={setIsMenuOpen}
+      isMenuOpen={isMenuOpen}
+      maxWidth={"full"}
+      className={clsx("bg-navbar-bg h-16 border-b-1 border-navbar-border", className)}
+      classNames={{wrapper: "max-lg:px-3 lg: px-4 xl:px-6 2xl:px-8"}}
+    >
+      <NavbarContent justify="start" className={clsx(searchOpen && "max-md:!flex-grow-[0.5] max-lg:!flex-grow-[0.5]")}>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
           className="sm:hidden"
         />
         <NavbarBrand>
           <NextUILink as={Link} href="/"><div className="h-10 w-10 bg-red-100 mr-2" /></NextUILink>
-          <NextUILink as={Link} className="font-bold text-foreground" href="/">Vapor</NextUILink>
+          <NextUILink as={Link} className={clsx("font-bold text-foreground", searchOpen && "max-[400px]:hidden flex-shrink")} href="/">Vapor</NextUILink>
         </NavbarBrand>
 
       </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+      <NavbarContent className={clsx("hidden sm:flex !gap-0  md:!gap-8 lg:!gap-10", searchOpen && "max-[800px]:!flex-grow-0 max-lg:!flex-grow-[0.5] sm:!gap-3" || "sm:!gap-6")} justify="center">
         {
           menuItems.map((item) => (
             <NavbarItem key={item.name}>
@@ -89,9 +96,9 @@ export default function Navbar({ className }: { className?: string }) {
         }
       </NavbarContent>
 
-      <NavbarContent justify="end">
-        <NavbarItem>
-          <SearchBar />
+      <NavbarContent justify="end" className="flex-shrink overflow-clip gap-2 md:gap-3 lg:gap-4">
+        <NavbarItem className="flex-shrink overflow-clip">
+          <SearchBar isOpen={searchOpen} onOpenChange={setSearchOpen} />
         </NavbarItem>
         <NavbarItem>
           <ShoppingCartButton />
@@ -124,7 +131,7 @@ function NavbarItemComponent({ item, selected }: { item: MenuItem, selected: boo
 
   if (item.type === "normal") {
     return (
-      <Link className={clsx("mr-3", { "text-primary": selected, "text-foreground": !selected })} href={{ pathname: item.pathname, query: item.searchParams }}>
+      <Link className={clsx({ "text-primary": selected, "text-foreground": !selected })} href={{ pathname: item.pathname, query: item.searchParams }}>
         {item.name}
       </Link>
     )
@@ -132,7 +139,7 @@ function NavbarItemComponent({ item, selected }: { item: MenuItem, selected: boo
   else return (
     <Dropdown>
       <DropdownTrigger>
-        <Button className={clsx("mr-3 bg-transparen text-medium", { "text-primary": selected, "text-foreground": !selected })}>
+        <Button className={clsx("p-0 bg-transparent text-medium min-w-0", { "text-primary": selected, "text-foreground": !selected })}>
           {item.name}
         </Button>
       </DropdownTrigger>
