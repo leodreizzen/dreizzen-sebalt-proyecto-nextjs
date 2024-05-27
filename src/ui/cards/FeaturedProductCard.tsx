@@ -36,8 +36,7 @@ export default function FeaturedProductCard({ product, className }: { product: P
                     </div>
                 </div>
                 <p className="text-white mr-4 sm:text-large">{formatPrice(product.currentPrice_cents)}</p>
-                <AddToCartButton className="text-black pr-1" textClassName="hidden @xl:block"/>
-
+                <AddToCartButton className="text-black pr-1" textClassName="hidden @lg:block"/>
             </CardFooter>
        </Card>
        </div>

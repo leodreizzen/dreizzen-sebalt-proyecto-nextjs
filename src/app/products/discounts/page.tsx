@@ -29,7 +29,7 @@ export default function Page({ searchParams } : { searchParams: { query?: string
                 ))}
             </div>
             <div className = "flex flex-col items-center justify-center gap-6 mt-3 px-0 mx-auto border border-borders rounded-3xl p-6">
-                <h1 className = "text-3xl font-bold text-center">Todos los descuentos</h1>
+                <h1 className = "text-3xl font-bold text-center px-1">Todos los descuentos</h1>
                 <SearchBoxBar placeholder = "Buscar" />
                 <div className = "flex flex-col lg:flex-row w-full lg:w-3/4 border border-borders rounded-3xl p-6">
                     <SearchBoxFilters genres = {tagPlaceholders} />
