@@ -23,9 +23,9 @@ export default function Page({ searchParams } : { searchParams: { query?: string
             <h1 className = "text-3xl font-bold mb-6 text-center">Descuentos destacados</h1>
             <div className = "border-2 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 border-borders rounded-lg w-full p-6 items-center justify-center gap-6 h-full">
                 
-                {products.map(product => (<div className = "flex flex-col">
+                {products.map(product => (<div key = {product.id} className = "flex flex-col">
                                             <FeaturedProductCard key={product.id} product = {product} className = "w-full h-full" />
-                                         </div>
+                                          </div>
                 ))}
             </div>
             <div className = "flex flex-col items-center justify-center gap-6 mt-3 px-0 mx-auto border border-borders rounded-3xl p-6">
