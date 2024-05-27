@@ -28,9 +28,9 @@ export default function FeaturedProductCard({ product, className }: { product: P
                 <div className="flex flex-grow gap-2 items-center">
                     <div className="flex flex-col justify-start items-start">
                         <div className="flex flex-wrap gap-2 h-[30px] overflow-y-hidden mt-1">
-                            <Chip size="md" color="primary" className="text-white text-tiny  @2xl:text-sm" classNames = {{ base: "p-0"}}>Deportes</Chip>
-                            <Chip size="md" color="primary" className="text-white text-tiny  @2xl:text-sm">Futbol</Chip>
-                            <Chip size="md" color="primary" className="text-white text-tiny  @2xl:text-sm">Femenino</Chip>
+                            <Chip size="md" color="primary" className="text-white text-tiny @2xl:text-sm">Deportes</Chip>
+                            <Chip size="md" color="primary" className="text-white text-tiny @2xl:text-sm">Futbol</Chip>
+                            <Chip size="md" color="primary" className="text-white text-tiny @2xl:text-sm">Femenino</Chip>
                         </div>
                         <p className="text-white font-bold @2xl:mt-1 @xl:text-large @2xl:text-4xl text-start">{product.name}</p>
                     </div>
