@@ -14,7 +14,7 @@ export default function VideoPlayer({video, active=true, muted, autoplay, classN
             url = `https://www.youtube.com/watch?v=${video.sourceId}`;
             break;
         case VideoSource.CLOUDINARY:
-            url = getCloudinary().video(video.sourceId).quality("auto").format("auto").toURL();
+            url = getCloudinary().video(video.sourceId).toURL();
             break;
     }
     
