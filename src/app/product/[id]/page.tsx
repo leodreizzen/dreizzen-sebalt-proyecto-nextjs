@@ -1,5 +1,6 @@
 import { productPlaceholders, tagPlaceholders } from "@/data/placeholders";
 import AddToCartButton from "@/ui/AddToCartButton";
+import MarqueeOnOverflow from "@/ui/MarqueeOnOverflow";
 import ProductInfoCarousel from "@/ui/carousels/product_info/ProductInfoCarousel";
 import { formatPrice } from "@/util/formatUtils";
 import { Chip } from "@nextui-org/chip";
@@ -20,27 +21,34 @@ export default function Page({ params }: { params: { id: string } }) {
             <div className="w-full flex flex-col-reverse md:flex-row items-center md:items-stretch">
                 <ProductInfoCarousel product={product} className=" w-full md:w-8/12 border md:border-r-0 rounded-xl md:rounded-r-none border-borders" />
                 <div className="w-full md:w-4/12 mt-2 pt-2 md:pt-0 mb-4 md:mb-0 md:mt-0 bg-content1 flex flex-col flex-grow justify-between rounded-xl md:rounded-l-none overflow-clip">
-                    <div>
+                    <div className="flex-grow flex flex-col overflow-hidden">
                         <div className="overflow-clip w-8/12 md:w-full mt-2 md:mt-0 mx-auto aspect-video relative">
                             <Image src={product.coverImage.url} alt={product.coverImage.alt} fill />
                         </div>
-                        {
-                            product.shortDescription ? <p className="py-4 text-justify px-4">{product.shortDescription}</p> : null
-                        }
+                        <div className="md:min-h-0 flex-grow md:basis-0 md:mb-4 inline-block text-ellipsis">
+                            {
+                                product.shortDescription ?
+                                    <p className="py-4 text-justify px-4 h-full basis-0 overflow-clip">{product.shortDescription}</p>
+                                : null
+                            }
+                        </div>
                     </div>
-                    <div className="flex gap-2 pb-4 flex-wrap px-3 items-center justify-center">
-                        {product.tags.map(tag => (
-                            <Chip key={tag.id} size="md" color="primary" className="text-white" >{tag.name}</Chip>
-                        ))}
+                    <div className="px-2">
+                        <MarqueeOnOverflow direction="horizontal" animation={["animate-marqueeSlowX", "animate-marqueeSlowX2"]} className="w-full justify-center">
+                            <div className="flex gap-2 pb-4 pl-2 flex-nowrap items-center justify-center">
+                                {product.tags.map(tag => (
+                                    <Chip key={tag.id} size="md" color="primary" className="text-white" >{tag.name}</Chip>
+                                ))}
+                            </div>
+                        </MarqueeOnOverflow>
                     </div>
-
                 </div>
             </div>
             <div className="mt-4 border border-borders w-full md:w-4/6 flex justify-between items-center p-3 rounded-lg">
                 <span>Comprar <strong>{product.name}</strong></span>
                 <div className="flex flex-shrink-0 flex-grow items-center justify-end">
                     <p className="text-large pr-3">{formatPrice(product.currentPrice_cents)}</p>
-                    <AddToCartButton className="flex-shrink-0"/>
+                    <AddToCartButton className="flex-shrink-0" />
                 </div>
             </div>
             <h1 className="text-large mt-5 md:mt-2"> Descripción </h1>

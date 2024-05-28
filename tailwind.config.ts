@@ -39,6 +39,9 @@ const config: Config = {
       animation:{
         marqueeX: "marqueeXA 10s linear infinite",
         marqueeX2: "marqueeXB 10s linear infinite",
+
+        marqueeSlowX: "marqueeXA 40s linear infinite",
+        marqueeSlowX2: "marqueeXB 40s linear infinite",
         
         marqueeY: "marqueeYA 10s linear infinite",
         marqueeY2: "marqueeYB 10s linear infinite",
