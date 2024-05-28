@@ -16,9 +16,9 @@ export default function AddToCartButton({className, iconClassName, textClassName
     }
 
     return (
-        <div className={clsx(className, "flex bg-green-300 p-1 justify-center hover:bg-green-400 active:bg-green-600 rounded-lg items-center")} {...pressProps} ref={ref}>
-            <ShoppingCartIcon className={clsx(iconClassName, "text-black", "w-6", "h-6")} />
-            <p className={clsx(textClassName, "text-md", "text-black ml-2 space-x-0 tracking-tighter")}>Agregar al carrito</p>
+        <div className={clsx(className, "flex bg-green-300 p-[0.4rem] justify-center hover:bg-green-400 active:bg-green-600 rounded-lg items-center")} {...pressProps} ref={ref}>
+            <ShoppingCartIcon className={clsx(iconClassName, "text-black w-6 h-6")} />
+            <p className={clsx(textClassName, "text-sm text-black ml-2 space-x-0")}>Agregar al carrito</p>
         </div>
     )
 }

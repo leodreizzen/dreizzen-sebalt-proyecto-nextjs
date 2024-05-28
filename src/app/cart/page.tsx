@@ -19,7 +19,7 @@ export default function Page({ }) {
     return (
         <main className="flex flex-col items-center">
             <h1 className="text-center text-3xl font-bold my-3">Carrito</h1>
-            <div className="flex flex-col w-10/12 gap-4 mb-4">
+            <div className="flex flex-col w-full sm:w-10/12 gap-4 mb-4 px-4">
                 <div className="w-full gap-4 flex flex-col border border-borders p-4 rounded-lg">
                     {
                         products.map(
