@@ -27,9 +27,9 @@ export default function Home() {
             )}
           </div>
         </div>
-        <div className="p-2 mt-8 ">
+        <div className="p-2 mt-8">
           <h2 className="text-center pb-2 text-large">Más vendidos</h2>
-          <div className="border border-borders p-4 rounded-3xl">
+          <div className="xs:border border-borders rounded-3xl p-4">
             <div className="mx-auto gap-3 flex flex-col items-center rounded-3xl">
               {
                 topSellers.map(product =>
