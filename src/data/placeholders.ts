@@ -108,7 +108,7 @@ export const productPlaceholders: ProductDTO[] = [
                 id: 2,
                 source: VideoSource.CLOUDINARY,
                 alt: "Product 1 video",
-                sourceId: "ejlzzt3ad1kxbbmvmgt8",
+                sourceId: "ah6hehaid8ap37fj1m5i",
                 thumbnail: {
                     id: 9,
                     url: "https://i.ytimg.com/vi/D9nZ6wzrcBg/maxresdefault.jpg",
