@@ -1,5 +1,6 @@
 import { productPlaceholders, tagPlaceholders } from "@/data/placeholders";
 import AddToCartButton from "@/ui/AddToCartButton";
+import FadeOnOverflowY from "@/ui/FadeOnOverflowY";
 import MarqueeOnOverflow from "@/ui/MarqueeOnOverflow";
 import ProductInfoCarousel from "@/ui/carousels/product_info/ProductInfoCarousel";
 import { formatPrice } from "@/util/formatUtils";
@@ -28,7 +29,9 @@ export default function Page({ params }: { params: { id: string } }) {
                         <div className="md:min-h-0 flex-grow md:basis-0 md:mb-4 inline-block text-ellipsis">
                             {
                                 product.shortDescription ?
-                                    <p className="py-4 text-justify px-4 h-full basis-0 overflow-clip">{product.shortDescription}</p>
+                                    <FadeOnOverflowY className="h-full overflow-hidden">
+                                    <p className="py-4 text-justify px-4 h-full basis-0">{product.shortDescription}</p>
+                                    </FadeOnOverflowY>
                                 : null
                             }
                         </div>
