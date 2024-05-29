@@ -1,6 +1,4 @@
-import { productPlaceholders } from "@/data/placeholders";
-import AddToCartButton from "@/ui/AddToCartButton";
-import ShoppingCartButton from "@/ui/ShoppingCartButton";
+import { productPlaceholders } from "@/lib/placeholders";
 import ListCard from "@/ui/cards/ListCard";
 
 export default function Page() {

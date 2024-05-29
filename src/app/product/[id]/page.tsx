@@ -1,4 +1,4 @@
-import { productPlaceholders, tagPlaceholders } from "@/data/placeholders";
+import { productPlaceholders, tagPlaceholders } from "@/lib/placeholders";
 import AddToCartButton from "@/ui/AddToCartButton";
 import FadeOnOverflowY from "@/ui/FadeOnOverflowY";
 import MarqueeOnOverflow from "@/ui/MarqueeOnOverflow";
@@ -30,9 +30,9 @@ export default function Page({ params }: { params: { id: string } }) {
                             {
                                 product.shortDescription ?
                                     <FadeOnOverflowY className="h-full overflow-hidden">
-                                    <p className="py-4 text-justify px-4 h-full basis-0">{product.shortDescription}</p>
+                                        <p className="py-4 text-justify px-4 h-full basis-0">{product.shortDescription}</p>
                                     </FadeOnOverflowY>
-                                : null
+                                    : null
                             }
                         </div>
                     </div>
@@ -51,7 +51,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 <span>Comprar <strong>{product.name}</strong></span>
                 <div className="flex flex-shrink-0 flex-grow items-center justify-end">
                     <p className="text-large pr-3">{formatPrice(product.currentPrice_cents)}</p>
-                    <AddToCartButton className="flex-shrink-0" />
+                        <AddToCartButton className="flex-shrink-0" product={product} />
                 </div>
             </div>
             <h1 className="text-large mt-5 md:mt-2"> Descripción </h1>

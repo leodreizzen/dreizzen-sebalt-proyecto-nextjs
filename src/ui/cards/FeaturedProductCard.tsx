@@ -3,7 +3,7 @@
 import { Card, CardBody, CardFooter } from "@nextui-org/card";
 import Image from "next/image";
 import { formatPrice } from "@/util/formatUtils";
-import { ProductDTO } from "@/data/DTO";
+import { ProductDTO } from "@/lib/DTO";
 import clsx from "clsx";
 import { Chip } from "@nextui-org/chip";
 import AddToCartButton from "../AddToCartButton";
@@ -11,13 +11,10 @@ import { useRouter } from "next/navigation";
 import MarqueeOnOverflow from "../MarqueeOnOverflow";
 
 export default function FeaturedProductCard({ product, className }: { product: ProductDTO, className?: string }) {
-
-
     const router = useRouter();
     function handleCardPress() {
         router.push(`/product/${product.id}`)
     }
-
     return (
         <>
             <div className={clsx("gap-3 @container", className)}>
@@ -35,13 +32,13 @@ export default function FeaturedProductCard({ product, className }: { product: P
                                 </div>
                                 <div className="w-full oveflow-clip flex-grow @2xl:mt-1">
                                     <MarqueeOnOverflow className="w-full" direction="horizontal" animation={["animate-marqueeX", "animate-marqueeX2"]}>
-                                    <p className="text-white font-bold @xl:text-large @2xl:text-4xl text-start text-nowrap mx-1 pb-1">{product.name}</p>
+                                        <p className="text-white font-bold @xl:text-large @2xl:text-4xl text-start text-nowrap mx-1 pb-1">{product.name}</p>
                                     </MarqueeOnOverflow>
                                 </div>
                             </div>
                         </div>
                         <p className="text-white mr-4 sm:text-large">{formatPrice(product.currentPrice_cents)}</p>
-                        <AddToCartButton className="text-black pr-1 flex-shrink-0" textClassName="hidden @lg:block" />
+                        <AddToCartButton className="text-black pr-1 flex-shrink-0" product={product} textClassName="hidden @lg:block" />
                     </CardFooter>
                 </Card>
             </div>

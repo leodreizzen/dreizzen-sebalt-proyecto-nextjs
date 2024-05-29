@@ -10,7 +10,7 @@ import './styles.css'; // Swiper does not allow setting custom class on slides
 
 import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
 import clsx from 'clsx';
-import { ProductDTO } from '@/data/DTO';
+import { ProductDTO } from '@/lib/DTO';
 import Image from 'next/image';
 import VideoPlayer from '../../video/VideoPlayer';
 import SwiperRightButton from '../SwiperRightButton';

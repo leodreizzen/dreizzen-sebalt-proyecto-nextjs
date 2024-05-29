@@ -1,5 +1,5 @@
 "use client";
-import { ProductDTO } from "@/data/DTO";
+import { ProductDTO } from "@/lib/DTO";
 import clsx from "clsx";
 import 'swiper/css';
 import 'swiper/css/pagination';

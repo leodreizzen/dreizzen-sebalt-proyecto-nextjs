@@ -1,7 +1,7 @@
 "use client"
 
 import { Card, CardBody, CardFooter } from "@nextui-org/card";
-import { ProductDTO } from "@/data/DTO";
+import { ProductDTO } from "@/lib/DTO";
 import Image from "next/image";
 import { formatPrice } from "@/util/formatUtils";
 import { useRouter } from "next/navigation";
@@ -60,7 +60,7 @@ export default function ListCard({ product, className }: { product: ProductDTO, 
                             <div className="col-span-3 md:col-span-3 mr-2">
                                 <p className="text-tiny md:text-md font-bold text-right">{formatPrice(product.currentPrice_cents)}</p>
                             </div>
-                            <AddToCartButton className="text-black hidden @xs:flex mr-1" textClassName="hidden @xl:block"/>
+                            <AddToCartButton className="text-black hidden @xs:flex mr-1" textClassName="hidden @xl:block" product={product}/>
                         </div>
                     </div>
 

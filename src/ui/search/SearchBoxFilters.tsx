@@ -1,6 +1,6 @@
 'use client';
 
-import  { TagDto } from "../../data/DTO";
+import  { TagDto } from "../../lib/DTO";
 import SearchBoxFilterChip from "./SearchBoxFilterChip";
 import { useState } from "react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";

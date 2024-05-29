@@ -1,4 +1,4 @@
-import { productPlaceholders } from "@/data/placeholders";
+import { productPlaceholders } from "@/lib/placeholders";
 import ListCard from "@/ui/cards/ListCard";
 
 export default async function SearchBoxList({

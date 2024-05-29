@@ -1,6 +1,6 @@
 import FeaturedProductCard from "../cards/FeaturedProductCard";
 import ListCard from "../cards/ListCard";
-import { productPlaceholders } from "@/data/placeholders";
+import { productPlaceholders } from "@/lib/placeholders";
 
 export default async function FeaturedBoxList({
     currentPage,

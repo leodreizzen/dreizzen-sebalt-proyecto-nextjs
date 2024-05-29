@@ -1,19 +1,24 @@
-import { productPlaceholders } from "@/data/placeholders"
+import { removeFromCart } from "@/lib/actions";
+import { productPlaceholders } from "@/lib/placeholders"
+import { getCart } from "@/lib/session-data";
 import MarqueeOnOverflow from "@/ui/MarqueeOnOverflow";
 import { formatPrice } from "@/util/formatUtils"
 import { Button } from "@nextui-org/button";
+import { redirect } from "next/navigation";
 import Image from "next/image"
 import Link from "next/link";
 import { MdRemoveCircleOutline } from "react-icons/md";
 
-export default function Page({ }) {
-    let products = productPlaceholders.concat(productPlaceholders).concat(productPlaceholders)
-    products = products.map((p, index) => ({ ...p, id: index + 1 }))
-    const total = products.reduce((acc, p) => acc + p.currentPrice_cents, 0)
+export default async function Page({ }) {
+    const productIds = await getCart();
+    const products = productPlaceholders.filter(product => productIds.includes(product.id));
 
-    async function removeItem() {
+    const total = products.reduce((acc, product) => acc + product.currentPrice_cents, 0);
+
+    async function handleCartRemove(productId: number) {
         "use server"
-        console.log("Removed from cart")
+        await removeFromCart(productId);
+        redirect("/cart");
     }
 
     return (
@@ -36,7 +41,7 @@ export default function Page({ }) {
                                     <div className="flex items-center mr-2">
                                         <p>{formatPrice(product.currentPrice_cents)}</p>
                                     </div>
-                                    <form action={removeItem} className="self-center">
+                                    <form action={handleCartRemove.bind(null, product.id)} className="self-center">
                                         <Button type="submit" className="flex items-center text-red-600 hover:text-red-400 active:text-red-300 h-10 w-10 min-w-0 min-h-0 bg-transparent px-0 self-center ">
                                             <MdRemoveCircleOutline className="h-10 w-10" />
                                         </Button>

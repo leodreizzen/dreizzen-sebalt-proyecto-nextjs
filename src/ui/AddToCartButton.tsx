@@ -5,35 +5,38 @@ import { useRef } from "react";
 import { usePress } from "@react-aria/interactions";
 import clsx from "clsx";
 import { useHover } from "@uidotdev/usehooks";
-import {mergeRefs} from "react-merge-refs";
+import { mergeRefs } from "react-merge-refs";
 import { MdRemoveCircleOutline } from "react-icons/md";
-export default function AddToCartButton({ className, iconClassName, textClassName }: { className?: string, iconClassName?: string, textClassName?: string }) {
+import { ProductDTO } from "@/lib/DTO";
+import { useShoppingCartContext } from "@/context/ShoppingCartContext";
+export default function AddToCartButton({ className, iconClassName, textClassName, product }: { className?: string, iconClassName?: string, textClassName?: string, product: ProductDTO }) {
     const pressRef = useRef<HTMLDivElement>(null);
     const [hoveredRef, isHovered] = useHover();
     const ref = mergeRefs([pressRef, hoveredRef]);
-    
+    const { shoppingCart, addToCart, removeFromCart } = useShoppingCartContext();
+
     const { pressProps } = usePress({
         ref: pressRef,
         onPress: handleCartPress
     })
 
-    const productInCart = false;
+    const productInCart = shoppingCart.includes(product.id);
 
     function handleCartPress() {
-        if(productInCart)
-            alert("Added to cart")
+        if (productInCart)
+            removeFromCart(product.id)
         else
-            alert("Removed from cart")
+            addToCart(product.id)
     }
 
     let icon, text, textClass;
     if (productInCart) {
-        if(isHovered){
+        if (isHovered) {
             icon = <MdRemoveCircleOutline className={clsx(iconClassName, "text-foreground bg-w w-6 h-6")} />
             text = "Eliminar del carrito"
             textClass = "text-foreground pr-2"
         }
-        else{
+        else {
             icon = <IoCheckmarkCircleOutline className={clsx(iconClassName, "text-black bg-w w-6 h-6")} />
             text = "Agregado al carrito"
             textClass = "text-black pr-1"
@@ -52,7 +55,7 @@ export default function AddToCartButton({ className, iconClassName, textClassNam
                 "bg-gray-300 hover:bg-red-700 active:bg-red-600": productInCart,
             }
             )}
-            {...pressProps} 
+            {...pressProps}
             ref={ref}>
             {icon}
             <p className={clsx(textClassName, textClass, "text-sm ml-1 space-x-0")}>{text}</p>

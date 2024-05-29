@@ -6,8 +6,7 @@ import clsx from "clsx";
 import { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 
-export default function ShoppingCartButton(){
-    const cartItems = 1;
+export default function ShoppingCartButton({cartItems}: {cartItems: number}){
     const pathName = usePathname();
     const selected = pathName.startsWith("/cart");
 

@@ -2,7 +2,7 @@ import { Chip } from "@nextui-org/chip";
 import { SearchParamsContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { TagDto } from "@/data/DTO";
+import { TagDto } from "@/lib/DTO";
 
 export default function SearchBoxFilterChip({className, tag, selected}: {className?: string, tag: TagDto, selected: boolean}) {
     const searchParams = useSearchParams();
@@ -15,7 +15,6 @@ export default function SearchBoxFilterChip({className, tag, selected}: {classNa
         const values = params.getAll('filter');
         if (selected) {
             const valuesString = values[0].split(',');
-            console.log(valuesString);
             valuesString.splice(valuesString.indexOf(tag.id.toString()), 1);
             const valuesResult = valuesString.join();
             params.set('filter', valuesResult);

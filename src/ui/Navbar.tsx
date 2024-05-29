@@ -3,7 +3,7 @@ import { Navbar as NextUINavbar, NavbarBrand, NavbarContent, NavbarItem, NavbarM
 import { Link as NextUILink } from "@nextui-org/link";
 import Link from "next/link";
 import { Button } from "@nextui-org/button";
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, Suspense, useState } from "react";
 import {
   Dropdown,
   DropdownTrigger,
@@ -15,7 +15,8 @@ import SearchBar from "./SearchBar";
 import { usePathname, useSearchParams } from "next/navigation";
 import ShoppingCartButton from "./ShoppingCartButton";
 import { useRouter } from "next/navigation";
-import { tagPlaceholders } from "@/data/placeholders";
+import { tagPlaceholders } from "@/lib/placeholders";
+import ShoppingCartButtonWrapper from "./ShopppingCartButtonWrapper";
 
 type NormalMenuItem = {
   name: string;
@@ -101,7 +102,7 @@ export default function Navbar({ className }: { className?: string }) {
           <SearchBar isOpen={searchOpen} onOpenChange={setSearchOpen} />
         </NavbarItem>
         <NavbarItem>
-          <ShoppingCartButton />
+            <ShoppingCartButtonWrapper />
         </NavbarItem>
       </NavbarContent>
 

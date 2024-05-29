@@ -1,5 +1,5 @@
 "use client"
-import { VideoDTO, VideoSource } from "@/data/DTO";
+import { VideoDTO, VideoSource } from "@/lib/DTO";
 import { ReactNode, useEffect, useState } from "react";
 import getCloudinary from "../cloudinary";
 import ReactPlayer from "react-player";
