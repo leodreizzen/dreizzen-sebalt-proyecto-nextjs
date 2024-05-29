@@ -4,7 +4,7 @@ import { formatPrice } from "@/util/formatUtils"
 import { Button } from "@nextui-org/button";
 import Image from "next/image"
 import Link from "next/link";
-import { CiCircleRemove } from "react-icons/ci";
+import { MdRemoveCircleOutline } from "react-icons/md";
 
 export default function Page({ }) {
     let products = productPlaceholders.concat(productPlaceholders).concat(productPlaceholders)
@@ -38,7 +38,7 @@ export default function Page({ }) {
                                     </div>
                                     <form action={removeItem} className="self-center">
                                         <Button type="submit" className="flex items-center text-red-600 hover:text-red-400 active:text-red-300 h-10 w-10 min-w-0 min-h-0 bg-transparent px-0 self-center ">
-                                            <CiCircleRemove className="h-10 w-10" />
+                                            <MdRemoveCircleOutline className="h-10 w-10" />
                                         </Button>
                                     </form>
                                 </div>
