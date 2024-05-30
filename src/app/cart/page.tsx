@@ -8,11 +8,29 @@ import { redirect } from "next/navigation";
 import Image from "next/image"
 import Link from "next/link";
 import { MdRemoveCircleOutline } from "react-icons/md";
+import { ProductDTO } from "@/lib/DTO";
+import clsx from "clsx";
+import { BsCartX } from "react-icons/bs";
 
 export default async function Page({ }) {
     const productIds = await getCart();
     const products = productPlaceholders.filter(product => productIds.includes(product.id));
 
+
+    return (
+        <main className="flex flex-col items-center min-h-full">
+            <h1 className="text-center text-3xl font-bold my-3 h-full">Carrito</h1>
+            {products.length > 0 ?
+                <CartWithItemsPage products={products} className="w-full sm:w-10/12 gap-4 mb-4 px-4" />
+                : <EmptyCartPage className="w-full sm:w-10/12 gap-4 mb-4 px-4" />
+            }
+
+
+        </main>
+    )
+}
+
+function CartWithItemsPage({ products, className }: { products: ProductDTO[], className?: String }) {
     const total = products.reduce((acc, product) => acc + product.currentPrice_cents, 0);
 
     async function handleCartRemove(productId: number) {
@@ -22,41 +40,50 @@ export default async function Page({ }) {
     }
 
     return (
-        <main className="flex flex-col items-center">
-            <h1 className="text-center text-3xl font-bold my-3">Carrito</h1>
-            <div className="flex flex-col w-full sm:w-10/12 gap-4 mb-4 px-4">
-                <div className="w-full gap-4 flex flex-col border border-borders p-4 rounded-lg">
-                    {
-                        products.map(
-                            product => (
-                                <div className="border border-borders grid grid-cols-[auto_1fr_auto_auto] grid-flow-row grid-rows-1 h-20 pr-2 rounded-lg overflow-clip" key={product.id}>
-                                    <div className="relative h-full aspect-video">
-                                        <Link href={`/product/${product.id}`}><Image src={product.coverImage.url} alt={product.coverImage.alt} fill /></Link>
-                                    </div>
-                                    <div className="flex items-center min-w-0 mx-2">
-                                        <MarqueeOnOverflow direction="horizontal" animation={["animate-marqueeX", "animate-marqueeX2"]}>
-                                            <Link href={`/product/${product.id}`}><span className="ml-1 mr-1 align-middle text-nowrap">{product.name}</span></Link>
-                                        </MarqueeOnOverflow>
-                                    </div>
-                                    <div className="flex items-center mr-2">
-                                        <p>{formatPrice(product.currentPrice_cents)}</p>
-                                    </div>
-                                    <form action={handleCartRemove.bind(null, product.id)} className="self-center">
-                                        <Button type="submit" className="flex items-center text-red-600 hover:text-red-400 active:text-red-300 h-10 w-10 min-w-0 min-h-0 bg-transparent px-0 self-center ">
-                                            <MdRemoveCircleOutline className="h-10 w-10" />
-                                        </Button>
-                                    </form>
+        <div className={clsx("flex flex-col", className)}>
+            <div className="w-full gap-4 flex flex-col border border-borders p-4 rounded-lg">
+                {
+                    products.map(
+                        product => (
+                            <div className="border border-borders grid grid-cols-[auto_1fr_auto_auto] grid-flow-row grid-rows-1 h-20 pr-2 rounded-lg overflow-clip" key={product.id}>
+                                <div className="relative h-full aspect-video">
+                                    <Link href={`/product/${product.id}`}><Image src={product.coverImage.url} alt={product.coverImage.alt} fill /></Link>
                                 </div>
-                            )
+                                <div className="flex items-center min-w-0 mx-2">
+                                    <MarqueeOnOverflow direction="horizontal" animation={["animate-marqueeX", "animate-marqueeX2"]}>
+                                        <Link href={`/product/${product.id}`}><span className="ml-1 mr-1 align-middle text-nowrap">{product.name}</span></Link>
+                                    </MarqueeOnOverflow>
+                                </div>
+                                <div className="flex items-center mr-2">
+                                    <p>{formatPrice(product.currentPrice_cents)}</p>
+                                </div>
+                                <form action={handleCartRemove.bind(null, product.id)} className="self-center">
+                                    <Button type="submit" className="flex items-center text-red-600 hover:text-red-400 active:text-red-300 h-10 w-10 min-w-0 min-h-0 bg-transparent px-0 self-center ">
+                                        <MdRemoveCircleOutline className="h-10 w-10" />
+                                    </Button>
+                                </form>
+                            </div>
                         )
-                    }
-                </div>
-                <div className="flex self-end text-lg items-center">
-                    <span>Total:</span>
-                    <span className="pl-2 pr-4">{formatPrice(total)}</span>
-                    <Button as={Link} href="/purchase" className="font-bold bg-transparent text-foreground border-foreground border" size="md">Comprar ahora</Button>
-                </div>
+                    )
+                }
             </div>
-        </main>
+            <div className="flex self-end text-lg items-center">
+                <span>Total:</span>
+                <span className="pl-2 pr-4">{formatPrice(total)}</span>
+                <Button as={Link} href="/purchase" className="font-bold bg-transparent text-foreground border-foreground border" size="md">Comprar ahora</Button>
+            </div>
+        </div>
+    )
+}
+
+function EmptyCartPage({ className }: { className?: String }) {
+    return (
+        <div className={clsx(className, "flex flex-col items-center h-full")}>
+            <div className="aspect-square w-1/5">
+                <BsCartX className="size-full" />
+            </div>
+            <p className="pt-3">Tu carrito está vacío. Agrega productos para comprarlos</p>
+            <Button as={Link} href="/" className="text-center bg-primary text-foreground mt-2">Elegir productos</Button>
+        </div>
     )
 }
