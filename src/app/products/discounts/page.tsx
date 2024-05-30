@@ -18,30 +18,33 @@ export default function Page({ searchParams }: { searchParams: { query?: string;
     /* if (totalPages === 0) hidden = true; */ /* Descomentar esto cuando este la conexión con la BD */
 
     return (
-            <div className="items-center justify-center p-6 px-6 ">
-                <h1 className="text-3xl font-bold mb-6 text-center">Descuentos destacados</h1>
-                <div className="border-2 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 border-borders rounded-lg w-full p-6 items-center justify-center gap-6 h-full">
-
+        <div className="items-center justify-center px-1">
+            <h1 className="text-3xl font-bold mt-6 mb-3 text-center">Descuentos destacados</h1>
+            <div className="p-3 2xl:px-64">
+                <div className="border-2 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 border-borders rounded-lg w-full p-6 xl:py-6 items-center justify-center gap-6 h-full">
                     {products.map(product => (<div key={product.id} className="flex flex-col">
-                        <FeaturedProductCard key={product.id} product={product} className="w-full h-full" />
-                    </div>
+                                                <FeaturedProductCard key={product.id} product = {product} className="w-full h-full" />
+                                            </div>
                     ))}
                 </div>
-                <div className="flex flex-col items-center justify-center gap-6 mt-3 px-0 mx-auto border border-borders rounded-3xl p-6">
-                    <h1 className="text-3xl font-bold text-center px-1">Todos los descuentos</h1>
-                    <SearchBoxBar placeholder="Buscar" />
-                    <div className="flex flex-col lg:flex-row w-full lg:w-3/4 border border-borders rounded-3xl p-6">
-                        <SearchBoxFilters genres={tagPlaceholders} />
-                        <div className="flex flex-col justify-center w-full">
-                            <div className="w-full">
-                                <SearchBoxList currentPage={currentPage} query={query} />
-                            </div>
-                            <div className={hidden ? "hidden" : "flex justify-center"}>
-                                <Pagination totalPages={totalPages} />
-                            </div>
+            </div>
+            <div className="flex flex-col items-center justify-center 2xl:w-3/4 mx-auto gap-6 mt-3 mb-3 p-0 border border-borders rounded-3xl">
+                <h1 className="text-3xl font-bold text-center px-1 mt-4">Todos los descuentos</h1>
+                <SearchBoxBar placeholder="Buscar" />
+                <div className="flex flex-col lg:flex-row w-full 2xl:w-3/4 border border-borders rounded-3xl">
+                    <div className="p-6">
+                        <SearchBoxFilters genres = {tagPlaceholders} />
+                    </div>
+                    <div className="flex flex-col justify-center w-full px-1">
+                        <div className="w-full mr-4">
+                            <SearchBoxList currentPage={currentPage} query={query} />
+                        </div>
+                        <div className={hidden ? "hidden" : "flex justify-center mb-2"}>
+                            <Pagination totalPages={totalPages} />
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
     )
 }

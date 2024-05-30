@@ -15,11 +15,11 @@ export default function Page({ params: { tagId, page } }: { params: { tagId: str
     const tag = tags.find((tag) => tag.id === Number(tagId));
 
     return (
-        <div className="items-center justify-center p-6 px-6 ">
-            <h1 className="text-3xl font-bold mb-6 text-center">Productos destacados del género {tag?.name.toLocaleLowerCase()}</h1>
-            <div className="border-2 border border-borders p-6">
+        <div className="items-center justify-center px-1">
+            <h1 className="text-3xl font-bold mt-6 mb-3 text-center">Productos destacados del género {tag?.name.toLocaleLowerCase()}</h1>
+            <div className="p-3 2xl:px-64">
                 <FeaturedBoxList currentPage={currentPage} />
-                <div className={hidden ? "hidden" : "flex justify-center"}>
+                <div className={hidden ? "hidden" : "flex justify-center mt-2"}>
                     <Pagination totalPages={totalPages} />
                 </div>
             </div>

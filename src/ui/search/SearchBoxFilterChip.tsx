@@ -3,6 +3,7 @@ import { SearchParamsContext } from "next/dist/shared/lib/hooks-client-context.s
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { TagDto } from "@/lib/DTO";
+import { FaPlus } from "react-icons/fa";
 
 export default function SearchBoxFilterChip({className, tag, selected}: {className?: string, tag: TagDto, selected: boolean}) {
     const searchParams = useSearchParams();
@@ -31,6 +32,6 @@ export default function SearchBoxFilterChip({className, tag, selected}: {classNa
     }
 
     return (
-        <Chip size="sm" color="primary" onClose = {() => { handleClose() }} endContent = { selected ? <img src="https://icons.veryicon.com/png/o/miscellaneous/alan-ui/ios-checkmark-circle-4.png" alt="check" className="w-4 h-4"/> : null  } className="text-white">{tag.name}</Chip>
+        <Chip size="sm" color="primary" onClose = {() => { handleClose() }} endContent = { selected ? null : <FaPlus className="text-sm text-white peer-focus:text-gray-900 ml-1 mr-1"/>  } className="text-white">{tag.name}</Chip>
     )
 }

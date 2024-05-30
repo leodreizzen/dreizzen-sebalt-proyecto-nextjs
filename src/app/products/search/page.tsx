@@ -17,21 +17,23 @@ export default function Page({ searchParams }: { searchParams: { query?: string;
 
     /* if (totalPages === 0) hidden = true; */ /* Descomentar esto cuando este la conexión con la BD */
 
-    return <div>
-        <div className="flex flex-col items-center justify-center gap-6 mt-3 px-0 mx-auto border border-borders rounded-3xl p-6">
-            <h1 className="text-3xl font-bold text-center">Búsqueda</h1>
-            <SearchBoxBar placeholder="Buscar" />
-            <div className="flex flex-col lg:flex-row w-full lg:w-3/4 border border-borders rounded-3xl p-6">
-                <SearchBoxFilters genres={tagPlaceholders} />
-                <div className="flex flex-col justify-center w-full">
-                    <div className="w-full">
-                        <SearchBoxList currentPage={currentPage} query={query} />
+    return (
+        <div className="flex flex-col items-center justify-center 2xl:w-3/4 mx-auto gap-6 mt-3 mb-3 p-0 border border-borders rounded-3xl">
+                <h1 className="text-3xl font-bold text-center px-1 mt-4">Todos los descuentos</h1>
+                <SearchBoxBar placeholder="Buscar" />
+                <div className="flex flex-col lg:flex-row w-full 2xl:w-3/4 border border-borders rounded-3xl">
+                    <div className="p-6">
+                        <SearchBoxFilters genres = {tagPlaceholders} />
                     </div>
-                    <div className={hidden ? "hidden" : "flex justify-center"}>
-                        <Pagination totalPages={totalPages} />
+                    <div className="flex flex-col justify-center w-full px-1">
+                        <div className="w-full mr-4">
+                            <SearchBoxList currentPage={currentPage} query={query} />
+                        </div>
+                        <div className={hidden ? "hidden" : "flex justify-center mb-2"}>
+                            <Pagination totalPages={totalPages} />
+                        </div>
                     </div>
                 </div>
-            </div>
         </div>
-    </div>
+    )
 }
