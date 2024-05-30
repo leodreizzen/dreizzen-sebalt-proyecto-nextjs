@@ -15,23 +15,27 @@ datasource db {
 }
 
 model Product {
-  id                  Int      @id @default(autoincrement())
-  name                String   @unique
+  id                  Int          @id @default(autoincrement())
+  name                String       @unique
   originalPrice_cents Int
   currentPrice_cents  Int
-  tags                Tag[]
+  tags                ProductTag[]
   description         String
   shortDescription    String?
-  descriptionImages   Image[]  @relation(name: "description_images")
-  coverImage          Image    @relation(name: "cover_image", fields: [coverImageId], references: [id], map: "cover_image_fk")
+  descriptionImages   Image[]      @relation(name: "description_images")
+  coverImage          Image        @relation(name: "cover_image", fields: [coverImageId], references: [id], map: "cover_image_fk")
   videos              Video[]
   launchDate          DateTime
 
-  developer    Company @relation(name: "developer", references: [id], map: "developer_company_fk", fields: [developerId])
-  publisher    Company @relation(name: "publisher", references: [id], map: "publisher_company_fk", fields: [publisherId])
+  developer Company @relation(name: "developer", references: [id], map: "developer_company_fk", fields: [developerId])
+  publisher Company @relation(name: "publisher", references: [id], map: "publisher_company_fk", fields: [publisherId])
+
+  available Boolean @default(true)
+
+  featured     FeaturedProduct?
   developerId  Int
   publisherId  Int
-  coverImageId Int     @unique
+  coverImageId Int              @unique
 }
 
 model Company {
@@ -41,34 +45,95 @@ model Company {
   developed Product[] @relation(name: "developer")
 }
 
+model ProductTag {
+  product Product @relation(fields: [productId], references: [id])
+  tag     Tag     @relation(fields: [tagId], references: [id])
+  order   Int     @unique
+
+  tagId     Int
+  productId Int
+
+  @@id([productId, tagId])
+}
+
 model Tag {
-  id         Int       @id @default(autoincrement())
-  name       String    @unique
+  id         Int     @id @default(autoincrement())
+  name       String  @unique
   inDropdown Boolean
-  products   Product[]
+
+  productTags ProductTag[]
+  featured    FeaturedTag?
+}
+
+model FeaturedTag {
+  tag   Tag   @relation(fields: [tagId], references: [id])
+  order Int   @unique
+  image Image @relation(fields: [imageId], references: [id])
+
+  tagId   Int @id
+  imageId Int
+}
+
+model FeaturedProduct {
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int     @id
+  order     Int
 }
 
 model Video {
-  id        Int         @id @default(autoincrement())
-  source    VideoSource
-  sourceId  String
-  alt       String
-  product   Product?    @relation(fields: [productId], references: [id])
-  productId Int?
-  thumbnail Image?       @relation(fields: [thumbnailId], references: [id])
-  thumbnailId   Int?         @unique
+  id       Int         @id @default(autoincrement())
+  source   VideoSource
+  sourceId String
+  alt      String
+
+  product   Product? @relation(fields: [productId], references: [id])
+  thumbnail Image?   @relation(fields: [thumbnailId], references: [id])
+
+  productId   Int?
+  thumbnailId Int? @unique
 
   @@unique([source, sourceId])
 }
 
 model Image {
-  id                   Int      @id @default(autoincrement())
-  url                  String
-  alt                  String
-  productDescription   Product? @relation(fields: [productDescriptionId], references: [id], map: "product_description_fk", name: "description_images")
-  productDescriptionId Int?     @map("productDescriptionId")
-  productCover         Product? @relation(map: "product_cover_fk", name: "cover_image")
-  videoThumbnail       Video?   @relation(map: "video_thumbnail_fk")
+  id               Int           @id @default(autoincrement())
+  url              String
+  alt              String
+  inDescription    Product?      @relation(fields: [inProductDescriptionId], references: [id], map: "product_description_fk", name: "description_images")
+  inProductCover   Product?      @relation(map: "product_cover_fk", name: "cover_image")
+  inVideoThumbnail Video?        @relation(map: "video_thumbnail_fk")
+  inFeaturedTag    FeaturedTag[]
+
+  inProductDescriptionId Int? @map("productDescriptionId")
+}
+
+model Purchase {
+  id            Int         @id @default(autoincrement())
+  paymentId     Int
+  invoiceData   InvoiceData @relation(fields: [invoiceDataId], references: [id])
+  invoiceDataId Int         @unique
+}
+
+model InvoiceData {
+  id         Int    @id
+  customerId Int
+  firstName  String
+  lastName   String
+  address1   String
+  address2   String
+  city       String
+  state      String
+  country    String
+
+  purchase   Purchase?
+  purchaseId Int
+}
+
+model User {
+  id           Int     @id @default(autoincrement())
+  email        String
+  passwordHash String
+  isAdmin      Boolean @default(false)
 }
 
 enum VideoSource {
