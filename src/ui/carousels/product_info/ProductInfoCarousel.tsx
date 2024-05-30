@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useId, useMemo, useState } from 'react';
+import React, { useId, useMemo, useState } from 'react';
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 
 import 'swiper/css';
@@ -9,6 +9,8 @@ import 'swiper/css/thumbs';
 import './styles.css'; // Swiper does not allow setting custom class on slides
 
 import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
+import { PiPlayCircleLight } from "react-icons/pi";
+
 import clsx from 'clsx';
 import { ProductDTO } from '@/lib/DTO';
 import Image from 'next/image';
@@ -16,8 +18,7 @@ import VideoPlayer from '../../video/VideoPlayer';
 import SwiperRightButton from '../SwiperRightButton';
 import SwiperLeftButton from '../SwiperLeftButton';
 
-import {useWindowSize} from '@uidotdev/usehooks';
-
+import { useWindowSize } from '@uidotdev/usehooks';
 import resolveConfig from 'tailwindcss/resolveConfig';
 import taiwindConfig from '@/../tailwind.config';
 const tailwindConfig = resolveConfig(taiwindConfig)
@@ -30,20 +31,20 @@ export default function ProductInfoCarousel({ className, product }: { className?
   const [initialized, setInitialized] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
   const [slideCount, setSlideCount] = useState(0);
-  
-  const {width} = useWindowSize(); // necessary as Swiper uses absolute positioning
 
-  function getSlidecount(width: number|null) {
-    if(width === null)
+  const { width } = useWindowSize(); // necessary as Swiper uses absolute positioning
+
+  function getSlidecount(width: number | null) {
+    if (width === null)
       return 3;
-    if(width <= Number(tailwindConfig.theme.screens.md.replace('px', '')))
+    if (width <= Number(tailwindConfig.theme.screens.md.replace('px', '')))
       return 3;
     else
       return 5;
   }
 
-  let slidesPerView = useMemo(()=>getSlidecount(width), [width])
-  let autoScrollOffset = useMemo(()=>Math.floor(slidesPerView/2) - 1, [slidesPerView])
+  let slidesPerView = useMemo(() => getSlidecount(width), [width])
+  let autoScrollOffset = useMemo(() => Math.floor(slidesPerView / 2) - 1, [slidesPerView])
 
   function handleInit() {
     setInitialized(true);
@@ -53,7 +54,7 @@ export default function ProductInfoCarousel({ className, product }: { className?
     <div className={clsx("p-2 sm:p-3 lg:p-4 flex flex-col productInfoCarousel", className, { "loading": !initialized })}>
       <div className='flex w-full items-center'>
         <SwiperLeftButton id={`${uniqueId}-swiper-button-prev`} enabled={activeSlide !== 0} className="mr-1" />
-      
+
         <Swiper
           navigation={{
             nextEl: `#${uniqueId}-swiper-button-next`,
@@ -63,7 +64,7 @@ export default function ProductInfoCarousel({ className, product }: { className?
           thumbs={{ swiper: thumbsSwiper, autoScrollOffset: autoScrollOffset }}
           modules={[FreeMode, Navigation, Thumbs]}
           className="rounded-lg overflow-clip w-full border border-slate-600 aspect-video"
-          onSlidesUpdated={(swiper) => {setSlideCount(swiper.slides.length)}}
+          onSlidesUpdated={(swiper) => { setSlideCount(swiper.slides.length) }}
           onActiveIndexChange={(swiper) => setActiveSlide(swiper.activeIndex)}
           noSwiping
           noSwipingClass='no-swipe'
@@ -82,7 +83,7 @@ export default function ProductInfoCarousel({ className, product }: { className?
             </SwiperSlide>
           ))}
         </Swiper>
-        <SwiperRightButton id={`${uniqueId}-swiper-button-next`} enabled={activeSlide < slideCount - 1} className='ml-1'/>
+        <SwiperRightButton id={`${uniqueId}-swiper-button-next`} enabled={activeSlide < slideCount - 1} className='ml-1' />
 
       </div>
       <Swiper
@@ -95,11 +96,14 @@ export default function ProductInfoCarousel({ className, product }: { className?
         watchSlidesProgress={true}
         modules={[FreeMode, Navigation, Thumbs]}
         className="w-full mt-3 md:mt-4 thumbsSwiper"
-        >
+      >
         {
           product.videos.map((video) => (
             <SwiperSlide key={video.id} className={clsx({ "!hidden": !initialized }, "border border-borders aspect-video relative")}>
-              <Image src={video.thumbnail.url} alt={"Miniatura: " + video.thumbnail.alt} fill={true} /> {/* TODO add sizes*/}
+              <div className='z-10 absolute aspect-square bg-[rgba(0,0,0,0.5)] rounded-full h-1/2 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
+                <PiPlayCircleLight className='text-slate-300 w-full h-full' />
+              </div>
+              <Image src={video.thumbnail.url} alt={"Miniatura: " + video.thumbnail.alt} fill={true} className='z-0' /> {/* TODO add sizes*/}
             </SwiperSlide>
           ))
         }
