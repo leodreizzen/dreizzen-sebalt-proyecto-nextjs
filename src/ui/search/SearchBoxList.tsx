@@ -16,9 +16,9 @@ export default async function SearchBoxList({
     else products.splice(3, 3);
   
     return (
-        <div className = "w-full mt-2 mb-2">
+        <div className = "w-full mt-2 mb-2 xl:px-6">
             {products.map(product => (
-                <ListCard key={product.id} product = {product} className = "items-center justify-center w-full gap-6"/>
+                <ListCard key={product.id} product = {product} className = "items-center justify-center w-full gap-6 mt-3"/>
             ))}
         </div>
     );
