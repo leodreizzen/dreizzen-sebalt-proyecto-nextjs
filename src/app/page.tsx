@@ -21,7 +21,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col mt-10 px-3 ">
             <h2 className="text-center pb-1 text-large">Géneros destacados</h2>
-            <div className="flex flex-col sm:grid sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-2 lg:gap-4 border border-borders px-8 md:px-10 pb-4 pt-5 rounded-3xl">
+            <div className="flex flex-col sm:grid sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-2 lg:gap-4 border border-borders px-4 sm:px-8 md:px-10 pb-4 pt-5 rounded-3xl">
               {featuredTagsPlaceholders.map((genre) =>
                 <GenreCard key={genre.tag.id} genre={genre} className="w-full self-center max-w-[28rem] sm:w-auto sm:max-w-full" />
               )}

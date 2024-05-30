@@ -5,7 +5,6 @@ import { ProductDTO } from "@/lib/DTO";
 import Image from "next/image";
 import { formatPrice } from "@/util/formatUtils";
 import { useRouter } from "next/navigation";
-import { usePress } from "@react-aria/interactions";
 import { useRef } from "react";
 import { clsx } from "clsx";
 import { Chip } from "@nextui-org/chip";
@@ -13,17 +12,6 @@ import AddToCartButton from "../AddToCartButton";
 import MarqueeOnOverflow from "../MarqueeOnOverflow";
 
 export default function ListCard({ product, className }: { product: ProductDTO, className?: string }) {
-    const ref = useRef<HTMLDivElement>(null);
-
-    const { pressProps } = usePress({
-        ref,
-        onPress: handleCartPress
-    })
-
-    function handleCartPress() {
-        alert("Added to cart")
-    }
-
     const router = useRouter();
 
     function handleCardPress() {

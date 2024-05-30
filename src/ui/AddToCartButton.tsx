@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { usePress } from "@react-aria/interactions";
 import clsx from "clsx";
 import { useHover } from "@uidotdev/usehooks";
+import { useMediaQuery } from "react-responsive";
 import { mergeRefs } from "react-merge-refs";
 import { MdRemoveCircleOutline } from "react-icons/md";
 import { ProductDTO } from "@/lib/DTO";
@@ -14,8 +15,9 @@ export default function AddToCartButton({ className, iconClassName, textClassNam
     const [hoveredRef, isHovered] = useHover();
     const ref = mergeRefs([pressRef, hoveredRef]);
     const { shoppingCart, addToCart, removeFromCart } = useShoppingCartContext();
+    const supportsHover = useMediaQuery({query: "(hover: hover)"})
 
-    const { pressProps } = usePress({
+    const { pressProps, isPressed } = usePress({
         ref: pressRef,
         onPress: handleCartPress
     })
@@ -31,7 +33,7 @@ export default function AddToCartButton({ className, iconClassName, textClassNam
 
     let icon, text, textClass;
     if (productInCart) {
-        if (isHovered) {
+        if (supportsHover && isHovered || isPressed) {
             icon = <MdRemoveCircleOutline className={clsx(iconClassName, "text-foreground bg-w w-6 h-6")} />
             text = "Eliminar del carrito"
             textClass = "text-foreground pr-2"
@@ -51,8 +53,15 @@ export default function AddToCartButton({ className, iconClassName, textClassNam
     return (
         <div
             className={clsx(className, "flex p-[0.4rem] justify-center rounded-lg items-center", {
-                "bg-green-300 hover:bg-green-400 active:bg-green-600": !productInCart,
-                "bg-gray-300 hover:bg-red-700 active:bg-red-600": productInCart,
+                "bg-green-300": !productInCart,
+                "bg-gray-300": productInCart,
+            }, isPressed && { // active has delay respect to isPressed
+                "bg-green-600": !productInCart,
+                "bg-red-600": productInCart
+            },
+             supportsHover && { // avoid issues in touch devices
+                "hover:bg-green-400": !productInCart, 
+                "hover:bg-red-700": productInCart
             }
             )}
             {...pressProps}

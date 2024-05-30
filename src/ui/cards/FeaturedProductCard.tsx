@@ -22,7 +22,7 @@ export default function FeaturedProductCard({ product, className }: { product: P
                     <CardBody className="gap-3 aspect-video">
                         <Image src={product.coverImage.url} alt={product.coverImage.alt} fill={true} />
                     </CardBody>
-                    <CardFooter className="bg-content-1 border-default-600 dark:border-default-100 h-1/6 p-3 @sm:p-4 @md:p-5">
+                    <CardFooter className="bg-content-1 border-default-600 dark:border-default-100 h-1/6 p-3 px-5">
                         <div className="flex flex-grow gap-2 items-center min-w-0 mr-1">
                             <div className="flex flex-col justify-start items-start min-w-0 flex-grow">
                                 <div className="flex flex-wrap gap-2 h-[30px] overflow-y-hidden mt-1 flex-grow">
@@ -32,7 +32,7 @@ export default function FeaturedProductCard({ product, className }: { product: P
                                 </div>
                                 <div className="w-full oveflow-clip flex-grow @2xl:mt-1">
                                     <MarqueeOnOverflow className="w-full" direction="horizontal" animation={["animate-marqueeX", "animate-marqueeX2"]}>
-                                        <p className="text-white font-bold @xl:text-large @2xl:text-4xl text-start text-nowrap mx-1 pb-1">{product.name}</p>
+                                        <p className="text-white font-bold text-large @sm:text-xl @md:text-2xl @xl:text-3xl text-start text-nowrap mx-1 pb-[0.1rem]">{product.name}</p>
                                     </MarqueeOnOverflow>
                                 </div>
                             </div>

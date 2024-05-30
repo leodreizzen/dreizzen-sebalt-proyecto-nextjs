@@ -47,7 +47,7 @@ export default function Page({ params }: { params: { id: string } }) {
                     </div>
                 </div>
             </div>
-            <div className="mt-4 border border-borders w-full md:w-4/6 flex justify-between items-center p-3 rounded-lg">
+            <div className="mt-4 border border-borders w-full md:w-4/6 flex max-sm:flex-col max-sm:gap-2 justify-between items-center p-3 rounded-lg">
                 <span>Comprar <strong>{product.name}</strong></span>
                 <div className="flex flex-shrink-0 flex-grow items-center justify-end">
                     <p className="text-large pr-3">{formatPrice(product.currentPrice_cents)}</p>
