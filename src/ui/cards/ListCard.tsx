@@ -35,7 +35,7 @@ export default function ListCard({ product, className }: { product: ProductDTO, 
                             fill
                         />
                     </div>
-                    <div className="flex-grow ml-2 min-w-0 grid grid-cols-[1fr_auto] grid-rows-[auto_min-content_min-content] grid-flow-col p-1 @xs:p-0 @xd:ml-0 @xs:mr-2">
+                    <div className="flex-grow ml-2 min-w-0 grid grid-cols-[1fr_auto] grid-rows-[1fr_min-content_min-content] grid-flow-col p-1 @xs:p-0 @xd:ml-0 @xs:mr-2">
                         <div className="self-end flex flex-wrap overflow-clip gap-x-2 overflow-y-hidden h-5 mb-1 justify-center @xs:justify-start @xs:row-span-2">
                             <Chip size="sm" color="primary" className="text-white" classNames={{ base: "py-0 h-5", content: "text-tiny" }}>Deportes</Chip>
                             <Chip size="sm" color="primary" className="text-white" classNames={{ base: "py-0 h-5", content: "text-tiny" }}>Futbol</Chip>
