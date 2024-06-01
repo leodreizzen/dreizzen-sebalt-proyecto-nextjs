@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={clsx(inter.className, "min-h-screen min-w-screen bg-background flex flex-col text-foreground")}>
         <ShoppingCartContextWrapper>
-          <NextUIProvider>
+          <NextUIProvider className="min-h-screen flex flex-col">
             <Suspense fallback={<div className="bg-navbar-bg h-16 w-full" />}>
               <Navbar className="w-full" />
             </Suspense>
