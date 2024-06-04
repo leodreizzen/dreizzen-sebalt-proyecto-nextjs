@@ -1,121 +1,127 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model Product {
-  id                  Int          @id @default(autoincrement())
-  name                String       @unique
+  id                  Int               @id @default(autoincrement())
+  name                String            @unique
   originalPrice_cents Int
   currentPrice_cents  Int
-  tags                ProductTag[]
   description         String
   shortDescription    String?
-  descriptionImages   Image[]      @relation(name: "description_images")
-  coverImage          Image        @relation(name: "cover_image", fields: [coverImageId], references: [id], map: "cover_image_fk")
-  videos              Video[]
   launchDate          DateTime
-
-  developer Company @relation(name: "developer", references: [id], map: "developer_company_fk", fields: [developerId])
-  publisher Company @relation(name: "publisher", references: [id], map: "publisher_company_fk", fields: [publisherId])
-
-  available Boolean @default(true)
-
-  featured     FeaturedProduct?
-  developerId  Int
-  publisherId  Int
-  coverImageId Int              @unique
+  coverImageId        Int               @unique
+  available           Boolean           @default(true)
+  featured            FeaturedProduct?
+  descriptionImages   Image[]           @relation("description_images")
+  coverImage          Image             @relation("cover_image", fields: [coverImageId], references: [id], map: "cover_image_fk")
+  developers          Company[]         @relation("developer")
+  publishers          Company[]         @relation("publisher")
+  sale                ProductSale?
+  tags                ProductTag[]
+  purchases           PurchaseItem[]
+  videos              Video[]
 }
 
 model Company {
   id        Int       @id @default(autoincrement())
   name      String    @unique
-  published Product[] @relation(name: "publisher")
-  developed Product[] @relation(name: "developer")
+  developed Product[] @relation("developer")
+  published Product[] @relation("publisher")
+}
+
+model ProductSale {
+  id                  Int     @id @default(autoincrement())
+  productId           Int     @unique
+  originalPrice_cents Int
+  currentPrice_cents  Int
+  isFeatured          Boolean
+  product             Product @relation(fields: [productId], references: [id])
 }
 
 model ProductTag {
-  product Product @relation(fields: [productId], references: [id])
-  tag     Tag     @relation(fields: [tagId], references: [id])
-  order   Int     @unique
-
+  order     Int
   tagId     Int
   productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  tag       Tag     @relation(fields: [tagId], references: [id])
 
   @@id([productId, tagId])
+  @@unique([productId, order])
 }
 
 model Tag {
-  id         Int     @id @default(autoincrement())
-  name       String  @unique
-  inDropdown Boolean
-
-  productTags ProductTag[]
+  id          Int          @id @default(autoincrement())
+  inDropdown  Boolean
+  name        String       @unique
   featured    FeaturedTag?
+  productTags ProductTag[]
 }
 
 model FeaturedTag {
-  tag   Tag   @relation(fields: [tagId], references: [id])
-  order Int   @unique
-  image Image @relation(fields: [imageId], references: [id])
-
-  tagId   Int @id
+  order   Int   @unique
+  tagId   Int   @id
   imageId Int
+  image   Image @relation(fields: [imageId], references: [id])
+  tag     Tag   @relation(fields: [tagId], references: [id])
 }
 
 model FeaturedProduct {
-  product   Product @relation(fields: [productId], references: [id])
   productId Int     @id
   order     Int
+  product   Product @relation(fields: [productId], references: [id])
 }
 
 model Video {
-  id       Int         @id @default(autoincrement())
-  source   VideoSource
-  sourceId String
-  alt      String
-
-  product   Product? @relation(fields: [productId], references: [id])
-  thumbnail Image?   @relation(fields: [thumbnailId], references: [id])
-
+  id          Int         @id @default(autoincrement())
   productId   Int?
-  thumbnailId Int? @unique
+  source      VideoSource
+  alt         String
+  thumbnailId Int?        @unique
+  sourceId    String
+  product     Product?    @relation(fields: [productId], references: [id])
+  thumbnail   Image?      @relation(fields: [thumbnailId], references: [id])
 
   @@unique([source, sourceId])
 }
 
 model Image {
-  id               Int           @id @default(autoincrement())
-  url              String
-  alt              String
-  inDescription    Product?      @relation(fields: [inProductDescriptionId], references: [id], map: "product_description_fk", name: "description_images")
-  inProductCover   Product?      @relation(map: "product_cover_fk", name: "cover_image")
-  inVideoThumbnail Video?        @relation(map: "video_thumbnail_fk")
-  inFeaturedTag    FeaturedTag[]
+  id                     Int           @id @default(autoincrement())
+  url                    String
+  alt                    String
+  inProductDescriptionId Int?          @map("productDescriptionId")
+  inFeaturedTag          FeaturedTag[]
+  inDescription          Product?      @relation("description_images", fields: [inProductDescriptionId], references: [id], map: "product_description_fk")
+  inProductCover         Product?      @relation("cover_image")
+  inVideoThumbnail       Video?
+}
 
-  inProductDescriptionId Int? @map("productDescriptionId")
+model PurchaseItem {
+  originalPrice_cents Int
+  currentPrice_cents  Int
+  purchaseId          Int      
+  productId           Int
+  product             Product  @relation(fields: [productId], references: [id])
+  purchase            Purchase @relation(fields: [purchaseId], references: [id])
+  @@id([productId, purchaseId])
 }
 
 model Purchase {
-  id            Int         @id @default(autoincrement())
+  id            Int              @id @default(autoincrement())
   paymentId     Int
-  invoiceData   InvoiceData @relation(fields: [invoiceDataId], references: [id])
-  invoiceDataId Int         @unique
+  invoiceDataId Int              @unique
+  invoiceData   InvoiceData      @relation(fields: [invoiceDataId], references: [id])
+  products      PurchaseItem[]
 }
 
 model InvoiceData {
-  id         Int    @id
+  id         Int       @id @default(autoincrement())
   customerId Int
   firstName  String
   lastName   String
@@ -124,9 +130,8 @@ model InvoiceData {
   city       String
   state      String
   country    String
-
+  email      String
   purchase   Purchase?
-  purchaseId Int
 }
 
 model User {

@@ -29,6 +29,7 @@
     "@tailwindcss/container-queries": "^0.1.1",
     "@uidotdev/usehooks": "^2.4.1",
     "@vercel/kv": "^2.0.0",
+    "bcrypt": "^5.1.1",
     "clsx": "^2.1.1",
     "framer-motion": "^11.2.4",
     "next": "14.2.3",
@@ -45,7 +46,7 @@
     "use-overflow": "^1.2.0"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^20.14.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
@@ -53,6 +54,10 @@
     "postcss": "^8",
     "prisma": "^5.14.0",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }
