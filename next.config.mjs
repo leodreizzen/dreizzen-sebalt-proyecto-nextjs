@@ -9,8 +9,8 @@ const nextConfig = {
       ]
     },
     experimental: {
-      taint: true,
-    },
+        taint: false // This is the default, but taint: true breaks nextui dropdowns/modals
+    }
   }
     ;
 export default nextConfig;
