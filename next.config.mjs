@@ -6,7 +6,11 @@ const nextConfig = {
           protocol: "https",
           hostname: "**",
         },
-      ],
-    }}
+      ]
+    },
+    experimental: {
+      taint: true,
+    },
+  }
     ;
 export default nextConfig;
