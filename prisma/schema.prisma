@@ -144,4 +144,5 @@ model User {
 enum VideoSource {
   YOUTUBE
   CLOUDINARY
+  STEAMCDN
 }

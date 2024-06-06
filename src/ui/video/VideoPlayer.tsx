@@ -1,5 +1,5 @@
 "use client"
-import { VideoDTO, VideoSource } from "@/lib/DTO";
+import {VideoSource} from '@prisma/client'
 import { ReactNode, useEffect, useState } from "react";
 import getCloudinary from "../cloudinary";
 import ReactPlayer from "react-player";
@@ -10,14 +10,17 @@ import { VideoWithThumbnail } from "@/lib/definitions";
 export default function VideoPlayer({video, active=true, muted, autoplay, className}: {video: VideoWithThumbnail, active?:boolean, className?: string | undefined, muted?: boolean, autoplay?: boolean}): ReactNode{
     const [playing, setPlaying] = useState(false);
     let url
-    /*switch(video.source){
+    switch(video.source){
         case VideoSource.YOUTUBE:
             url = `https://www.youtube.com/watch?v=${video.sourceId}`;
             break;
         case VideoSource.CLOUDINARY:
             url = getCloudinary().video(video.sourceId).toURL();
             break;
-    }*/
+        case VideoSource.STEAMCDN:
+            url = `https://steamcdn-a.akamaihd.net/steam/apps/${video.sourceId}/movie_max.mp4`
+
+    }
     
     function handlePlay(){
         setPlaying(true);
