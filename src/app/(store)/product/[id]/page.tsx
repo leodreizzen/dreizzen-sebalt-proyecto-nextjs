@@ -1,5 +1,4 @@
 import { fetchProduct } from "@/lib/data";
-import { productPlaceholders, tagPlaceholders } from "@/lib/placeholders";
 import AddToCartButton from "@/ui/AddToCartButton";
 import FadeOnOverflowY from "@/ui/FadeOnOverflowY";
 import MarqueeOnOverflow from "@/ui/MarqueeOnOverflow";

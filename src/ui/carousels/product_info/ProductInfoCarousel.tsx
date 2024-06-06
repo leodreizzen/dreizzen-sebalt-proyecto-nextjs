@@ -12,7 +12,6 @@ import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
 import { PiPlayCircleLight } from "react-icons/pi";
 
 import clsx from 'clsx';
-import { ProductDTO } from '@/lib/DTO';
 import Image from 'next/image';
 import VideoPlayer from '../../video/VideoPlayer';
 import SwiperRightButton from '../SwiperRightButton';
@@ -21,7 +20,6 @@ import SwiperLeftButton from '../SwiperLeftButton';
 import { useWindowSize } from '@uidotdev/usehooks';
 import resolveConfig from 'tailwindcss/resolveConfig';
 import taiwindConfig from '@/../tailwind.config';
-import { Product } from '@prisma/client';
 import { ProductForDetail } from '@/lib/definitions';
 const tailwindConfig = resolveConfig(taiwindConfig)
 

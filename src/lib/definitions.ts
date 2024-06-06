@@ -1,5 +1,9 @@
 import { Company, Image, Product, Tag, Video, Purchase, InvoiceData, ProductTag, FeaturedTag, ProductSale, VideoSource } from "@prisma/client";
 
+export function removeReadOnlyForNumArray(arr: readonly number[]): number[] {
+    return arr as number[]
+}
+
 export type ShoppingCart = number[];
 
 export interface ProductWithTags extends Product{

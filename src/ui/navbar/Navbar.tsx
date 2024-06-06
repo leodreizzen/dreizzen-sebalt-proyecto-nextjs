@@ -3,7 +3,7 @@ import { Navbar as NextUINavbar, NavbarBrand, NavbarContent, NavbarItem, NavbarM
 import { Link as NextUILink } from "@nextui-org/link";
 import Link from "next/link";
 import { Button } from "@nextui-org/button";
-import React, { ReactNode, Suspense, useState } from "react";
+import React, { ReactNode, useState } from "react";
 import {
   Dropdown,
   DropdownTrigger,
@@ -13,10 +13,10 @@ import {
 import clsx from "clsx";
 import SearchBar from "./SearchBar";
 import { usePathname, useSearchParams } from "next/navigation";
-import ShoppingCartButton from "./ShoppingCartButton";
 import { useRouter } from "next/navigation";
-import { tagPlaceholders } from "@/lib/placeholders";
-import ShoppingCartButtonWrapper from "./ShopppingCartButtonWrapper";
+import ShoppingCartButtonWrapper from "../ShopppingCartButtonWrapper";
+import {fetchDropdownTags, fetchFeaturedTags} from "@/lib/data";
+import {Tag} from "@prisma/client";
 
 type NormalMenuItem = {
   name: string;
@@ -40,13 +40,13 @@ type ChildItem = {
 
 type MenuItem = NormalMenuItem | DropdownMenuItem;
 
-export default function Navbar({ className }: { className?: string }) {
+export default function Navbar({ className, dropdownTags }: { className?: string, dropdownTags: Tag[] }) {
   const currentPathName = usePathname()
   const currentParams = useSearchParams()
   const [searchOpen, setSearchOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const genreLinks = tagPlaceholders.filter(tag => tag.inDropdown).map(tag => ({
+  const genreLinks = dropdownTags.map(tag => ({
     name: tag.name,
     extraURL: tag.id.toString(),
   }))

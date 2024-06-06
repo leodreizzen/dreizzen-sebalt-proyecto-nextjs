@@ -1,6 +1,16 @@
 import "server-only";
 import prisma from './prisma';
-import { FeaturedProductWithProduct, FeaturedSaleWithProduct, FeaturedTagWithTagAndImage, ProductForDetail, ProductWithTagsAndCoverImage } from "./definitions";
+import {
+    FeaturedProductWithProduct,
+    FeaturedSaleWithProduct,
+    FeaturedTagWithTagAndImage,
+    ProductForDetail,
+    ProductWithCoverImage,
+    ProductWithTagsAndCoverImage, removeReadOnlyForNumArray
+} from "./definitions";
+import {getCart} from "@/lib/session-data";
+import {boolean} from "zod";
+import {Tag} from "@prisma/client";
 
 const TOTAL_ITEMS_PER_PAGE = 6;
 
@@ -40,6 +50,15 @@ export async function fetchFeaturedTags(){
             }
         }
     );
+    return data
+}
+
+export async function fetchDropdownTags(): Promise<Tag[]>{
+    const data = await prisma.tag.findMany({
+        where: {
+            inDropdown: true
+        }
+    });
     return data
 }
 
@@ -102,6 +121,45 @@ export async function fetchByGenre(tagId: number, page: number) {
         take: TOTAL_ITEMS_PER_PAGE
     })
     return data
+}
+
+export async function fetchCartProducts(): Promise<ProductWithCoverImage[]> {
+    const cartIds = await getCart()
+    const data = await prisma.product.findMany({
+        where: {
+            id: {
+                in: removeReadOnlyForNumArray(cartIds)
+            }
+        },
+        include: {
+            coverImage: true,
+            tags: {
+                include: {
+                    tag: true
+                }
+            }
+        }
+    })
+    return data
+}
+
+export async function fetchValidProducts(ids: number[]): Promise<number[]> {
+    const data = await prisma.product.findMany({
+        where: {
+            id: {
+                in: removeReadOnlyForNumArray(ids)
+            }
+        }
+    })
+    return data.map(product => product.id)
+}
+
+export async function validateProduct(id: number): Promise<boolean>{
+    return await prisma.product.findUnique({
+        where: {
+            id: id
+        }
+    }) !== null
 }
 
 export async function fetchTagName(id: number) {

@@ -1,11 +1,9 @@
 "use client"
 
 import { Card, CardBody, CardFooter } from "@nextui-org/card";
-import { ProductDTO } from "@/lib/DTO";
 import Image from "next/image";
 import { formatPrice } from "@/util/formatUtils";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
 import { clsx } from "clsx";
 import { Chip } from "@nextui-org/chip";
 import AddToCartButton from "../AddToCartButton";

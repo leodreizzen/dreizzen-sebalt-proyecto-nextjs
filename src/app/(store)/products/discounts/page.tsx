@@ -1,5 +1,4 @@
-import { fetchFeaturedSales, fetchSalePages, fetchSearch, fetchSearchPages, fetchTags } from "@/lib/data";
-import { productPlaceholders, tagPlaceholders } from "@/lib/placeholders";
+import { fetchFeaturedSales, fetchSearchPages, fetchTags } from "@/lib/data";
 import FeaturedProductCard from "@/ui/cards/FeaturedProductCard";
 import Pagination from "@/ui/pagination/pagination";
 import SearchBoxBar from "@/ui/search/SearchBoxBar";

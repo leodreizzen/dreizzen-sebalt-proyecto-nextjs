@@ -1,4 +1,3 @@
-import { productPlaceholders, tagPlaceholders } from "@/lib/placeholders";
 import SearchBoxBar from "@/ui/search/SearchBoxBar";
 import SearchBoxFilters from "@/ui/search/SearchBoxFilters";
 import SearchBoxList from "@/ui/search/SearchBoxList";

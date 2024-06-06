@@ -1,11 +1,9 @@
 import { Chip } from "@nextui-org/chip";
-import { SearchParamsContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import { TagDto } from "@/lib/DTO";
 import { FaPlus } from "react-icons/fa";
+import {Tag} from "@prisma/client";
 
-export default function SearchBoxFilterChip({className, tag, selected}: {className?: string, tag: TagDto, selected: boolean}) {
+export default function SearchBoxFilterChip({className, tag, selected}: {className?: string, tag: Tag, selected: boolean}) {
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();

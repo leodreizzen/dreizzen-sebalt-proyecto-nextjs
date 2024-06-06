@@ -4,7 +4,6 @@ import {Card, CardFooter} from "@nextui-org/card";
 import {Image} from "@nextui-org/image";
 import NextImage from "next/image";
 import clsx from "clsx";
-import { FeaturedTagDTO } from "@/lib/DTO";
 import { useRouter } from "next/navigation";
 import { FeaturedTagWithTagAndImage } from "@/lib/definitions";
 

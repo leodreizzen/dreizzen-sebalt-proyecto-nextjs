@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import clsx from "clsx";
 import { NextUIProvider } from "@nextui-org/system";
-import Navbar from "@/ui/Navbar";
+import Navbar from "@/ui/navbar/NavbarWrapper";
 import { Suspense } from "react";
 import ShoppingCartContextWrapper from "@/context/ShoppingCartContextWrapper";
 const inter = Inter({ subsets: ["latin"] });

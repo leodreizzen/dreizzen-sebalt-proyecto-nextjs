@@ -1,13 +1,13 @@
 'use client';
 
-import  { TagDto } from "../../lib/DTO";
 import SearchBoxFilterChip from "./SearchBoxFilterChip";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { Slider } from "@nextui-org/slider";
 import { useDebouncedCallback } from "use-debounce";
+import {Tag} from "@prisma/client";
 
 
-export default function SearchBoxFilters({ genres } : { genres: TagDto[] }) {
+export default function SearchBoxFilters({ genres } : { genres: Tag[] }) {
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();

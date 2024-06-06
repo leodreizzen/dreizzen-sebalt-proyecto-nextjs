@@ -1,6 +1,4 @@
 import { removeFromCart } from "@/lib/actions";
-import { productPlaceholders } from "@/lib/placeholders"
-import { getCart } from "@/lib/session-data";
 import MarqueeOnOverflow from "@/ui/MarqueeOnOverflow";
 import { formatPrice } from "@/util/formatUtils"
 import { Button } from "@nextui-org/button";
@@ -8,15 +6,13 @@ import { redirect } from "next/navigation";
 import Image from "next/image"
 import Link from "next/link";
 import { MdRemoveCircleOutline } from "react-icons/md";
-import { ProductDTO } from "@/lib/DTO";
 import clsx from "clsx";
 import { BsCartX } from "react-icons/bs";
+import {fetchCartProducts} from "@/lib/data";
+import {ProductWithCoverImage} from "@/lib/definitions";
 
 export default async function Page({ }) {
-    const productIds = await getCart();
-    const products = productPlaceholders.filter(product => productIds.includes(product.id));
-
-
+    const products = await fetchCartProducts()
     return (
         <main className="flex flex-col items-center min-h-full">
             <h1 className="text-center text-3xl font-bold my-3 h-full">Carrito</h1>
@@ -30,7 +26,7 @@ export default async function Page({ }) {
     )
 }
 
-function CartWithItemsPage({ products, className }: { products: ProductDTO[], className?: String }) {
+function CartWithItemsPage({ products, className }: { products: ProductWithCoverImage[], className?: String }) {
     const total = products.reduce((acc, product) => acc + product.currentPrice_cents, 0);
 
     async function handleCartRemove(productId: number) {

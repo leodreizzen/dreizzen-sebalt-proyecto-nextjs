@@ -1,5 +1,5 @@
 import React, {Suspense} from "react";
-import Navbar from "@/ui/Navbar";
+import Navbar from "@/ui/navbar/NavbarWrapper";
 
 export default function StoreLayout({children}: { children: React.ReactNode} ) {
     return (

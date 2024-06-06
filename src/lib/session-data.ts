@@ -1,31 +1,41 @@
 import 'server-only';
-import { get, set } from './session-store';
-import { ShoppingCart } from './definitions';
-import { productPlaceholders } from './placeholders';
-import { revalidatePath } from 'next/cache';
+import {get, set} from './session-store';
+import {ShoppingCart} from './definitions';
+import {revalidatePath} from 'next/cache';
+import {fetchValidProducts, validateProduct} from "@/lib/data";
 
 export async function getCart(): Promise<Readonly<ShoppingCart>> {
-    const storedCart = await get('cart');
+    const storedCart = await get('cart') as number[] | null;
     if (!storedCart) {
         return [];
     }
 
-    const validProductIds = (storedCart as number[]).filter(p => productPlaceholders.map(product => product.id).includes(p));
-    const invalidProductIds = (storedCart as number[]).filter(p => productPlaceholders.map(product => product.id).includes(p));
+    const validProductIds = await fetchValidProducts(storedCart)
+    let allValid = true;
 
-    if (invalidProductIds.length > 0) {
+    if (validProductIds.length != storedCart.length)
+        allValid = false;
+    else {
+        for (let i = 0; i < storedCart.length; i++)
+            if (storedCart[i] != validProductIds[i])
+                allValid = false;
+
+    }
+
+    if (!allValid) {
         await set('cart', validProductIds);
         revalidatePath('/', "layout")
     }
 
     return validProductIds;
 }
+
 export async function addToSessionCart(productId: number): Promise<ShoppingCart> {
     let cart = await get('cart') as number[] | null;
     if (!cart) {
         cart = [];
     }
-    if (!cart.includes(productId) && productPlaceholders.map(product => product.id).includes(productId)) {
+    if (!cart.includes(productId) && await validateProduct(productId)) {
         cart.push(productId);
         await set('cart', cart);
     }

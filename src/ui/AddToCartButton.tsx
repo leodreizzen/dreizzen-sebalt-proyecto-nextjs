@@ -8,7 +8,6 @@ import { useHover } from "@uidotdev/usehooks";
 import { useMediaQuery } from "react-responsive";
 import { mergeRefs } from "react-merge-refs";
 import { MdRemoveCircleOutline } from "react-icons/md";
-import { ProductDTO } from "@/lib/DTO";
 import { useShoppingCartContext } from "@/context/ShoppingCartContext";
 import { Product } from "@prisma/client";
 export default function AddToCartButton({ className, iconClassName, textClassName, product }: { className?: string, iconClassName?: string, textClassName?: string, product: Product }) {

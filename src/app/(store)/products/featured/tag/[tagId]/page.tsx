@@ -1,8 +1,6 @@
 import { fetchByGenre, fetchGenrePages, fetchTagName } from "@/lib/data";
-import { tagPlaceholders } from "@/lib/placeholders";
 import FeaturedBoxList from "@/ui/featuredlist/FeaturedBoxList";
 import Pagination from "@/ui/pagination/pagination";
-import { number } from "zod";
 
 export default async function Page({ params: { tagId }, searchParams }: { params: { tagId: string }, searchParams: { page?: string } }) {
 

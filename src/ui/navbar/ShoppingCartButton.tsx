@@ -1,6 +1,6 @@
 import { Button } from "@nextui-org/button"
 import Link from "next/link"
-import ShoppingCartIcon from "./icons/ShoppingCartIcon";
+import ShoppingCartIcon from "../icons/ShoppingCartIcon";
 import { Badge } from "@nextui-org/badge";
 import clsx from "clsx";
 import { ReactNode } from "react";

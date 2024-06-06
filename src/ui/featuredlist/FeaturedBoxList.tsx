@@ -1,7 +1,4 @@
-import { fetchByGenre } from "@/lib/data";
 import FeaturedProductCard from "../cards/FeaturedProductCard";
-import ListCard from "../cards/ListCard";
-import { productPlaceholders } from "@/lib/placeholders";
 import { ProductWithTagsAndCoverImage } from "@/lib/definitions";
 
 export default function FeaturedBoxList({

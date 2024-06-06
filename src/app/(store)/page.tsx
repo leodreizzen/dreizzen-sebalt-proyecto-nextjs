@@ -1,4 +1,3 @@
-import { featuredTagsPlaceholders, productPlaceholders } from "@/lib/placeholders";
 import FeaturedProductsCarousel from "@/ui/carousels/featured/FeaturedProductsCarousel";
 import GenreCard from "@/ui/cards/GenreCard";
 import ListCard from "@/ui/cards/ListCard";
