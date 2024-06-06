@@ -21,16 +21,20 @@ import SwiperLeftButton from '../SwiperLeftButton';
 import { useWindowSize } from '@uidotdev/usehooks';
 import resolveConfig from 'tailwindcss/resolveConfig';
 import taiwindConfig from '@/../tailwind.config';
+import { Product } from '@prisma/client';
+import { ProductForDetail } from '@/lib/definitions';
 const tailwindConfig = resolveConfig(taiwindConfig)
 
 
-export default function ProductInfoCarousel({ className, product }: { className?: string, product: ProductDTO }) {
+export default function ProductInfoCarousel({ className, product }: { className?: string, product: ProductForDetail }) {
   const uniqueId = useId().replaceAll(":", "")
 
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
   const [initialized, setInitialized] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
   const [slideCount, setSlideCount] = useState(0);
+
+  const genericThumbnail = "https://static-00.iconduck.com/assets.00/image-x-generic-symbolic-icon-512x512-39rql7k5.png"
 
   const { width } = useWindowSize(); // necessary as Swiper uses absolute positioning
 
@@ -103,7 +107,7 @@ export default function ProductInfoCarousel({ className, product }: { className?
               <div className='z-10 absolute aspect-square bg-[rgba(0,0,0,0.5)] rounded-full h-1/2 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
                 <PiPlayCircleLight className='text-slate-300 w-full h-full' />
               </div>
-              <Image src={video.thumbnail.url} alt={"Miniatura: " + video.thumbnail.alt} fill={true} className='z-0' /> {/* TODO add sizes*/}
+              <Image src={video.thumbnail?.url || genericThumbnail} alt={"Miniatura: " + video.thumbnail?.alt || "Generic thumbnail."} fill={true} className='z-0' /> {/* TODO add sizes*/}
             </SwiperSlide>
           ))
         }

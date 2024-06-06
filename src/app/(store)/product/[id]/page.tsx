@@ -1,3 +1,4 @@
+import { fetchProduct } from "@/lib/data";
 import { productPlaceholders, tagPlaceholders } from "@/lib/placeholders";
 import AddToCartButton from "@/ui/AddToCartButton";
 import FadeOnOverflowY from "@/ui/FadeOnOverflowY";
@@ -8,10 +9,10 @@ import { Chip } from "@nextui-org/chip";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
-export default function Page({ params }: { params: { id: string } }) {
+export default async function Page({ params }: { params: { id: string } }) {
     const { id: strId } = params;
     const id = parseInt(strId);
-    const product = productPlaceholders.find(product => product.id === id);
+    const product = await fetchProduct(id);
     if (!product)
         notFound();
     const textParagraphs = product.description.split("\n");
@@ -40,7 +41,7 @@ export default function Page({ params }: { params: { id: string } }) {
                         <MarqueeOnOverflow direction="horizontal" animation={["animate-marqueeSlowX", "animate-marqueeSlowX2"]} className="w-full justify-center">
                             <div className="flex gap-2 pb-4 pl-2 flex-nowrap items-center justify-center">
                                 {product.tags.map(tag => (
-                                    <Chip key={tag.id} size="md" color="primary" className="text-white" >{tag.name}</Chip>
+                                    <Chip key={tag.tag.id} size="md" color="primary" className="text-white" >{tag.tag.name}</Chip>
                                 ))}
                             </div>
                         </MarqueeOnOverflow>

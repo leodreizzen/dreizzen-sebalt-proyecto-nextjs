@@ -1,4 +1,4 @@
-import { Company, Image, Product, Tag, Video, Purchase, InvoiceData, ProductTag, FeaturedTag, ProductSale } from "@prisma/client";
+import { Company, Image, Product, Tag, Video, Purchase, InvoiceData, ProductTag, FeaturedTag, ProductSale, VideoSource } from "@prisma/client";
 
 export type ShoppingCart = number[];
 
@@ -24,6 +24,15 @@ export interface FeaturedTagWithTagAndImage extends FeaturedTag{
 }
 
 export interface ProductWithTagsAndCoverImage extends ProductWithTags, ProductWithCoverImage{}
+
+export interface ProductForDetail extends ProductWithTagsAndCoverImage{
+    videos: VideoWithThumbnail[],
+    descriptionImages: Image[]
+}
+
+export interface VideoWithThumbnail extends Video{
+    thumbnail: Image | null
+}
 
 export interface FeaturedProductWithProduct{
     product: ProductWithTagsAndCoverImage

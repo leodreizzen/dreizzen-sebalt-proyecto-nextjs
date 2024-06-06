@@ -1,6 +1,6 @@
 import "server-only";
 import prisma from './prisma';
-import { FeaturedProductWithProduct, FeaturedProductWithProductAndOrder, FeaturedSaleWithProduct, FeaturedTagWithTagAndImage, ProductWithCoverImage, ProductWithTagsAndCoverImage } from "./definitions";
+import { FeaturedProductWithProduct, FeaturedSaleWithProduct, FeaturedTagWithTagAndImage, ProductForDetail, ProductWithTagsAndCoverImage } from "./definitions";
 
 const TOTAL_ITEMS_PER_PAGE = 6;
 
@@ -261,4 +261,27 @@ export async function fetchMostSoldPages() {
 
     const filteredData = data.filter((product) => product._count.purchases > 1)
     return Math.ceil(filteredData.length / TOTAL_ITEMS_PER_PAGE)
+}
+
+export async function fetchProduct(id: number) {
+    const data: ProductForDetail | null = await prisma.product.findUnique({
+        where: {
+            id: id
+        },
+        include: {
+            coverImage: true,
+            tags: {
+                include: {
+                    tag: true
+                }
+            },
+            videos: {
+                include: {
+                    thumbnail: true,
+                }
+            },
+            descriptionImages: true
+        }
+    })
+    return data
 }
