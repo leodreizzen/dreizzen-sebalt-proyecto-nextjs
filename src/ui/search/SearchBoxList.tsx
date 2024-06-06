@@ -1,20 +1,21 @@
-import { productPlaceholders } from "@/lib/placeholders";
+import { fetchSearch } from "@/lib/data";
 import ListCard from "@/ui/cards/ListCard";
 
 export default async function SearchBoxList({
     query,
+    filters,
+    priceRange,
     currentPage,
+    onSale,
   }: {
     query: string;
+    filters: number[];
+    priceRange: number[];
+    onSale: boolean;
     currentPage: number;
   }) {
-    /* Cambiar por el fetch de la base de datos */
-    let products = productPlaceholders.concat(productPlaceholders).concat(productPlaceholders);
-    products = products.map(product => ({ ...product }));
-    products.forEach((product, index) => product.id = index + 1);
-    if (currentPage === 1) products.splice(0, 3);
-    else products.splice(3, 3);
-  
+    const products = await fetchSearch(query, currentPage, filters, priceRange, onSale);
+
     return (
         <div className = "w-full mt-2 mb-2 xl:px-6">
             {products.map(product => (

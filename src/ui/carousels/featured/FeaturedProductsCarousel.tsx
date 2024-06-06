@@ -11,8 +11,9 @@ import FeaturedProductCard from "@/ui/cards/FeaturedProductCard";
 import { useId } from "react";
 import SwiperLeftButton from "../SwiperLeftButton";
 import SwiperRightButton from "../SwiperRightButton";
+import { FeaturedProductWithProduct } from "@/lib/definitions";
 
-export default function FeaturedProductsCarousel({ className, products }: { className?: string, products: ProductDTO[] }) {
+export default function FeaturedProductsCarousel({ className, products }: { className?: string, products: FeaturedProductWithProduct[] }) {
     const uniqueId = useId().replaceAll(":", "")
     return (
         <div className={clsx(className, "flex flex-col")}>
@@ -54,8 +55,8 @@ export default function FeaturedProductsCarousel({ className, products }: { clas
                     wrapperClass="h-full w-full"
                 >
                     {products.map((product) => (
-                        <SwiperSlide key={product.id}>
-                            <FeaturedProductCard product={product} className="h-full w-full" />
+                        <SwiperSlide key={product.product.id}>
+                            <FeaturedProductCard product={product.product} className="h-full w-full" />
                         </SwiperSlide>
                     ))
                     }

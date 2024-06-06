@@ -10,8 +10,9 @@ import { clsx } from "clsx";
 import { Chip } from "@nextui-org/chip";
 import AddToCartButton from "../AddToCartButton";
 import MarqueeOnOverflow from "../MarqueeOnOverflow";
+import { ProductWithTagsAndCoverImage } from "@/lib/definitions";
 
-export default function ListCard({ product, className }: { product: ProductDTO, className?: string }) {
+export default function ListCard({ product, className }: { product: ProductWithTagsAndCoverImage, className?: string }) {
     const router = useRouter();
 
     function handleCardPress() {
@@ -37,9 +38,9 @@ export default function ListCard({ product, className }: { product: ProductDTO, 
                     </div>
                     <div className="flex-grow ml-2 min-w-0 grid grid-cols-[1fr_auto] grid-rows-[1fr_min-content_min-content] grid-flow-col p-1 @xs:p-0 @xd:ml-0 @xs:mr-2">
                         <div className="self-end flex flex-wrap overflow-clip gap-x-2 overflow-y-hidden h-5 mb-1 justify-center @xs:justify-start @xs:row-span-2">
-                            <Chip size="sm" color="primary" className="text-white" classNames={{ base: "py-0 h-5", content: "text-tiny" }}>Deportes</Chip>
-                            <Chip size="sm" color="primary" className="text-white" classNames={{ base: "py-0 h-5", content: "text-tiny" }}>Futbol</Chip>
-                            <Chip size="sm" color="primary" className="text-white" classNames={{ base: "py-0 h-5", content: "text-tiny" }}>Femenino</Chip>
+                            {product.tags.map((tag) => (
+                                <Chip key={tag.order} size="sm" color="primary" className="text-white" classNames={{ base: "py-0 h-5", content: "text-tiny" }}>{tag.tag.name}</Chip>
+                            ))}
                         </div>
                         <MarqueeOnOverflow animation={["animate-marqueeX", "animate-marqueeX2"]} direction="horizontal" className="row-start-2 @xs:row-start-3 justify-center @xs:justify-start @xs:items-center @xs:mr-2">
                             <p className="text-tiny sm:text-medium font-bold text-nowrap">{product.name}</p>

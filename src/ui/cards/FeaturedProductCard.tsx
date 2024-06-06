@@ -3,14 +3,14 @@
 import { Card, CardBody, CardFooter } from "@nextui-org/card";
 import Image from "next/image";
 import { formatPrice } from "@/util/formatUtils";
-import { ProductDTO } from "@/lib/DTO";
 import clsx from "clsx";
 import { Chip } from "@nextui-org/chip";
 import AddToCartButton from "../AddToCartButton";
 import { useRouter } from "next/navigation";
 import MarqueeOnOverflow from "../MarqueeOnOverflow";
+import { FeaturedProductWithProduct, ProductWithCoverImage, ProductWithTagsAndCoverImage } from "@/lib/definitions";
 
-export default function FeaturedProductCard({ product, className }: { product: ProductDTO, className?: string }) {
+export default function FeaturedProductCard({ product, className }: { product: ProductWithTagsAndCoverImage; className?: string }) {
     const router = useRouter();
     function handleCardPress() {
         router.push(`/product/${product.id}`)
@@ -26,9 +26,9 @@ export default function FeaturedProductCard({ product, className }: { product: P
                         <div className="flex flex-grow gap-2 items-center min-w-0 mr-1">
                             <div className="flex flex-col justify-start items-start min-w-0 flex-grow">
                                 <div className="flex flex-wrap gap-2 h-[30px] overflow-y-hidden mt-1 flex-grow">
-                                    <Chip size="md" color="primary" className="text-white text-tiny @2xl:text-sm">Deportes</Chip>
-                                    <Chip size="md" color="primary" className="text-white text-tiny @2xl:text-sm">Futbol</Chip>
-                                    <Chip size="md" color="primary" className="text-white text-tiny @2xl:text-sm">Femenino</Chip>
+                                    {product.tags.map((tag) => (
+                                        <Chip key={tag.order} size="md" color="primary" className="text-white text-tiny @2xl:text-sm">{tag.tag.name}</Chip>
+                                    ))}
                                 </div>
                                 <div className="w-full oveflow-clip flex-grow @2xl:mt-1">
                                     <MarqueeOnOverflow className="w-full" direction="horizontal" animation={["animate-marqueeX", "animate-marqueeX2"]}>

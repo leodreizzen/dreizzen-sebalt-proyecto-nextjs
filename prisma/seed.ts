@@ -1,13 +1,13 @@
 import { PrismaClient, Product, VideoSource } from "@prisma/client";
+import bcrypt from 'bcrypt';
+import fs from 'fs';
 
 const prisma = new PrismaClient();
 
-const fs = require('fs');
 
-const bcrypt = require('bcrypt');
 
 function getJsonFromFile(path: string){
-    let rawdata = fs.readFileSync(path);
+    let rawdata = fs.readFileSync(path).toString();
     let json = JSON.parse(rawdata);
     return json;
 }
@@ -231,6 +231,12 @@ async function createProductSales(){
             }
         })
         console.log(`Created product sale with id: ${productObject.id}`)
+        await prisma.product.update({
+            where: { id: productObject.id },
+            data: {
+                currentPrice_cents: Math.floor(productObject.currentPrice_cents * ((100 - productSale.discount) / 100))
+            }
+        })
     }
 
 }
@@ -249,6 +255,29 @@ async function createUser(){
         console.log(`Created user with email: ${user.email}`)
     }
 
+}
+
+async function createFeaturedTags(){
+    const tags = getJsonFromFile('prisma/featuredtags.json');
+    for (const tag of tags) {
+        await prisma.featuredTag.create({
+            data: {
+                order: tag.order,
+                tag: {
+                    connect: {
+                        name: tag.name
+                    }
+                },
+                image: {
+                    create: {
+                        url: tag.image,
+                        alt: "Featured tag image for " + tag.name
+                    }
+                }
+            }
+        })
+        console.log(`Created featured tag with name: ${tag.name}`)
+    }
 }
 
 async function putInDropdown(){
@@ -272,6 +301,7 @@ async function main() {
     await createPurchases()
     await createProductSales()
     await createUser()
+    await createFeaturedTags()
     await putInDropdown()
 }
 

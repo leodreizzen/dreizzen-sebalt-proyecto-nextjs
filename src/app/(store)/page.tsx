@@ -4,11 +4,12 @@ import GenreCard from "@/ui/cards/GenreCard";
 import ListCard from "@/ui/cards/ListCard";
 import { Button } from "@nextui-org/button";
 import Link from "next/link";
+import { fetchFeaturedProducts, fetchFeaturedTags, fetchMostSold } from "@/lib/data";
 
-export default function Home() {
-  let topSellers = productPlaceholders.concat(productPlaceholders).concat(productPlaceholders).concat(productPlaceholders)
-  topSellers = topSellers.map(product => ({ ...product }))
-  topSellers.forEach((product, index) => product.id = index + 1)
+export default async function Home() {
+  const topSellers = await fetchMostSold(1);
+  const featuredProducts = await fetchFeaturedProducts();
+  const featuredTags = await fetchFeaturedTags();
 
   return (
       <main className="w-full flex flex-col items-center pt-4">
@@ -17,14 +18,12 @@ export default function Home() {
             <h2 className="text-center text-large pb-2">Destacados</h2>
           </div>
           <div className="sm:border border-borders px-2 pt-4 rounded-3xl ">
-            <FeaturedProductsCarousel products={productPlaceholders} className="mx-auto lg:w-11/12 xl:w-10/12 2xl:w-9/12" />
+            <FeaturedProductsCarousel products={featuredProducts} className="mx-auto lg:w-11/12 xl:w-10/12 2xl:w-9/12" />
           </div>
           <div className="flex flex-col mt-10 px-3 ">
             <h2 className="text-center pb-1 text-large">Géneros destacados</h2>
             <div className="flex flex-col sm:grid sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-2 lg:gap-4 border border-borders px-4 sm:px-8 md:px-10 pb-4 pt-5 rounded-3xl">
-              {featuredTagsPlaceholders.map((genre) =>
-                <GenreCard key={genre.tag.id} genre={genre} className="w-full self-center max-w-[28rem] sm:w-auto sm:max-w-full" />
-              )}
+              {featuredTags.map(tag => <GenreCard key={tag.order} genre={tag} />)}
             </div>
           </div>
           <div className="p-2 mt-8">

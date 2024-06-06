@@ -1,18 +1,15 @@
+import { fetchByGenre } from "@/lib/data";
 import FeaturedProductCard from "../cards/FeaturedProductCard";
 import ListCard from "../cards/ListCard";
 import { productPlaceholders } from "@/lib/placeholders";
+import { ProductWithTagsAndCoverImage } from "@/lib/definitions";
 
-export default async function FeaturedBoxList({
-    currentPage,
+export default function FeaturedBoxList({
+    products
   }: {
-    currentPage: number;
+    products: ProductWithTagsAndCoverImage[];
   }) {
-    /* Cambiar por el fetch de la base de datos */
-    let products = productPlaceholders.concat(productPlaceholders).concat(productPlaceholders).concat(productPlaceholders).concat(productPlaceholders).concat(productPlaceholders);
-    products = products.map(product => ({ ...product }));
-    products.forEach((product, index) => product.id = index + 1);
-    if (currentPage === 1) products.splice(0, 6);
-    else products.splice(6, 6);
+
   
     return (
             <div className = "border-2 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 border-borders rounded-lg w-full p-6 xl:py-6 items-center justify-center gap-6 h-full">

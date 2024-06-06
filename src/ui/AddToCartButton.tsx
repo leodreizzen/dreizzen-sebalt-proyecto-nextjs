@@ -10,7 +10,8 @@ import { mergeRefs } from "react-merge-refs";
 import { MdRemoveCircleOutline } from "react-icons/md";
 import { ProductDTO } from "@/lib/DTO";
 import { useShoppingCartContext } from "@/context/ShoppingCartContext";
-export default function AddToCartButton({ className, iconClassName, textClassName, product }: { className?: string, iconClassName?: string, textClassName?: string, product: ProductDTO }) {
+import { Product } from "@prisma/client";
+export default function AddToCartButton({ className, iconClassName, textClassName, product }: { className?: string, iconClassName?: string, textClassName?: string, product: Product }) {
     const pressRef = useRef<HTMLDivElement>(null);
     const [hoveredRef, isHovered] = useHover();
     const ref = mergeRefs([pressRef, hoveredRef]);

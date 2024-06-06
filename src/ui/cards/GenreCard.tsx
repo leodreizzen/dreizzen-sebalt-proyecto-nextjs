@@ -6,8 +6,9 @@ import NextImage from "next/image";
 import clsx from "clsx";
 import { FeaturedTagDTO } from "@/lib/DTO";
 import { useRouter } from "next/navigation";
+import { FeaturedTagWithTagAndImage } from "@/lib/definitions";
 
-export default function GenreCard({className, genre}: {className?: string, genre: FeaturedTagDTO}) {
+export default function GenreCard({className, genre}: {className?: string, genre: FeaturedTagWithTagAndImage}) {
   const router = useRouter();
   function handlePress() {
     router.push(`/products/featured/tag/${genre.tag.id}`)
