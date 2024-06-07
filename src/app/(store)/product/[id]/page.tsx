@@ -7,14 +7,15 @@ import { formatPrice } from "@/util/formatUtils";
 import { Chip } from "@nextui-org/chip";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-
-export default async function Page({ params }: { params: { id: string } }) {
+import DOMPurify from "isomorphic-dompurify";
+export default async function ProductInfoPage({ params }: { params: { id: string } }) {
     const { id: strId } = params;
     const id = parseInt(strId);
     const product = await fetchProduct(id);
     if (!product)
         notFound();
     const textParagraphs = product.description.split("\n");
+    const sanitizedDescription = DOMPurify.sanitize(product.description);
 
     return (
         <main className="sm:w-10/12 md:w-full lg:w-11/12 xl:w-10/12 2xl:w-8/12 mx-auto p-2">
@@ -55,11 +56,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </div>
             </div>
             <h1 className="text-large mt-5 md:mt-2"> Descripción </h1>
-            <div className="bg-content1 p-2">
-                {
-                    textParagraphs.map((paragraph, index) => <p key={index} className="text-justify">{paragraph}</p>)
-                }
-            </div>
+            <div className="bg-content1 p-2" dangerouslySetInnerHTML={{__html: sanitizedDescription}}/>
         </main>
     )
 }
