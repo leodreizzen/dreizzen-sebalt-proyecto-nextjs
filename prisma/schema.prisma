@@ -108,15 +108,15 @@ model PurchaseItem {
   purchaseId          Int      
   productId           Int
   product             Product  @relation(fields: [productId], references: [id])
-  purchase            Purchase @relation(fields: [purchaseId], references: [id])
+  purchase            Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
   @@id([productId, purchaseId])
 }
 
 model Purchase {
   id            Int              @id @default(autoincrement())
-  paymentId     Int
+  paymentId     Int?             @unique
   invoiceDataId Int              @unique
-  invoiceData   InvoiceData      @relation(fields: [invoiceDataId], references: [id])
+  invoiceData   InvoiceData      @relation(fields: [invoiceDataId], references: [id], onDelete: Cascade)
   products      PurchaseItem[]
 }
 
@@ -126,7 +126,7 @@ model InvoiceData {
   firstName  String
   lastName   String
   address1   String
-  address2   String
+  address2   String?
   city       String
   state      String
   country    String

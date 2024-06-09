@@ -59,3 +59,19 @@ export interface ProductWithcCompanies extends Product{
 export interface PurchaseWithInvoiceData extends Purchase{
     invoiceData: InvoiceData
 }
+
+export enum PurchaseError {
+    VALIDATION_ERROR,
+    PAYMENT_REJECTED_BAD_FILLED,
+    PAYMENT_REJECTED_CALL_AUTHORIZE,
+    PAYMENT_REJECTED_GENERIC,
+    PURCHASE_FAILED
+}
+
+export type PurchaseResult = {
+    success: true,
+    purchaseId: number
+} | {
+    success: false,
+    error: PurchaseError
+}

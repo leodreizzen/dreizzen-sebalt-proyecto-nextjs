@@ -54,3 +54,7 @@ export async function removeFromSessionCart(productId: number): Promise<Shopping
     }
     return cart;
 }
+
+export async function clearSessionCart(): Promise<void> {
+    await set('cart', []);
+}
