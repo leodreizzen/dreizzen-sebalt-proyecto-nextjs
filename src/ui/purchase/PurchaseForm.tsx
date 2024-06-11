@@ -1,6 +1,6 @@
 "use client"
 import PurchaseInvoiceDataStep from "@/ui/purchase/PurchaseInvoiceDataStep";
-import React, {useMemo, useState} from "react";
+import React, {useState} from "react";
 import PurchasePaymentStep from "@/ui/purchase/PurchasePaymentStep";
 import PurchaseEmailStep from "@/ui/purchase/PurchaseEmailStep";
 import PurchaseFinishedStep from "@/ui/purchase/PurchaseFinishedStep";
@@ -18,13 +18,17 @@ import {useRouter} from "next/navigation";
 import {purchase} from "@/lib/paymentAction"
 import {ICardPaymentBrickPayer, ICardPaymentFormData} from "@mercadopago/sdk-react/bricks/cardPayment/type";
 import {v4 as uuidv4} from "uuid";
-import {PurchaseResult} from "@/lib/definitions";
+import {PurchaseError, PurchaseResult} from "@/lib/definitions";
 
 enum PurchaseStep {
     EMAIL,
     INVOICE_DATA,
     PAYMENT,
     FINISHED,
+}
+
+function generateIdempotencyKey(){
+    return uuidv4()
 }
 
 declare global {
@@ -40,10 +44,9 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
         resolver: zodResolver(purchaseInvoiceDataModel),
         mode: "all"
     })
-    const router = useRouter()
-    const idempotencyKey = useMemo(() => uuidv4(), [])
+    const [idempotencyKey, setIdempotencyKey] = useState(generateIdempotencyKey())
     const [purchaseResult, setPurchaseResult] = useState<PurchaseResult | undefined>()
-
+    const router = useRouter()
     function handleReturnToCart() {
         router.push("/cart")
     }
@@ -86,6 +89,17 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
         }
     }
 
+    function handleRetry(){
+        if(purchaseResult?.success === false){
+            if(purchaseResult.error !== PurchaseError.VALIDATION_ERROR){
+                setIdempotencyKey(generateIdempotencyKey())
+                setPurchaseResult(undefined)
+                setStep(PurchaseStep.PAYMENT)
+            } else
+                window.location.reload()
+        }
+    }
+
     let stepContent;
     switch (step) {
         case PurchaseStep.EMAIL:
@@ -98,7 +112,7 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
             stepContent = <PurchasePaymentStep amount_cents={amount_cents} className="w-full"/>
             break;
         case PurchaseStep.FINISHED:
-            stepContent = purchaseResult ? <PurchaseFinishedStep purchaseResult={purchaseResult}/> : null
+            stepContent = purchaseResult ? <PurchaseFinishedStep purchaseResult={purchaseResult} onRetry={handleRetry} className="w-full"/> : null
             break;
     }
 
