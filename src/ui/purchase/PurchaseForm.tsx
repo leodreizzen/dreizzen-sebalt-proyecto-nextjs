@@ -106,7 +106,7 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
     return (
         <div className="flex flex-col items-center mt-2">
             <h1 className="text-xl">Purchase</h1>
-            <div className="flex flex-col items-center w-1/4 mt-2">
+            <div className="flex flex-col items-center mx-4 xs:w-9/12 sm:w-7/12 md:w-5/12 lg:w-5/12 xl:w-4/12 2xl:w-3/12 mt-2 mb-2">
                 <FormProgressIndicator currentStep={step}
                                        steps={["Email", "Invoice data", "Payment", purchaseResult?.success !== false ? "Finished" : "Error"]}
                                        className="w-full mb-3"/>

@@ -12,7 +12,7 @@ export default function PurchaseInvoiceDataStep({methods: {register, formState: 
     return (
         <div className={clsx(className, "flex flex-col")}>
             <h2 className="text-large font-bold">Invoice data</h2>
-            <form className="grid gap-y-2 gap-x-4 mt-1">
+            <form className="flex flex-col min-[375px]:grid gap-y-2 gap-x-4 mt-1">
                 <FormField label="ID number" type="number" registerRes={register("id")} errors={errors}
                            className="col-span-2" required/>
                 <FormField label="First name" type="text" registerRes={register("firstName")} errors={errors} required/>

@@ -14,11 +14,12 @@ interface FormFieldProps<T extends FieldValues> {
 }
 
 export function FormField<T extends FieldValues>({label, type, autoComplete, className, required, value, registerRes, errors}: FormFieldProps<T>) {
+    const inputId = `input-${registerRes.name}`
     return (
-        <div className={clsx("flex flex-col gap-0.5", className)}>
-            <label htmlFor={registerRes.name}><span>{label}</span> {required && <span className="text-red-300">*</span>}</label>
+        <div className={clsx("flex flex-col gap-0.5 min-w-0", className)}>
+            <label htmlFor={inputId}><span>{label}</span> {required && <span className="text-red-300">*</span>}</label>
             <input type={type} className="text-black px-1 rounded-md" autoComplete={autoComplete}
-                   required={required} value={value} {...registerRes} id={registerRes.name}/>
+                   required={required} value={value} {...registerRes} id={inputId}/>
             <ErrorMessage name={registerRes.name} errors={errors} as={<span className={"text-red-400"}/>}/>
         </div>
     )
