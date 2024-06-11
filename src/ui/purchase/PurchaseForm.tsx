@@ -1,6 +1,6 @@
 "use client"
 import PurchaseInvoiceDataStep from "@/ui/purchase/PurchaseInvoiceDataStep";
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import PurchasePaymentStep from "@/ui/purchase/PurchasePaymentStep";
 import PurchaseEmailStep from "@/ui/purchase/PurchaseEmailStep";
 import PurchaseFinishedStep from "@/ui/purchase/PurchaseFinishedStep";
@@ -27,7 +27,7 @@ enum PurchaseStep {
     FINISHED,
 }
 
-function generateIdempotencyKey(){
+function generateIdempotencyKey() {
     return uuidv4()
 }
 
@@ -46,7 +46,9 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
     })
     const [idempotencyKey, setIdempotencyKey] = useState(generateIdempotencyKey())
     const [purchaseResult, setPurchaseResult] = useState<PurchaseResult | undefined>()
-    const router = useRouter()
+    const router = useRouter();
+    const [finishButtonClicked, setFinishButtonClicked] = useState(false)
+
     function handleReturnToCart() {
         router.push("/cart")
     }
@@ -79,22 +81,26 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
     }
 
     async function handleFinish() {
-        if (globalThis.paymentBrickController) {
-            const paymentData = (await globalThis.paymentBrickController.getFormData()).formData
-            if (paymentData) {
-                const result = await purchase(emailMethods.getValues(), invoiceDataMethods.getValues(), paymentData, idempotencyKey)
-                setPurchaseResult(result)
-                setStep(PurchaseStep.FINISHED)
+        if (!finishButtonClicked) {
+            if (globalThis.paymentBrickController) {
+                const paymentData = (await globalThis.paymentBrickController.getFormData()).formData
+                if (paymentData) {
+                    setFinishButtonClicked(true)
+                    const result = await purchase(emailMethods.getValues(), invoiceDataMethods.getValues(), paymentData, idempotencyKey)
+                    setPurchaseResult(result)
+                    setStep(PurchaseStep.FINISHED)
+                }
             }
         }
     }
 
-    function handleRetry(){
-        if(purchaseResult?.success === false){
-            if(purchaseResult.error !== PurchaseError.VALIDATION_ERROR){
-                setIdempotencyKey(generateIdempotencyKey())
-                setPurchaseResult(undefined)
-                setStep(PurchaseStep.PAYMENT)
+    function handleRetry() {
+        if (purchaseResult?.success === false) {
+            if (purchaseResult.error !== PurchaseError.VALIDATION_ERROR) {
+                setIdempotencyKey(generateIdempotencyKey());
+                setPurchaseResult(undefined);
+                setFinishButtonClicked(false)
+                setStep(PurchaseStep.PAYMENT);
             } else
                 window.location.reload()
         }
@@ -112,15 +118,16 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
             stepContent = <PurchasePaymentStep amount_cents={amount_cents} className="w-full"/>
             break;
         case PurchaseStep.FINISHED:
-            stepContent = purchaseResult ? <PurchaseFinishedStep purchaseResult={purchaseResult} onRetry={handleRetry} className="w-full"/> : null
+            stepContent = purchaseResult ?
+                <PurchaseFinishedStep purchaseResult={purchaseResult} onRetry={handleRetry} className="w-full"/> : null
             break;
     }
-
 
     return (
         <div className="flex flex-col items-center mt-2">
             <h1 className="text-xl">Purchase</h1>
-            <div className="flex flex-col items-center mx-4 xs:w-9/12 sm:w-7/12 md:w-5/12 lg:w-5/12 xl:w-4/12 2xl:w-3/12 mt-2 mb-2">
+            <div
+                className="flex flex-col items-center mx-4 xs:w-9/12 sm:w-7/12 md:w-5/12 lg:w-5/12 xl:w-4/12 2xl:w-3/12 mt-2 mb-2">
                 <FormProgressIndicator currentStep={step}
                                        steps={["Email", "Invoice data", "Payment", purchaseResult?.success !== false ? "Finished" : "Error"]}
                                        className="w-full mb-3"/>
@@ -135,7 +142,10 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
                     {step !== PurchaseStep.PAYMENT && step !== PurchaseStep.FINISHED &&
                         <Button onPress={handleNavigateNext} color="primary">Next</Button>}
                     {step === PurchaseStep.PAYMENT &&
-                        <Button onPress={handleFinish} color="secondary">Finish purchase</Button>}
+                        <Button onPress={handleFinish} color="secondary" isDisabled={finishButtonClicked}>
+                            Finish purchase
+                        </Button>
+                    }
                 </div>
             </div>
         </div>
