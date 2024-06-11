@@ -1,6 +1,5 @@
 import { Button } from "@nextui-org/button";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 
 export default function SearchBar({ isOpen, onOpenChange }: { isOpen: boolean, onOpenChange: (open: boolean) => void }) {

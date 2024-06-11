@@ -1,4 +1,4 @@
-import React, {ChangeEventHandler, HTMLInputAutoCompleteAttribute, HTMLInputTypeAttribute} from "react";
+import React, {HTMLInputAutoCompleteAttribute, HTMLInputTypeAttribute} from "react";
 import clsx from "clsx";
 import {FieldErrors, FieldName, FieldValues, UseFormRegisterReturn} from "react-hook-form";
 import {ErrorMessage, FieldValuesFromFieldErrors} from "@hookform/error-message";
