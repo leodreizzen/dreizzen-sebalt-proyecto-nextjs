@@ -9,20 +9,20 @@ datasource db {
 }
 
 model Product {
-  id                  Int               @id @default(autoincrement())
-  name                String            @unique
+  id                  Int              @id @default(autoincrement())
+  name                String           @unique
   originalPrice_cents Int
   currentPrice_cents  Int
   description         String
   shortDescription    String?
   launchDate          DateTime
-  coverImageId        Int               @unique
-  available           Boolean           @default(true)
+  coverImageId        Int              @unique
+  available           Boolean          @default(true)
   featured            FeaturedProduct?
-  descriptionImages   Image[]           @relation("description_images")
-  coverImage          Image             @relation("cover_image", fields: [coverImageId], references: [id], map: "cover_image_fk")
-  developers          Company[]         @relation("developer")
-  publishers          Company[]         @relation("publisher")
+  descriptionImages   Image[]          @relation("description_images")
+  coverImage          Image            @relation("cover_image", fields: [coverImageId], references: [id], map: "cover_image_fk")
+  developers          Company[]        @relation("developer")
+  publishers          Company[]        @relation("publisher")
   sale                ProductSale?
   tags                ProductTag[]
   purchases           PurchaseItem[]
@@ -105,19 +105,21 @@ model Image {
 model PurchaseItem {
   originalPrice_cents Int
   currentPrice_cents  Int
-  purchaseId          Int      
+  purchaseId          Int
   productId           Int
   product             Product  @relation(fields: [productId], references: [id])
   purchase            Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+
   @@id([productId, purchaseId])
 }
 
 model Purchase {
-  id            Int              @id @default(autoincrement())
-  paymentId     Int?             @unique
-  invoiceDataId Int              @unique
-  invoiceData   InvoiceData      @relation(fields: [invoiceDataId], references: [id], onDelete: Cascade)
-  products      PurchaseItem[]
+  id             Int            @id @default(autoincrement())
+  paymentId      Int?           @unique
+  idempotencyKey String         @unique
+  invoiceDataId  Int            @unique
+  invoiceData    InvoiceData    @relation(fields: [invoiceDataId], references: [id], onDelete: Cascade)
+  products       PurchaseItem[]
 }
 
 model InvoiceData {

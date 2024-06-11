@@ -1,6 +1,6 @@
 "use client"
 import PurchaseInvoiceDataStep from "@/ui/purchase/PurchaseInvoiceDataStep";
-import React, {useRef, useState} from "react";
+import React, {useState} from "react";
 import PurchasePaymentStep from "@/ui/purchase/PurchasePaymentStep";
 import PurchaseEmailStep from "@/ui/purchase/PurchaseEmailStep";
 import PurchaseFinishedStep from "@/ui/purchase/PurchaseFinishedStep";
@@ -87,8 +87,10 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
                 if (paymentData) {
                     setFinishButtonClicked(true)
                     const result = await purchase(emailMethods.getValues(), invoiceDataMethods.getValues(), paymentData, idempotencyKey)
-                    setPurchaseResult(result)
-                    setStep(PurchaseStep.FINISHED)
+                    if(!(!result.success && result.error === PurchaseError.DUPLICATE_PURCHASE)){
+                        setPurchaseResult(result)
+                        setStep(PurchaseStep.FINISHED)
+                    }
                 }
             }
         }

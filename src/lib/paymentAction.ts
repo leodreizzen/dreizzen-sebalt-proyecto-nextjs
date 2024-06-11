@@ -52,13 +52,16 @@ async function processPurchase(cartProducts: Product[],
     let purchaseResult
     //TODO REVALIDAR RUTAS QUE DEPENDEN DE COMPRAS
     try {
-        // For atomicity, save the purchase first, then process the payment
+        // For atomicity and isolation, save the purchase first, then process the payment
         // This protects against the case where the payment is successful but the purchase is not saved
-        purchaseId = await saveUnpaidPurchase(cartProducts, invoiceData, emailData);
+        const {duplicate, purchaseId} = await saveUnpaidPurchase(cartProducts, invoiceData, emailData, idempotencyKey);
+
+        if(duplicate)
+            return {success:false, error: PurchaseError.DUPLICATE_PURCHASE}
 
         purchaseResult = await processPayment(paymentData, cartProducts, invoiceData, idempotencyKey);
         if (purchaseResult.status === "approved") {
-            savePaymentId(purchaseId, purchaseResult.id as number)
+            await savePaymentId(purchaseId, purchaseResult.id as number)
             try {
                 await clearCart()
                 //TODO ENVIAR EMAIL
@@ -90,36 +93,49 @@ async function processPurchase(cartProducts: Product[],
 }
 
 
-async function saveUnpaidPurchase(products: Product[], invoiceData: purchaseInvoiceDataFields, emailData: purchaseEmailFields) {
-    const createdPurchase = await prisma.purchase.create({
-        data: {
-            invoiceData: {
-                create: {
-                    email: emailData.email,
-                    firstName: invoiceData.firstName,
-                    lastName: invoiceData.lastName,
-                    country: invoiceData.country,
-                    state: invoiceData.state,
-                    city: invoiceData.city,
-                    address1: invoiceData.address1,
-                    address2: invoiceData.address2,
-                    customerId: invoiceData.id
-                }
-            },
-            products: {
-                create: products.map(product => ({
-                    product: {
-                        connect: {
-                            id: product.id
-                        }
-                    },
-                    originalPrice_cents: product.originalPrice_cents,
-                    currentPrice_cents: product.currentPrice_cents
-                }))
+async function saveUnpaidPurchase(products: Product[], invoiceData: purchaseInvoiceDataFields, emailData: purchaseEmailFields, idempotencyKey: string): Promise<{duplicate: boolean, purchaseId: number}> {
+    return prisma.$transaction(async (tx) => {
+        const existingPurchase = await tx.purchase.findUnique({
+            where: {
+                idempotencyKey: idempotencyKey
             }
-        }
-    })
-    return createdPurchase.id
+        })
+
+        if (existingPurchase)
+            return {duplicate: true, purchaseId: existingPurchase.id}
+
+
+        const newPurchase = await tx.purchase.create({
+            data: {
+                idempotencyKey: idempotencyKey,
+                invoiceData: {
+                    create: {
+                        email: emailData.email,
+                        firstName: invoiceData.firstName,
+                        lastName: invoiceData.lastName,
+                        country: invoiceData.country,
+                        state: invoiceData.state,
+                        city: invoiceData.city,
+                        address1: invoiceData.address1,
+                        address2: invoiceData.address2,
+                        customerId: invoiceData.id
+                    }
+                },
+                products: {
+                    create: products.map(product => ({
+                        product: {
+                            connect: {
+                                id: product.id
+                            }
+                        },
+                        originalPrice_cents: product.originalPrice_cents,
+                        currentPrice_cents: product.currentPrice_cents
+                    }))
+                }
+            }
+        })
+        return {duplicate: false, purchaseId: newPurchase.id}
+    });
 }
 
 async function deleteFailedPurchase(purchaseId: number) {
@@ -164,8 +180,8 @@ async function processPayment(paymentData: purchasePaymentDataFieldsCoerced, car
 }
 
 
-function savePaymentId(purchaseId: number, paymentId: number) {
-    prisma.purchase.update({
+async function savePaymentId(purchaseId: number, paymentId: number) {
+    await prisma.purchase.update({
         where: {
             id: purchaseId
         },
