@@ -17,6 +17,7 @@ import {PaymentResponse} from "mercadopago/dist/clients/payment/commonTypes";
 import {Payment, PaymentRefund} from "mercadopago";
 import {v4 as uuidv4} from "uuid";
 import {clearCart} from "@/lib/actions";
+import prisma from "@/lib/prisma";
 
 export async function purchase(form_emailData: purchaseEmailFields,
                                form_invoiceData: purchaseInvoiceDataFields,
