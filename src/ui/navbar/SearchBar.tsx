@@ -36,7 +36,7 @@ export default function SearchBar({ isOpen, onOpenChange }: { isOpen: boolean, o
                     <div className="bg-content1 max-w-full h-10 border border-foreground rounded-xl flex-shrink" onBlur={handleBlur}>
                         <form className="flex items-center w-full h-full" action={sendData}>
                             <input name="query" type="text" className="w-32 lg:w-40 2xl:w-48 bg-transparent text-foreground flex-grow min-w-0 ml-2 rounded px-1 focus:outline-none flex-shrink" placeholder="Buscar" autoFocus />
-                            <Button type="submit" className="bg-transparent min-w-5 w-5 h-5 mr-2 p-0"><FaSearch className="text-foreground w-full h-full" /></Button>
+                            <Button type="submit" aria-label="search" className="bg-transparent min-w-5 w-5 h-5 mr-2 p-0"><FaSearch className="text-foreground w-full h-full" /></Button>
                         </form>
                     </div>
                 </>

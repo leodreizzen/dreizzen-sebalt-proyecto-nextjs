@@ -15,7 +15,6 @@ import SearchBar from "./SearchBar";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import ShoppingCartButtonWrapper from "../ShopppingCartButtonWrapper";
-import {fetchDropdownTags, fetchFeaturedTags} from "@/lib/data";
 import {Tag} from "@prisma/client";
 
 type NormalMenuItem = {
@@ -81,7 +80,7 @@ export default function Navbar({ className, dropdownTags }: { className?: string
           className="sm:hidden"
         />
         <NavbarBrand>
-          <NextUILink as={Link} href="/"><div className="h-10 w-10 bg-red-100 mr-2" /></NextUILink>
+          <NextUILink as={Link} href="/" aria-label="Ir a home"><div className="h-10 w-10 bg-red-100 mr-2" /></NextUILink>
           <NextUILink as={Link} className={clsx("font-bold text-foreground", searchOpen && "max-[400px]:hidden flex-shrink")} href="/">Vapor</NextUILink>
         </NavbarBrand>
 

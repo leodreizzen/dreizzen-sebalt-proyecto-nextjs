@@ -11,7 +11,7 @@ import { BsCartX } from "react-icons/bs";
 import {fetchCartProducts} from "@/lib/data";
 import {ProductWithCoverImage} from "@/lib/definitions";
 
-export default async function Page({ }) {
+export default async function CartPage({ }) {
     const products = await fetchCartProducts()
     return (
         <main className="flex flex-col items-center min-h-full">
@@ -54,7 +54,7 @@ function CartWithItemsPage({ products, className }: { products: ProductWithCover
                                     <p>{formatPrice(product.currentPrice_cents)}</p>
                                 </div>
                                 <form action={handleCartRemove.bind(null, product.id)} className="self-center">
-                                    <Button type="submit" className="flex items-center text-red-600 hover:text-red-400 active:text-red-300 w-7 h-7 max-sm:ml-1 xs:h-10 xs:w-10 min-w-0 min-h-0 bg-transparent px-0 self-center ">
+                                    <Button type="submit" aria-label="Eliminar del carrito" className="flex items-center text-red-600 hover:text-red-400 active:text-red-300 w-7 h-7 max-sm:ml-1 xs:h-10 xs:w-10 min-w-0 min-h-0 bg-transparent px-0 self-center ">
                                         <MdRemoveCircleOutline className="h-10 w-10" />
                                     </Button>
                                 </form>
