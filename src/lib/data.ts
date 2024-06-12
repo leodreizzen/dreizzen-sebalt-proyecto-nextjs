@@ -9,7 +9,6 @@ import {
     ProductWithTagsAndCoverImage, removeReadOnlyForNumArray
 } from "./definitions";
 import {getCart} from "@/lib/session-data";
-import {boolean} from "zod";
 import {Tag} from "@prisma/client";
 
 const TOTAL_ITEMS_PER_PAGE = 6;
@@ -184,7 +183,8 @@ export async function fetchTags(query: string, filter: number[], priceRange: num
                     some: {
                         product: {
                             name: {
-                                contains: query
+                                contains: query,
+                                mode: 'insensitive'
                             },
                             currentPrice_cents: {
                                 gte: priceRange[0] * 100,
@@ -243,7 +243,8 @@ export async function fetchSearch(query: string, page: number, filter: number[],
     let data: ProductWithTagsAndCoverImage[] = await prisma.product.findMany({
         where: {
             name: {
-                contains: query
+                contains: query,
+                mode: 'insensitive'
             },
             currentPrice_cents: {
                 gte: priceRange[0] * 100,
@@ -278,7 +279,8 @@ export async function fetchSearchPages(query: string, filter: number[], priceRan
     const data = await prisma.product.count({
         where: {
             name: {
-                contains: query
+                contains: query,
+                mode: 'insensitive'
             },
             currentPrice_cents: {
                 gte: priceRange[0] * 100,
