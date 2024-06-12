@@ -7,6 +7,7 @@ import PurchaseFinishedStep from "@/ui/purchase/PurchaseFinishedStep";
 import FormProgressIndicator from "@/ui/purchase/FormProgressIndicator";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
+import UseStateRef from "react-usestateref"
 import {
     purchaseEmailFields,
     purchaseEmailModel,
@@ -47,7 +48,7 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
     const [idempotencyKey, setIdempotencyKey] = useState(generateIdempotencyKey())
     const [purchaseResult, setPurchaseResult] = useState<PurchaseResult | undefined>()
     const router = useRouter();
-    const [finishButtonClicked, setFinishButtonClicked] = useState(false)
+    const [finishButtonClicked, setFinishButtonClicked, finishedButtonClickedRef] = UseStateRef(false)
 
     function handleReturnToCart() {
         router.push("/cart")
@@ -81,12 +82,13 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
     }
 
     async function handleFinish() {
-        if (!finishButtonClicked) {
+        if (!finishedButtonClickedRef.current) {
             if (globalThis.paymentBrickController) {
                 const paymentData = (await globalThis.paymentBrickController.getFormData()).formData
                 if (paymentData) {
-                    setFinishButtonClicked(true)
-                    const result = await purchase(emailMethods.getValues(), invoiceDataMethods.getValues(), paymentData, idempotencyKey)
+                    setFinishButtonClicked(true);
+                    const result = await purchase(emailMethods.getValues(), invoiceDataMethods.getValues(), paymentData, idempotencyKey);
+
                     if(!(!result.success && result.error === PurchaseError.DUPLICATE_PURCHASE)){
                         setPurchaseResult(result)
                         setStep(PurchaseStep.FINISHED)

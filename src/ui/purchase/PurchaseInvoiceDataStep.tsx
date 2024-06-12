@@ -13,7 +13,7 @@ export default function PurchaseInvoiceDataStep({methods: {register, formState: 
             <h2 className="text-large font-bold">Invoice data</h2>
             <form className="flex flex-col min-[375px]:grid gap-y-2 gap-x-4 mt-1">
                 <FormField label="ID number" type="number" registerRes={register("id")} errors={errors}
-                           className="col-span-2" required/>
+                           className="col-span-2" required autoFocus/>
                 <FormField label="First name" type="text" registerRes={register("firstName")} errors={errors} required/>
                 <FormField label="Last name" type="text" registerRes={register("lastName")} errors={errors} required/>
 

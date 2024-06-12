@@ -21,7 +21,7 @@ export default function PurchaseEmailStep({className, methods: {register, watch,
                 a valid address</strong></p>
             <form className="flex flex-col gap-2 mt-2">
                 <FormField label="Enter your email address" type="email" registerRes={register("email")} errors={errors}
-                           autoComplete="shipping email"/>
+                           autoComplete="shipping email" autoFocus/>
                 <FormField label="Confirm your email address" type="email" registerRes={register("email_confirm")} errors={errors}
                             autoComplete="shipping email" className={clsx(!dirtyFields.email && "hidden")}/>
             </form>

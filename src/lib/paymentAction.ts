@@ -27,13 +27,8 @@ export async function purchase(form_emailData: purchaseEmailFields,
     const invoiceData = purchaseInvoiceDataModel.safeParse(form_invoiceData);
     const paymentData = purchasePaymentDataModel.safeParse(form_paymentData);
     const cartProducts = await fetchCartProducts();
-    const cartAmount = cartProducts.reduce((acc, product) => acc + product.currentPrice_cents, 0);
     const idempotencyKey = z.string().length(36).safeParse(form_idempotency_key);
     //TODO AGREGAR CONDICION CON ITEMS DE CARRITO INVALIDOS
-    if (cartAmount / 100 !== paymentData.data?.transaction_amount) {
-        console.error("Cart amount does not match")
-        return {success: false, error: PurchaseError.VALIDATION_ERROR}
-    }
 
     if (!(emailData.success && invoiceData.success && paymentData.success && idempotencyKey.success)) {
         return {success: false, error: PurchaseError.VALIDATION_ERROR}
@@ -55,11 +50,15 @@ async function processPurchase(cartProducts: Product[],
         // For atomicity and isolation, save the purchase first, then process the payment
         // This protects against the case where the payment is successful but the purchase is not saved
         const {duplicate, purchaseId} = await saveUnpaidPurchase(cartProducts, invoiceData, emailData, idempotencyKey);
-
         if(duplicate)
             return {success:false, error: PurchaseError.DUPLICATE_PURCHASE}
 
-        purchaseResult = await processPayment(paymentData, cartProducts, invoiceData, idempotencyKey);
+        if(!checkCartAmount(cartProducts, paymentData.transaction_amount)){
+            await deleteFailedPurchase(purchaseId)
+            return {success: false, error: PurchaseError.VALIDATION_ERROR}
+        }
+
+        purchaseResult = await processPayment(paymentData, cartProducts, invoiceData, idempotencyKey, purchaseId);
         if (purchaseResult.status === "approved") {
             await savePaymentId(purchaseId, purchaseResult.id as number)
             try {
@@ -92,6 +91,10 @@ async function processPurchase(cartProducts: Product[],
     }
 }
 
+function checkCartAmount(cartProducts: Product[], transactionAmount: number): boolean {
+    const cartAmount = cartProducts.reduce((acc, product) => acc + product.currentPrice_cents, 0);
+    return cartAmount / 100 === transactionAmount
+}
 
 async function saveUnpaidPurchase(products: Product[], invoiceData: purchaseInvoiceDataFields, emailData: purchaseEmailFields, idempotencyKey: string): Promise<{duplicate: boolean, purchaseId: number}> {
     return prisma.$transaction(async (tx) => {
@@ -100,10 +103,8 @@ async function saveUnpaidPurchase(products: Product[], invoiceData: purchaseInvo
                 idempotencyKey: idempotencyKey
             }
         })
-
         if (existingPurchase)
             return {duplicate: true, purchaseId: existingPurchase.id}
-
 
         const newPurchase = await tx.purchase.create({
             data: {
@@ -135,7 +136,7 @@ async function saveUnpaidPurchase(products: Product[], invoiceData: purchaseInvo
             }
         })
         return {duplicate: false, purchaseId: newPurchase.id}
-    });
+    }, {isolationLevel: "Serializable"});
 }
 
 async function deleteFailedPurchase(purchaseId: number) {
@@ -147,7 +148,7 @@ async function deleteFailedPurchase(purchaseId: number) {
     })
 }
 
-async function processPayment(paymentData: purchasePaymentDataFieldsCoerced, cartProducts: Product[], invoiceData: purchaseInvoiceDataFields, idempotency_key: string): Promise<PaymentResponse> {
+async function processPayment(paymentData: purchasePaymentDataFieldsCoerced, cartProducts: Product[], invoiceData: purchaseInvoiceDataFields, idempotency_key: string, purchaseId: number): Promise<PaymentResponse> {
     const payments = new Payment(mercadoPago)
     return await payments.create({
         body: {
@@ -158,6 +159,9 @@ async function processPayment(paymentData: purchasePaymentDataFieldsCoerced, car
             token: paymentData.token,
             transaction_amount: paymentData.transaction_amount,
             binary_mode: true,
+            metadata: {
+                purchase_id: purchaseId
+            },
             additional_info: {
                 items: cartProducts.map(product => ({
                     id: product.id.toString(),
