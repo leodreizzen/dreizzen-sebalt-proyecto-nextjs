@@ -1,6 +1,7 @@
 import { PrismaClient, Product, VideoSource } from "@prisma/client";
 import bcrypt from 'bcrypt';
 import fs from 'fs';
+import {randomUUID} from "node:crypto";
 
 const prisma = new PrismaClient();
 
@@ -193,6 +194,7 @@ async function createPurchases(){
         const purchaseObject = await prisma.purchase.create({
             data: {
                 paymentId: purchase.paymentId,
+                idempotencyKey: randomUUID(),
                 invoiceData: {
                     connect: {
                         id: invoice.id
