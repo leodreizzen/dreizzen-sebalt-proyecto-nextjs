@@ -45,7 +45,7 @@ export default function ListCard({ product, className }: { product: ProductWithT
                         </MarqueeOnOverflow>
                         <div className="flex items-center flex-shrink-0 row-start-3 justify-center @xs:row-start-2 @xs:row-span-2 @xs:items-center">
                             <div className="col-span-3 md:col-span-3 mr-2">
-                                <p className="text-tiny md:text-md font-bold text-right">{formatPrice(product.currentPrice_cents)}</p>
+                                <p className="text-tiny md:text-md font-bold text-right">{<s>{ product.originalPrice_cents != product.currentPrice_cents ? <s>{formatPrice(product.originalPrice_cents)}<br /></s> : null }</s>}{formatPrice(product.currentPrice_cents)}</p>
                             </div>
                             <AddToCartButton className="text-black hidden @xs:flex mr-1" textClassName="hidden @xl:block" product={product}/>
                         </div>

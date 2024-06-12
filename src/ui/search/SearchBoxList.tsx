@@ -1,20 +1,10 @@
-import { fetchSearch } from "@/lib/data";
+import { ProductWithTagsAndCoverImage } from "@/lib/definitions";
 import ListCard from "@/ui/cards/ListCard";
 
 export default async function SearchBoxList({
-    query,
-    filters,
-    priceRange,
-    currentPage,
-    onSale,
+    products
   }: {
-    query: string;
-    filters: number[];
-    priceRange: number[];
-    onSale: boolean;
-    currentPage: number;
-  }) {
-    const products = await fetchSearch(query, currentPage, filters, priceRange, onSale);
+    products: ProductWithTagsAndCoverImage[];}) {
 
     return (
         <div className = "w-full mt-2 mb-2 xl:px-6">

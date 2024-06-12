@@ -171,10 +171,41 @@ export async function fetchTagName(id: number) {
     return data
 }
 
+export async function fetchAllTags(){
+    const data = await prisma.tag.findMany()
+    return data
+}
 
-
-export async function fetchTags() {
-    const data = await prisma.tag.findMany();
+export async function fetchTags(query: string, filter: number[], priceRange: number[], onSale: boolean) {
+    const data = await prisma.tag.findMany(
+        {
+            where: {
+                productTags: {
+                    some: {
+                        product: {
+                            name: {
+                                contains: query
+                            },
+                            currentPrice_cents: {
+                                gte: priceRange[0] * 100,
+                                lte: priceRange[1] * 100
+                            },
+                            AND: filter.map((tagId) => ({
+                                tags: {
+                                    some: {
+                                        tag: {
+                                            id: tagId
+                                        }
+                                    }
+                                }
+                            })),
+                            sale: onSale ? { isNot: null } : {},
+                        }
+                    }
+                }
+            }
+        }
+    );
     return data
 }
 
@@ -262,7 +293,7 @@ export async function fetchSearchPages(query: string, filter: number[], priceRan
                     }
                 }
             })),
-            sale: onSale ? { isNot: null } : {is: null},
+            sale: onSale ? { isNot: null } : {},
         }
     })
     return Math.ceil(data / TOTAL_ITEMS_PER_PAGE)
