@@ -49,7 +49,7 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
     const [purchaseResult, setPurchaseResult] = useState<PurchaseResult | undefined>()
     const router = useRouter();
     const [finishButtonClicked, setFinishButtonClicked, finishedButtonClickedRef] = UseStateRef(false)
-
+    const [retryCount, setRetryCount] = useState(0)
     function handleReturnToCart() {
         router.push("/cart")
     }
@@ -104,6 +104,7 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
                 setIdempotencyKey(generateIdempotencyKey());
                 setPurchaseResult(undefined);
                 setFinishButtonClicked(false)
+                setRetryCount(x => x + 1)
                 setStep(PurchaseStep.PAYMENT);
             } else
                 window.location.reload()
@@ -119,7 +120,7 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
             stepContent = <PurchaseInvoiceDataStep methods={invoiceDataMethods} className="w-full"/>
             break;
         case PurchaseStep.PAYMENT:
-            stepContent = <PurchasePaymentStep amount_cents={amount_cents} className="w-full"/>
+            stepContent = <PurchasePaymentStep amount_cents={amount_cents} retryCount={retryCount} className="w-full"/>
             break;
         case PurchaseStep.FINISHED:
             stepContent = purchaseResult ?
