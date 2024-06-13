@@ -1,6 +1,6 @@
 "use client"
 
-import { Card, CardBody, CardFooter } from "@nextui-org/card";
+import { Card, CardFooter } from "@nextui-org/card";
 import Image from "next/image";
 import { formatPrice } from "@/util/formatUtils";
 import clsx from "clsx";
@@ -19,7 +19,7 @@ export default function FeaturedProductCard({ product, className }: { product: P
         <>
             <div className={clsx("gap-3 @container", className)}>
                 <Card isFooterBlurred className={"w-full h-full"} onPress={handleCardPress} isPressable>
-                    <div className="gap-3 aspect-video">
+                    <div className="gap-3 aspect-video h-full w-full">
                         <Image src={product.coverImage.url} alt={product.coverImage.alt} fill={true} />
                     </div>
                     <CardFooter className="bg-black/60 border-default-600 dark:border-default-100 h-1/6 p-3 px-5">
