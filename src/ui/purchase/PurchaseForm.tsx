@@ -1,6 +1,6 @@
 "use client"
 import PurchaseInvoiceDataStep from "@/ui/purchase/PurchaseInvoiceDataStep";
-import React, {useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import PurchasePaymentStep from "@/ui/purchase/PurchasePaymentStep";
 import PurchaseEmailStep from "@/ui/purchase/PurchaseEmailStep";
 import PurchaseFinishedStep from "@/ui/purchase/PurchaseFinishedStep";
@@ -23,6 +23,7 @@ import {PurchaseError, PurchaseResult} from "@/lib/definitions";
 import {AwesomeButtonProgress} from "react-awesome-button";
 import 'react-awesome-button/dist/styles.css';
 import "./buttonProgress.css"
+import {useShoppingCartContext} from "@/context/ShoppingCartContext";
 enum PurchaseStep {
     EMAIL,
     INVOICE_DATA,
@@ -52,9 +53,20 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
     const router = useRouter();
     const [finishButtonClicked, setFinishButtonClicked, finishedButtonClickedRef] = UseStateRef(false)
     const [retryCount, setRetryCount] = useState(0)
-    function handleReturnToCart() {
-        router.push("/cart")
-    }
+    const {refresh: refreshCart} = useShoppingCartContext();
+
+    const handleReturnToCart = useCallback(function handleReturnToCart() {
+        router.push("/cart");
+    }, [router]);
+
+    useEffect(() => {
+        if(amount_cents == 0 && step != PurchaseStep.FINISHED){
+            handleReturnToCart();
+        }
+    }, [amount_cents, handleReturnToCart, step]);
+
+    if(amount_cents == 0 && step != PurchaseStep.FINISHED)
+        return null;
 
     async function handleNavigateNext() {
         switch (step) {
@@ -96,9 +108,10 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
                         else
                             next(false, "Error")
 
+                        refreshCart();
                         setTimeout(() => {
-                            setPurchaseResult(result)
-                            setStep(PurchaseStep.FINISHED)
+                            setPurchaseResult(result);
+                            setStep(PurchaseStep.FINISHED);
                         }, 1000)
                     }
                 } else

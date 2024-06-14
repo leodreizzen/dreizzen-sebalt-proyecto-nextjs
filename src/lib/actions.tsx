@@ -1,33 +1,32 @@
 "use server"
 import {addToSessionCart, clearSessionCart, removeFromSessionCart} from "@/lib/session-data";
 import {ShoppingCart} from "./definitions";
-import {revalidatePath} from "next/cache";
+import {revalidatePath, revalidateTag} from "next/cache";
 import {signIn} from "@/auth";
 import {AuthError} from "next-auth";
 import {CallbackRouteError} from "@auth/core/errors";
-import {
-    purchaseEmailFields,
-    purchaseEmailModel,
-    purchaseInvoiceDataFields,
-    purchaseInvoiceDataModel
-} from "@/lib/purchase-zod-model";
+
+function revalidateCart(){
+    revalidatePath("/cart");
+    revalidatePath("/purchase");
+    revalidateTag("cart");
+}
 
 export async function addToCart(productId: number): Promise<ShoppingCart> {
     const cart = await addToSessionCart(productId);
-    revalidatePath("/", "layout");
-    return cart
+    revalidateCart();
+    return cart;
 }
 
 export async function removeFromCart(productId: number): Promise<ShoppingCart> {
     const cart = await removeFromSessionCart(productId);
-    revalidatePath("/", "layout");
-    return cart
+    revalidateCart();
+    return cart;
 }
 
 export async function clearCart(): Promise<void>{
     await clearSessionCart();
-    //revalidatePath("/", "layout"); TODO revalidar acá causa que la página de compra se actualice y no muestre el resultado
-
+    revalidateCart();
 }
 
 export async function authenticate(_: string | undefined, formData: FormData): Promise<string | undefined> {

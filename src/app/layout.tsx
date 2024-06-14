@@ -3,9 +3,7 @@ import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import clsx from "clsx";
 import { NextUIProvider } from "@nextui-org/system";
-import Navbar from "@/ui/navbar/NavbarWrapper";
-import { Suspense } from "react";
-import ShoppingCartContextWrapper from "@/context/ShoppingCartContextWrapper";
+import {ShoppingCartProvider} from "@/context/ShoppingCartContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -21,11 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={clsx(inter.className, "min-h-screen min-w-screen bg-background flex flex-col text-foreground")}>
-        <ShoppingCartContextWrapper>
+        <ShoppingCartProvider>
           <NextUIProvider className="min-h-screen flex flex-col">
             {children}
           </NextUIProvider>
-        </ShoppingCartContextWrapper>
+        </ShoppingCartProvider>
       </body>
     </html>
   );

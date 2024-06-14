@@ -5,11 +5,13 @@ import { Badge } from "@nextui-org/badge";
 import clsx from "clsx";
 import { ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import {useShoppingCartContext} from "@/context/ShoppingCartContext";
 
-export default function ShoppingCartButton({cartItems}: {cartItems: number}){
+export default function ShoppingCartButton(){
     const pathName = usePathname();
     const selected = pathName.startsWith("/cart");
-
+    const {shoppingCart} = useShoppingCartContext()
+    const cartItems = shoppingCart.dataAvailable ? shoppingCart.data.length: 0;
     return (
         <Button aria-label="Ir al carrito" as={Link} href="/cart" variant="flat" className="pl-0 pr-2 min-w-0 bg-transparent py-1 flex items-center">
             <CartItemsBadge items={cartItems}>

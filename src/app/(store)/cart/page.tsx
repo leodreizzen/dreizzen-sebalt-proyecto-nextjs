@@ -1,15 +1,13 @@
-import { removeFromCart } from "@/lib/actions";
 import MarqueeOnOverflow from "@/ui/MarqueeOnOverflow";
 import { formatPrice } from "@/util/formatUtils"
 import { Button } from "@nextui-org/button";
-import { redirect } from "next/navigation";
 import Image from "next/image"
 import Link from "next/link";
-import { MdRemoveCircleOutline } from "react-icons/md";
 import clsx from "clsx";
 import { BsCartX } from "react-icons/bs";
 import {fetchCartProducts} from "@/lib/data";
 import {ProductWithCoverImage} from "@/lib/definitions";
+import RemoveFromCartPageButton from "@/ui/video/RemoveFromCartPageButton";
 
 export default async function CartPage({ }) {
     const products = await fetchCartProducts()
@@ -29,12 +27,6 @@ export default async function CartPage({ }) {
 function CartWithItemsPage({ products, className }: { products: ProductWithCoverImage[], className?: String }) {
     const total = products.reduce((acc, product) => acc + product.currentPrice_cents, 0);
 
-    async function handleCartRemove(productId: number) {
-        "use server"
-        await removeFromCart(productId);
-        redirect("/cart");
-    }
-
     return (
         <div className={clsx("flex flex-col", className)}>
             <div className="w-full gap-4 flex flex-col border border-borders p-4 sm:rounded-lg">
@@ -53,11 +45,7 @@ function CartWithItemsPage({ products, className }: { products: ProductWithCover
                                 <div className="flex items-center xs:mr-1  max-xs:justify-self-end">
                                     <p>{formatPrice(product.currentPrice_cents)}</p>
                                 </div>
-                                <form action={handleCartRemove.bind(null, product.id)} className="self-center">
-                                    <Button type="submit" aria-label="Eliminar del carrito" className="flex items-center text-red-600 hover:text-red-400 active:text-red-300 w-7 h-7 max-sm:ml-1 xs:h-10 xs:w-10 min-w-0 min-h-0 bg-transparent px-0 self-center ">
-                                        <MdRemoveCircleOutline className="h-10 w-10" />
-                                    </Button>
-                                </form>
+                                <RemoveFromCartPageButton productId={product.id}/>
                             </div>
                         )
                     )

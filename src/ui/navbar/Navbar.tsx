@@ -14,8 +14,8 @@ import clsx from "clsx";
 import SearchBar from "./SearchBar";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import ShoppingCartButtonWrapper from "../ShopppingCartButtonWrapper";
 import {Tag} from "@prisma/client";
+import ShoppingCartButton from "@/ui/navbar/ShoppingCartButton";
 
 type NormalMenuItem = {
   name: string;
@@ -101,7 +101,7 @@ export default function Navbar({ className, dropdownTags }: { className?: string
           <SearchBar isOpen={searchOpen} onOpenChange={setSearchOpen} />
         </NavbarItem>
         <NavbarItem>
-            <ShoppingCartButtonWrapper />
+            <ShoppingCartButton/>
         </NavbarItem>
       </NavbarContent>
 

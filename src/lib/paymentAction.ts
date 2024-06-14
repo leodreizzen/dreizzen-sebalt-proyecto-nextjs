@@ -93,7 +93,7 @@ async function processPurchase(cartProducts: Product[],
 
 function checkCartAmount(cartProducts: Product[], transactionAmount: number): boolean {
     const cartAmount = cartProducts.reduce((acc, product) => acc + product.currentPrice_cents, 0);
-    return cartAmount / 100 === transactionAmount
+    return cartAmount > 0 && cartAmount / 100 === transactionAmount
 }
 
 async function saveUnpaidPurchase(products: Product[], invoiceData: purchaseInvoiceDataFields, emailData: purchaseEmailFields, idempotencyKey: string): Promise<{duplicate: boolean, purchaseId: number}> {
