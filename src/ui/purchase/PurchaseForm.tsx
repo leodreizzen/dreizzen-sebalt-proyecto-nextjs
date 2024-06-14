@@ -20,7 +20,9 @@ import {purchase} from "@/lib/paymentAction"
 import {ICardPaymentBrickPayer, ICardPaymentFormData} from "@mercadopago/sdk-react/bricks/cardPayment/type";
 import {v4 as uuidv4} from "uuid";
 import {PurchaseError, PurchaseResult} from "@/lib/definitions";
-
+import {AwesomeButtonProgress} from "react-awesome-button";
+import 'react-awesome-button/dist/styles.css';
+import "./buttonProgress.css"
 enum PurchaseStep {
     EMAIL,
     INVOICE_DATA,
@@ -81,19 +83,26 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
 
     }
 
-    async function handleFinish() {
+    async function handleFinish(event: MouseEvent, next: (b: boolean, invalidData: string | undefined) => void) {
         if (!finishedButtonClickedRef.current) {
             if (globalThis.paymentBrickController) {
                 const paymentData = (await globalThis.paymentBrickController.getFormData()).formData
                 if (paymentData) {
                     setFinishButtonClicked(true);
                     const result = await purchase(emailMethods.getValues(), invoiceDataMethods.getValues(), paymentData, idempotencyKey);
+                    if (!(!result.success && result.error === PurchaseError.DUPLICATE_PURCHASE)) {
+                        if (result.success)
+                            next(true, undefined)
+                        else
+                            next(false, "Error")
 
-                    if(!(!result.success && result.error === PurchaseError.DUPLICATE_PURCHASE)){
-                        setPurchaseResult(result)
-                        setStep(PurchaseStep.FINISHED)
+                        setTimeout(() => {
+                            setPurchaseResult(result)
+                            setStep(PurchaseStep.FINISHED)
+                        }, 1000)
                     }
-                }
+                } else
+                    next(false, "Check your info")
             }
         }
     }
@@ -147,9 +156,16 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
                     {step !== PurchaseStep.PAYMENT && step !== PurchaseStep.FINISHED &&
                         <Button onPress={handleNavigateNext} color="primary">Next</Button>}
                     {step === PurchaseStep.PAYMENT &&
-                        <Button onPress={handleFinish} color="secondary" isDisabled={finishButtonClicked}>
+                        <div className="finish-purchase-btn">
+                        <AwesomeButtonProgress
+                            type="primary"
+                            //@ts-ignore
+                            onPress={handleFinish}
+                            loadingLabel="Processing"
+                            disabled={finishButtonClicked}>
                             Finish purchase
-                        </Button>
+                        </AwesomeButtonProgress>
+                        </div>
                     }
                 </div>
             </div>

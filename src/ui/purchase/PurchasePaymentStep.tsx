@@ -28,7 +28,7 @@ export default function PurchasePaymentStep({amount_cents, className, retryCount
             }}
 
         />
-    }, [retryCount])
+    }, [retryCount, amount_cents])
 
     return <div className={clsx(className)}>
         {paymentBrick}
