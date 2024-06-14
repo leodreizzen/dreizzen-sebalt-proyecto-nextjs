@@ -42,16 +42,16 @@ export default function AddToCartButton({className, iconClassName, textClassName
     let icon, text, textClass;
     if (productInCart) {
         if (supportsHover && isHovered || isPressed) {
-            icon = <MdRemoveCircleOutline className={clsx(iconClassName, "text-foreground bg-w w-6 h-6")}/>
+            icon = <MdRemoveCircleOutline className={clsx(iconClassName, "text-foreground bg-w w-6 h-6 mr-1")}/>
             text = "Eliminar del carrito"
             textClass = "text-foreground pr-2"
         } else {
-            icon = <IoCheckmarkCircleOutline className={clsx(iconClassName, "text-black bg-w w-6 h-6")}/>
+            icon = <IoCheckmarkCircleOutline className={clsx(iconClassName, "text-black bg-w w-6 h-6 mr-1")}/>
             text = "Agregado al carrito"
             textClass = "text-black pr-1"
         }
     } else {
-        icon = <ShoppingCartIcon className={clsx(iconClassName, "text-black bg-w w-6 h-6")}/>
+        icon = <ShoppingCartIcon className={clsx(iconClassName, "text-black bg-w w-6 h-6 mr-1")}/>
         text = "Agregar al carrito"
         textClass = "text-black"
     }
@@ -76,7 +76,7 @@ export default function AddToCartButton({className, iconClassName, textClassName
             {...pressProps}
             ref={ref}>
             {icon}
-            <p className={clsx(textClassName, textClass, "text-sm ml-1 space-x-0")}>{text}</p>
+            <p className={clsx(textClassName, textClass, "text-sm space-x-0")}>{text}</p>
         </div>
     )
 }
