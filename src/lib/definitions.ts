@@ -31,6 +31,8 @@ export interface ProductWithTagsAndCoverImage extends ProductWithTags, ProductWi
 
 export interface ProductForDetail extends ProductWithTagsAndCoverImage{
     videos: VideoWithThumbnail[],
+    publishers: Company[],
+    developers: Company[],
     descriptionImages: Image[]
 }
 

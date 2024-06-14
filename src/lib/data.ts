@@ -354,13 +354,15 @@ export async function fetchMostSoldPages() {
     return Math.ceil(filteredData.length / TOTAL_ITEMS_PER_PAGE)
 }
 
-export async function fetchProduct(id: number) {
+export async function fetchProduct(id: number): Promise<ProductForDetail | null> {
     const data: ProductForDetail | null = await prisma.product.findUnique({
         where: {
             id: id
         },
         include: {
             coverImage: true,
+            publishers: true,
+            developers: true,
             tags: {
                 include: {
                     tag: true
