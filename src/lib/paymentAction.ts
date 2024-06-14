@@ -77,7 +77,7 @@ async function processPurchase(cartProducts: Product[],
         console.error(e)
         try {
             if (purchaseResult && purchaseResult.status === "approved" && purchaseResult.id) {
-                console.log(await refundPayment(purchaseResult.id))
+                await refundPayment(purchaseResult.id)
             }
             if (purchaseId) {
                 // Only deletes if the paymentId was not saved.
