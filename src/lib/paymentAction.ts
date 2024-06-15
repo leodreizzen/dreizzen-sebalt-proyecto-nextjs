@@ -46,7 +46,7 @@ export async function purchase(form_emailData: purchaseEmailFields,
 }
 
 function randomString(len: number) {
-    const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let randomString = '';
     for (var i = 0; i < len; i++) {
         const randomPos = Math.floor(Math.random() * charSet.length);
