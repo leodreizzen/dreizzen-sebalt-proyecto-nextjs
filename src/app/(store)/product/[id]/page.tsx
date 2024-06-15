@@ -10,8 +10,8 @@ import {notFound} from "next/navigation";
 import DOMPurify from "isomorphic-dompurify";
 import {Company} from "@prisma/client";
 import pluralize from "pluralize"
-import {BsDot} from "react-icons/bs";
 import {GoDotFill} from "react-icons/go";
+import Link from "next/link";
 
 export default async function ProductInfoPage({params}: { params: { id: string } }) {
     const {id: strId} = params;
@@ -19,7 +19,6 @@ export default async function ProductInfoPage({params}: { params: { id: string }
     const product = await fetchProduct(id);
     if (!product)
         notFound();
-    const textParagraphs = product.description.split("\n");
     const sanitizedDescription = DOMPurify.sanitize(product.description);
 
     return (
@@ -48,10 +47,10 @@ export default async function ProductInfoPage({params}: { params: { id: string }
                         <MarqueeOnOverflow direction="horizontal"
                                            animation={["animate-marqueeSlowX", "animate-marqueeSlowX2"]}
                                            className="w-full justify-center">
-                            <div className="flex gap-2 pb-4 pl-2 flex-nowrap items-center justify-center">
+                            <div className="flex mt-3 gap-2 pb-3 pl-2 flex-nowrap items-center justify-center">
                                 {product.tags.map(tag => (
                                     <Chip key={tag.tag.id} size="md" color="primary"
-                                          className="text-white">{tag.tag.name}</Chip>
+                                          className="text-white hover:bg-primary-500 active:bg-primary-400" as={Link} href={`/products/search?filter=${tag.tagId}`}>{tag.tag.name}</Chip>
                                 ))}
                             </div>
                         </MarqueeOnOverflow>
