@@ -12,12 +12,20 @@ import mercadoPago from "@/lib/mercadoPago";
 import {fetchCartProducts} from "@/lib/data";
 import {Product} from "@prisma/client";
 import {z} from "zod";
-import {PurchaseError, PurchaseResult} from "@/lib/definitions";
+import {ProductWithCoverImage, PurchaseError, PurchaseResult, PurchaseWithInvoiceData} from "@/lib/definitions";
 import {PaymentResponse} from "mercadopago/dist/clients/payment/commonTypes";
 import {Payment, PaymentRefund} from "mercadopago";
 import {v4 as uuidv4} from "uuid";
 import {clearCart} from "@/lib/actions";
 import prisma from "@/lib/prisma";
+import PurchaseEmail, {EmailProduct} from '@/../emails/PurchaseEmail'
+import {randomUUID} from "node:crypto";
+
+import { Resend } from 'resend';
+if (!process.env.RESEND_API_KEY)
+    throw new Error("RESEND_API_KEY not set")
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 
 export async function purchase(form_emailData: purchaseEmailFields,
                                form_invoiceData: purchaseInvoiceDataFields,
@@ -37,8 +45,42 @@ export async function purchase(form_emailData: purchaseEmailFields,
     }
 }
 
+function randomString(len: number) {
+    const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let randomString = '';
+    for (var i = 0; i < len; i++) {
+        const randomPos = Math.floor(Math.random() * charSet.length);
+        randomString += charSet.substring(randomPos,randomPos+1);
+    }
+    return randomString;
+}
 
-async function processPurchase(cartProducts: Product[],
+function randomKey(){
+    let key = randomString(5)
+    for(let i = 0; i < 2; i++){
+        key += "-" + randomString(5)
+    }
+    return key
+}
+
+async function sendEmail(cartProducts: ProductWithCoverImage[], purchase: PurchaseWithInvoiceData, emailData: purchaseEmailFields, amount_cents: number) {
+    const emailProducts: EmailProduct[] = cartProducts.map(product => ({
+        ...product,
+        productKey: randomKey(), // Mocks. In a real store, this should be real data
+        downloadLink: `https://bit.ly/3XpvyDR`
+    }))
+    const { error} = await resend.emails.send({
+            from: 'Vapor <order@vaporgames.tech>',
+            to: [emailData.email],
+            subject: `Thanks for purchasing in Vapor (#${purchase.id})`,
+            react: PurchaseEmail({products: emailProducts, total_cents: amount_cents, purchase: purchase}),
+        }
+    )
+    if(error)
+        console.error(error)
+}
+
+async function processPurchase(cartProducts: ProductWithCoverImage[],
                                invoiceData: purchaseInvoiceDataFields,
                                emailData: purchaseEmailFields,
                                paymentData: purchasePaymentDataFieldsCoerced,
@@ -50,20 +92,20 @@ async function processPurchase(cartProducts: Product[],
         // For atomicity and isolation, save the purchase first, then process the payment
         // This protects against the case where the payment is successful but the purchase is not saved
         const {duplicate, purchaseId} = await saveUnpaidPurchase(cartProducts, invoiceData, emailData, idempotencyKey);
-        if(duplicate)
-            return {success:false, error: PurchaseError.DUPLICATE_PURCHASE}
+        if (duplicate)
+            return {success: false, error: PurchaseError.DUPLICATE_PURCHASE}
 
-        if(!checkCartAmount(cartProducts, paymentData.transaction_amount)){
+        if (!checkCartAmount(cartProducts, paymentData.transaction_amount)) {
             await deleteFailedPurchase(purchaseId)
             return {success: false, error: PurchaseError.VALIDATION_ERROR}
         }
 
         purchaseResult = await processPayment(paymentData, cartProducts, invoiceData, idempotencyKey, purchaseId);
         if (purchaseResult.status === "approved") {
-            await savePaymentId(purchaseId, purchaseResult.id as number)
+            const purchase = await savePaymentId(purchaseId, purchaseResult.id as number)
             try {
                 await clearCart()
-                //TODO ENVIAR EMAIL
+                await sendEmail(cartProducts, purchase, emailData, paymentData.transaction_amount * 100)
             } catch (e) {
                 // Don't rollback if this happens
                 console.error(e)
@@ -96,7 +138,10 @@ function checkCartAmount(cartProducts: Product[], transactionAmount: number): bo
     return cartAmount > 0 && cartAmount / 100 === transactionAmount
 }
 
-async function saveUnpaidPurchase(products: Product[], invoiceData: purchaseInvoiceDataFields, emailData: purchaseEmailFields, idempotencyKey: string): Promise<{duplicate: boolean, purchaseId: number}> {
+async function saveUnpaidPurchase(products: Product[], invoiceData: purchaseInvoiceDataFields, emailData: purchaseEmailFields, idempotencyKey: string): Promise<{
+    duplicate: boolean,
+    purchaseId: number
+}> {
     return prisma.$transaction(async (tx) => {
         const existingPurchase = await tx.purchase.findUnique({
             where: {
@@ -152,7 +197,7 @@ async function processPayment(paymentData: purchasePaymentDataFieldsCoerced, car
     const payments = new Payment(mercadoPago)
     return await payments.create({
         body: {
-            description: "Payment for purchase in Vapor",
+            description: `Payment for purchase #${purchaseId} in Vapor`,
             installments: paymentData.installments,
             issuer_id: paymentData.issuer_id,
             payment_method_id: paymentData.payment_method_id,
@@ -184,13 +229,16 @@ async function processPayment(paymentData: purchasePaymentDataFieldsCoerced, car
 }
 
 
-async function savePaymentId(purchaseId: number, paymentId: number) {
-    await prisma.purchase.update({
+async function savePaymentId(purchaseId: number, paymentId: number): Promise<PurchaseWithInvoiceData> {
+    return prisma.purchase.update({
         where: {
             id: purchaseId
         },
         data: {
             paymentId: paymentId
+        },
+        include:{
+            invoiceData: true
         }
     })
 }
@@ -208,7 +256,7 @@ async function refundPayment(paymentId: number) {
     const refund = new PaymentRefund(mercadoPago)
     return await refund.create({
             payment_id: paymentId,
-            requestOptions:{
+            requestOptions: {
                 idempotencyKey: uuidv4()
             }
         }

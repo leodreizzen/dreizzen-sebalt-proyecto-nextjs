@@ -20,7 +20,6 @@ export default async function ProductInfoPage({params}: { params: { id: string }
     if (!product)
         notFound();
     const sanitizedDescription = DOMPurify.sanitize(product.description);
-
     return (
         <main className="sm:w-10/12 md:w-full lg:w-11/12 xl:w-10/12 2xl:w-8/12 mx-auto p-2">
             <h1 className="text-3xl font-bold text-center md:text-start md:pt-5 md:pb-2 lg:pb-3 ">{product.name}</h1>
