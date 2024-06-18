@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import clsx from "clsx";
 import { NextUIProvider } from "@nextui-org/system";
-import {ShoppingCartProvider} from "@/context/ShoppingCartContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -19,11 +18,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={clsx(inter.className, "min-h-screen min-w-screen bg-background flex flex-col text-foreground")}>
-        <ShoppingCartProvider>
           <NextUIProvider className="min-h-screen flex flex-col">
             {children}
           </NextUIProvider>
-        </ShoppingCartProvider>
       </body>
     </html>
   );

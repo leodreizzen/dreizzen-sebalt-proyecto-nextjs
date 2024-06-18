@@ -12,7 +12,7 @@ import {
 } from "@nextui-org/dropdown";
 import clsx from "clsx";
 import SearchBar from "./SearchBar";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import {Tag} from "@prisma/client";
 import ShoppingCartButton from "@/ui/navbar/ShoppingCartButton";
@@ -20,7 +20,6 @@ import ShoppingCartButton from "@/ui/navbar/ShoppingCartButton";
 type NormalMenuItem = {
   name: string;
   pathname: string;
-  searchParams?: { [key: string]: string };
   type: "normal";
 }
 
@@ -34,14 +33,12 @@ type DropdownMenuItem = {
 type ChildItem = {
   name: string;
   extraURL?: string;
-  searchParams?: { [key: string]: string };
 }
 
 type MenuItem = NormalMenuItem | DropdownMenuItem;
 
 export default function Navbar({ className, dropdownTags }: { className?: string, dropdownTags: Tag[] }) {
   const currentPathName = usePathname()
-  const currentParams = useSearchParams()
   const [searchOpen, setSearchOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -90,7 +87,7 @@ export default function Navbar({ className, dropdownTags }: { className?: string
         {
           menuItems.map((item) => (
             <NavbarItem key={item.name}>
-              <NavbarItemComponent item={item} selected={isSelected(item, currentPathName, currentParams)} />
+              <NavbarItemComponent item={item} selected={isSelected(item, currentPathName)} />
             </NavbarItem>
           ))
         }
@@ -108,7 +105,7 @@ export default function Navbar({ className, dropdownTags }: { className?: string
       <NavbarMenu className="w-full gap-4">
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item}-${index}`}>
-            <NavbarMenuComponent item={item} selected={isSelected(item, currentPathName, currentParams)} onItemClick={() => setIsMenuOpen(false)} />
+            <NavbarMenuComponent item={item} selected={isSelected(item, currentPathName)} onItemClick={() => setIsMenuOpen(false)} />
           </NavbarMenuItem>
         ))}
       </NavbarMenu>
@@ -120,18 +117,9 @@ export default function Navbar({ className, dropdownTags }: { className?: string
 function NavbarItemComponent({ item, selected }: { item: MenuItem, selected: boolean }): ReactNode {
   const router = useRouter()
 
-  function route({ pathname, query }: { pathname: string, query: { [_: string]: string } | undefined }) {
-    if (!query || Object.keys(query).length === 0)
-      router.push(pathname)
-    else {
-      const params = new URLSearchParams(query)
-      router.push(`${pathname}&${params.toString()}`)
-    }
-  }
-
   if (item.type === "normal") {
     return (
-      <Link className={clsx({ "text-primary": selected, "text-foreground": !selected })} href={{ pathname: item.pathname, query: item.searchParams }}>
+      <Link className={clsx({ "text-primary": selected, "text-foreground": !selected })} href={item.pathname}>
         {item.name}
       </Link>
     )
@@ -147,11 +135,10 @@ function NavbarItemComponent({ item, selected }: { item: MenuItem, selected: boo
         {
           item.children.map(child => (
             <DropdownItem key={child.name} textValue={child.name} variant="solid"
-              onPress={() => route({
-                pathname: concatURL(item.baseUrl,
-                  child.extraURL),
-                query: child.searchParams
-              })}>
+              onPress={() => router.push(
+                concatURL(item.baseUrl,
+                  child.extraURL)
+              )}>
               {child.name}
             </DropdownItem>
           ))
@@ -165,7 +152,7 @@ function NavbarMenuComponent({ item, selected, onItemClick }: { item: MenuItem, 
   if (item.type === "normal") {
     return (
       <Link className={clsx("mr-3", { "text-primary": selected, "text-foreground": !selected })}
-        href={{ pathname: item.pathname, query: item.searchParams }}
+        href={item.pathname}
         onClick={() => onItemClick()}>
         {item.name}
       </Link>
@@ -192,11 +179,10 @@ function CollapsibleMenuItem({ item, onChildClick, selected }: { item: DropdownM
         isOpen && <div className="flex flex-col gap-3 mt-2">
           {
             item.children.map((child, index) => (
-              <Link href={{
-                pathname: concatURL(item.baseUrl,
-                  child.extraURL),
-                query: child.searchParams
-              }}
+              <Link href={
+                concatURL(item.baseUrl,
+                  child.extraURL)
+              }
                 color="foreground"
                 className={clsx("ml-4 text-sm", { "mt-2": index !== 0, "mt-1": index == 0 })}
                 key={child.name}
@@ -216,17 +202,13 @@ function concatURL(base: string, extra: string | undefined) {
   return base + (extra ? `/${extra}` : "")
 }
 
-function isSelected(item: MenuItem, currentPathName: string, currentParams: URLSearchParams) {
-  function containsParams(params: { [key: string]: string }, currentParams: URLSearchParams) {
-    return Object.keys(params).every(key => currentParams.get(key) === params[key])
-  }
-
+function isSelected(item: MenuItem, currentPathName: string) {
   if (item.type === "normal") {
-    return item.pathname === currentPathName && containsParams(item.searchParams || {}, currentParams)
+    return item.pathname === currentPathName
   }
   else {
     for (const child of item.children) {
-      if (currentPathName === concatURL(item.baseUrl, child.extraURL) && containsParams(child.searchParams || {}, currentParams))
+      if (currentPathName === concatURL(item.baseUrl, child.extraURL))
         return true
     }
     return false
