@@ -60,7 +60,7 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
     }, [router]);
 
     useEffect(() => {
-        if(amount_cents == 0 && step != PurchaseStep.FINISHED){
+        if(amount_cents == 0 && step === PurchaseStep.EMAIL){
             handleReturnToCart();
         }
     }, [amount_cents, handleReturnToCart, step]);
