@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
-    "email-dev": "email dev"
+    "email-dev": "email dev",
+    "summarize": "npx esrun scripts/summarize.ts",
+    "updateShortDescriptions": "npx esrun scripts/updateShortDescriptions.ts"
   },
   "dependencies": {
     "@cloudinary/react": "^1.13.0",
@@ -72,6 +74,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@anthropic-ai/sdk": "^0.24.0",
     "@hookform/devtools": "^4.3.1",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20.14.2",
