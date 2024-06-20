@@ -1,6 +1,7 @@
 import "server-only";
 import prisma from './prisma';
 import {
+    AdminProduct,
     FeaturedProductWithProduct,
     FeaturedSaleWithProduct,
     FeaturedTagWithTagAndImage,
@@ -375,6 +376,28 @@ export async function fetchProduct(id: number): Promise<ProductForDetail | null>
             },
             descriptionImages: true
         }
+    })
+    return data
+}
+
+export async function fetchProductPages() {
+    const data = await prisma.product.count();
+    return data / TOTAL_ITEMS_PER_PAGE
+}
+
+export async function fetchProducts(page: number) {
+    const data: AdminProduct[] = await prisma.product.findMany({
+        include: {
+            coverImage: true,
+            tags: {
+                include: {
+                    tag: true
+                }
+            },
+            purchases: true
+        },
+        skip: (page - 1) * TOTAL_ITEMS_PER_PAGE,
+        take: TOTAL_ITEMS_PER_PAGE
     })
     return data
 }

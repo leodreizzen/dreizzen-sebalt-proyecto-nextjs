@@ -1,4 +1,17 @@
-import { Company, Image, Product, Tag, Video, Purchase, InvoiceData, ProductTag, FeaturedTag, ProductSale, VideoSource } from "@prisma/client";
+import {
+    Company,
+    Image,
+    Product,
+    Tag,
+    Video,
+    Purchase,
+    InvoiceData,
+    ProductTag,
+    FeaturedTag,
+    ProductSale,
+    VideoSource,
+    PurchaseItem
+} from "@prisma/client";
 
 export function removeReadOnlyForNumArray(arr: readonly number[]): number[] {
     return arr as number[]
@@ -12,6 +25,10 @@ export interface ProductWithTags extends Product{
 
 export interface ProductTagWithTag extends ProductTag{
     tag: Tag
+}
+
+export interface AdminProduct extends ProductWithTagsAndCoverImage {
+    purchases: PurchaseItem[]
 }
 
 export interface FeaturedSaleWithProduct extends ProductSale{

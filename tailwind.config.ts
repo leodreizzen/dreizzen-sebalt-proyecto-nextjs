@@ -3,12 +3,11 @@ import type { Config } from "tailwindcss";
 import containerQueries from "@tailwindcss/container-queries"
 const config: Config = {
   content: [
-    "./node_modules/@nextui-org/theme/dist/components/(accordion|badge|button|card|chip|divider|dropdown|image|link|navbar|ripple|spinner|menu|popover).js",
     "./src/ui/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",    
-    "./node_modules/@nextui-org/theme/dist/components/(accordion|badge|button|card|checkbox|chip|divider|dropdown|image|link|navbar|slider|ripple|spinner|menu|popover).js"
+    "./node_modules/@nextui-org/theme/dist/components/(accordion|badge|button|card|checkbox|chip|divider|dropdown|image|link|navbar|slider|ripple|spinner|menu|modal|popover).js"
 ],
   theme: {
     extend: {
