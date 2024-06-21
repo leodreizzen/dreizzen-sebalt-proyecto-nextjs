@@ -380,13 +380,28 @@ export async function fetchProduct(id: number): Promise<ProductForDetail | null>
     return data
 }
 
-export async function fetchProductPages() {
-    const data = await prisma.product.count();
-    return data / TOTAL_ITEMS_PER_PAGE
+export async function fetchProductPages(query: string) {
+    const data = await prisma.product.count(
+        {
+            where: {
+                name: {
+                    contains: query,
+                    mode: 'insensitive'
+                }
+            }
+        }
+    )
+    return Math.ceil(data / TOTAL_ITEMS_PER_PAGE)
 }
 
-export async function fetchProducts(page: number) {
+export async function fetchProducts(page: number, query: string) {
     const data: AdminProduct[] = await prisma.product.findMany({
+        where: {
+            name: {
+                contains: query,
+                mode: 'insensitive'
+            }
+        },
         include: {
             coverImage: true,
             tags: {

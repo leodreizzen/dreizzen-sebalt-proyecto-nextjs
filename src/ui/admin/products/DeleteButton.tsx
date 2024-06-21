@@ -31,7 +31,7 @@ export default function DeleteButton({ productId }: { productId: number }) {
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
+                            <ModalHeader className="flex flex-col gap-1">Delete product</ModalHeader>
                             <ModalBody>
                                 <p>
                                     ¿Are you sure you want to delete this product? This action cannot be undone.
@@ -39,10 +39,10 @@ export default function DeleteButton({ productId }: { productId: number }) {
                             </ModalBody>
                             <ModalFooter>
                                 <Button color="danger" variant="light" onPress={onClose}>
-                                    Close
+                                    Cancel
                                 </Button>
                                 <Button color="primary" onPress={onClose}>
-                                    Action
+                                    Delete
                                 </Button>
                             </ModalFooter>
                         </>

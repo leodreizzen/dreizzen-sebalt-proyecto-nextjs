@@ -1,12 +1,12 @@
 
 import { Card, CardContent } from "@/ui/shadcn/card"
-import { Button } from "@/ui/shadcn/button"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/ui/shadcn/table"
 import {AdminProduct} from "@/lib/definitions";
 import Image from "next/image";
-import { FaTrash, FaPen } from "react-icons/fa";
+import { FaPen } from "react-icons/fa";
 import {formatPrice} from "@/util/formatUtils";
 import DeleteButton from "@/ui/admin/products/DeleteButton";
+import {Button} from "@nextui-org/button";
 
 export default function ProductTable({ products }: {products: AdminProduct[]}) {
     return (
@@ -23,7 +23,7 @@ export default function ProductTable({ products }: {products: AdminProduct[]}) {
                                     <div className="text-gray-500">Purchases: {product.purchases.length}</div>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Button variant="secondary" size="sm">
+                                    <Button className={"text-white bg-gray-800 rounded-md min-w-6 h-9"} size="sm">
                                         <FaPen className="h-4 w-4" />
                                     </Button>
                                     <DeleteButton productId={product.id} />
@@ -46,7 +46,7 @@ export default function ProductTable({ products }: {products: AdminProduct[]}) {
                     </TableHeader>
                     <TableBody>
                         {products.map((product) => (
-                            <TableRow key={product.id}>
+                            <TableRow key={product.id} className={"hover:bg-slate-100/50 dark:hover:bg-slate-800/50"}>
                                 <TableCell>
                                     <Image src={product.coverImage.url} alt={product.coverImage.alt} width={100} height={80} className="rounded-md" />
                                 </TableCell>
@@ -55,7 +55,7 @@ export default function ProductTable({ products }: {products: AdminProduct[]}) {
                                 <TableCell>{product.purchases.length}</TableCell>
                                 <TableCell>
                                     <div className="flex items-center gap-2">
-                                        <Button variant="secondary" size="sm">
+                                        <Button className={"text-white bg-gray-800 rounded-md min-w-6 h-9"} size="sm">
                                             <FaPen className="h-4 w-4" />
                                         </Button>
                                         <DeleteButton productId={product.id} />
