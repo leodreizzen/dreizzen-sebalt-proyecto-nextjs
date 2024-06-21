@@ -87,7 +87,7 @@ export default function AdminSidebar(){
                         }
                     >
                         <div className={"flex flex-row items-center mt-3 mb-3 justify-center"}>
-                            <VaporLogo className={"fill-white mr-1"} cropped={collapsed}/>
+                            <VaporLogo className={"fill-white mr-1"} cropped={collapsed} h={"80px"} w={"140px"}/>
                         </div>
                         <hr className="border-borders my-2"/>
                         {mainMenuItems.map((item) => (

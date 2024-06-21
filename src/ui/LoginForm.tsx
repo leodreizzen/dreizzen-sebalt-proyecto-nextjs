@@ -4,14 +4,16 @@ import {authenticate} from "@/lib/actions";
 import {MdAlternateEmail} from "react-icons/md";
 import {PiKey} from "react-icons/pi";
 import {Button} from "@nextui-org/button";
+import VaporLogo from "@/ui/icons/VaporLogo";
+import React from "react";
 
 export default function LoginForm() {
     const [errorMessage, login] = useFormState(authenticate, undefined)
     return (
         <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2">
             <div className="flex flex-col items-center">
-                <div className="h-24 w-24 inline-block mx-auto bg-content1">
-                    INSERTE LOGO
+                <div className="inline-block mx-auto bg-transparent">
+                    <VaporLogo className={"fill-white mr-1"} h={"80px"} w={"170px"}/>
                 </div>
                 <h1 className="text-3xl font-bold text-center mt-5 mb-4">Iniciar sesión</h1>
                 <div className="flex flex-col items-center">
