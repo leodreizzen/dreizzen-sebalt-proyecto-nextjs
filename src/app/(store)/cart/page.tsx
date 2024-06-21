@@ -63,8 +63,8 @@ function CartWithItemsPage({products, className}: { products: ProductWithCoverIm
                 <span>Total:</span>
                 <span className="pl-2 pr-4">{formatPrice(total)}</span>
                 <Button as={Link} href="/purchase"
-                        className="font-bold bg-transparent text-foreground border-foreground border" size="md">Comprar
-                    ahora</Button>
+                        className="font-bold bg-transparent text-foreground border-foreground border" size="md"
+                >Comprar ahora</Button>
             </div>
         </div>
     )
