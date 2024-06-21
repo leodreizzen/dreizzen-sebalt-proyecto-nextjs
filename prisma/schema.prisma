@@ -119,6 +119,7 @@ model Purchase {
   idempotencyKey String         @unique
   invoiceDataId  Int            @unique
   invoiceData    InvoiceData    @relation(fields: [invoiceDataId], references: [id], onDelete: Cascade)
+  purchaseDate   DateTime       @default(now())
   products       PurchaseItem[]
 }
 
