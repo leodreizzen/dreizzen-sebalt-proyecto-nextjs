@@ -1,14 +1,13 @@
 "use client";
 
-import React, {useState} from "react";
+import React, {ReactNode, useState} from "react";
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { BsArrowBarLeft, BsArrowBarRight } from 'react-icons/bs';
-import { FaStar, FaShoppingBag, FaTag, FaDollarSign } from 'react-icons/fa';
+import { FaStar, FaGamepad, FaTag } from 'react-icons/fa';
 import { ShoppingCartBoldIcon } from "@nextui-org/shared-icons";
-import {Link as NextUILink} from "@nextui-org/link";
 import Link from "next/link";
 import clsx from "clsx";
-import {usePathname, useSearchParams} from "next/navigation";
+import {usePathname} from "next/navigation";
 import VaporLogo from "@/ui/icons/VaporLogo";
 
 type NormalMenuItem = {
@@ -42,28 +41,14 @@ export default function AdminSidebar(){
     const mainMenuItems : MenuItem[] = [
         {
             name: "Featured",
-            type: "submenu",
-            baseUrl: "/admin/featured",
+            pathname: "/admin/featured",
             icon: <FaStar />,
-            children: [
-                {
-                    name: "Products",
-                    extraURL: "/products",
-                },
-                {
-                    name: "Tags",
-                    extraURL: "/tags",
-                },
-                {
-                    name: "Sales",
-                    extraURL: "/sales",
-                }
-            ]
+            type: "normal",
         },
         {
             name: "Products",
             pathname: "/admin/products",
-            icon: <FaShoppingBag />,
+            icon: <FaGamepad />,
             type: "normal",
         },
         {
@@ -107,18 +92,9 @@ export default function AdminSidebar(){
                         <hr className="border-borders my-2"/>
                         {mainMenuItems.map((item) => (
                             item.type === "normal" ?
-                                <MenuItem key={item.name} icon={item.icon} active={isSelected(item, currentPathName)}>
-                                    {item.name}
-                                </MenuItem>
+                                <SidebarMenuComponent item={item} selected={isSelected(item, currentPathName)} key={item.name}/>
                                 :
-                                <SubMenu key={item.name} title={item.name} icon={item.icon} label={item.name}>
-                                    {item.children.map((child) => (
-                                        <MenuItem key={child.name} icon={<FaStar/>}
-                                                  active={isSelected(item, currentPathName)}>
-                                            {child.name}
-                                        </MenuItem>
-                                    ))}
-                                </SubMenu>
+                                <SidebarSubMenuComponent item={item} selected={isSelected(item, currentPathName)} parentUrl={item.baseUrl} key={item.name}/>
                         ))}
                     </Menu>
                 </Sidebar>
@@ -127,24 +103,59 @@ export default function AdminSidebar(){
                 {collapsed ? <BsArrowBarRight/> : <BsArrowBarLeft/>}
             </button>
         </>
-            )
-            }
+    )
+}
 
-            function concatURL(base: string, extra: string | undefined) {
-            return base + (extra ? `/${extra}` : "")
-        }
+function SidebarMenuComponent({ item, selected }: { item: NormalMenuItem, selected: boolean }): ReactNode {
+    return (
+        <Link className={clsx("", { "text-primary": selected, "text-foreground": !selected })}
+              href={item.pathname}>
+            <MenuItem key={item.name} icon={item.icon} active={selected} component={'div'}>
+                {item.name}
+            </MenuItem>
+        </Link>
+    )
+}
 
-            function isSelected(item: MenuItem, currentPathName: string) {
+function SidebarSubMenuComponent({ item, selected }: { item: SubMenuItem, selected: boolean, parentUrl: string }): ReactNode {
+    return (
+        <SubMenu key={item.name} title={item.name} icon={item.icon} label={item.name}>
+            {item.children.map((child) => (
+                <MenuItem key={child.name} icon={<FaStar/>}
+                          active={selected}>
+                    <SidebarSubMenuItemComponent item={child}
+                                                 selected={selected}
+                                                 parentUrl={item.baseUrl}/>
+                </MenuItem>
+            ))}
+        </SubMenu>
+    )
+}
 
-            if (item.type === "normal") {
-            return item.pathname === currentPathName
-        }
-            else {
-            for (const child of item.children) {
+function SidebarSubMenuItemComponent({ item, selected, parentUrl }: { item: SubMenuChildItem, selected: boolean, parentUrl: string }): ReactNode {
+    return (
+        <Link href={concatURL(parentUrl, item.extraURL)}
+              className={clsx("", { "text-primary": selected, "text-foreground": !selected })}>
+            <MenuItem key={item.name} icon={item.icon} active={selected} component={'div'}>
+                {item.name}
+            </MenuItem>
+        </Link>
+    )
+}
+
+function concatURL(base: string, extra: string | undefined) {
+    return base + (extra ? `/${extra}` : "")
+}
+
+function isSelected(item: MenuItem, currentPathName: string) {
+    if (item.type === "normal") {
+        return item.pathname === currentPathName
+    }
+    else {
+        for (const child of item.children) {
             if (currentPathName === concatURL(item.baseUrl, child.extraURL))
-            return true
+                return true
         }
             return false
-
-        }
-        }
+    }
+}
