@@ -60,5 +60,6 @@ export const purchasePlaceholder:PurchaseWithInvoiceData = {
     paymentId: 10,
     id: 10,
     idempotencyKey: randomUUID(),
+    purchaseDate: new Date(Date.now()),
     invoiceDataId: 1
 }
