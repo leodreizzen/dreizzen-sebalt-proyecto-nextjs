@@ -10,6 +10,7 @@ import {usePathname} from "next/navigation";
 import VaporLogo from "@/ui/icons/VaporLogo";
 import {manageLogout} from "@/ui/admin/sidebar/logout";
 import {LogOutIcon} from "lucide-react";
+import { Link as NextUILink } from "@nextui-org/link";
 
 type NormalMenuItem = {
     name: string;
@@ -122,7 +123,9 @@ export default function AdminSidebar({collapsed, className, initialized}: {
                 }
             >
                 <div className={"flex flex-row items-center mt-3 mb-3 justify-center"}>
-                    <VaporLogo className={"fill-white mr-1"} cropped={collapsed} h={"80px"} w={"140px"}/>
+                    <NextUILink as={Link} href="/" aria-label="Ir a home">
+                        <VaporLogo className={"fill-white mr-1"} cropped={collapsed} h={"80px"} w={"140px"}/>
+                    </NextUILink>
                 </div>
                 <hr className="border-borders my-2"/>
                 {mainMenuItems.map((item) => (
