@@ -1,7 +1,7 @@
 import "server-only";
 import prisma from './prisma';
 import {
-    AdminProduct,
+    AdminProduct, FeaturedProductSaleWithProduct,
     FeaturedProductWithProduct,
     FeaturedSaleWithProduct,
     FeaturedTagWithTagAndImage,
@@ -211,7 +211,7 @@ export async function fetchTags(query: string, filter: number[], priceRange: num
 }
 
 export async function fetchSaleSearch(query: string) {
-    const data: FeaturedProductWithProduct[] = await prisma.productSale.findMany({
+    const data: FeaturedProductSaleWithProduct[] = await prisma.productSale.findMany({
         where: {
             product: {
                 name: {

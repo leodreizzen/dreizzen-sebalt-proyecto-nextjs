@@ -10,7 +10,7 @@ import {
     FeaturedTag,
     ProductSale,
     VideoSource,
-    PurchaseItem
+    PurchaseItem, FeaturedProduct
 } from "@prisma/client";
 
 export function removeReadOnlyForNumArray(arr: readonly number[]): number[] {
@@ -57,7 +57,11 @@ export interface VideoWithThumbnail extends Video{
     thumbnail: Image | null
 }
 
-export interface FeaturedProductWithProduct{
+export interface FeaturedProductWithProduct extends FeaturedProduct{
+    product: ProductWithTagsAndCoverImage
+}
+
+export interface FeaturedProductSaleWithProduct extends ProductSale{
     product: ProductWithTagsAndCoverImage
 }
 
