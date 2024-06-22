@@ -6,8 +6,11 @@ import clsx from "clsx";
 import {ProductWithTagsAndCoverImage} from "@/lib/definitions";
 import {Key} from "react-aria";
 
-export default function ProductAutocomplete({className, onValueChange}: {className?: string, onValueChange: (product: ProductWithTagsAndCoverImage | null) => void}) {
-
+export default function ProductAutocomplete({className, onValueChange}: {
+    className?: string,
+    onValueChange: (product: ProductWithTagsAndCoverImage | null) => void
+}) {
+    const [loading, setLoading] = useState(true)
     const [products, setProducts] = useState<ProductWithTagsAndCoverImage[]>([])
     const getProductsDebounced = useDebouncedCallback(getProducts, 500)
 
@@ -19,6 +22,7 @@ export default function ProductAutocomplete({className, onValueChange}: {classNa
         fetch(`/api/internal/admin/products?q=${query}`).then(async (res) => {
             if (res.ok) {
                 setProducts((await res.json()) as AdminProductsAPIResponse)
+                setLoading(false)
             } else {
                 console.error("Failed to fetch product list")
             }
@@ -26,7 +30,7 @@ export default function ProductAutocomplete({className, onValueChange}: {classNa
     }
 
     function handleSelectionChange(key: Key | null) {
-        const id = key !== null ? Number(key): null
+        const id = key !== null ? Number(key) : null
         if (id) {
             onValueChange(products.find(product => product.id === id) || null)
         } else {
@@ -35,10 +39,13 @@ export default function ProductAutocomplete({className, onValueChange}: {classNa
     }
 
     return (
-        <Autocomplete className={clsx(className)} onInputChange={getProductsDebounced} listboxProps={{emptyContent: ""}} onSelectionChange={handleSelectionChange} label={"Select a product"} color={"primary"} autoFocus>
-            {products.map(product =>
+        <Autocomplete className={clsx(className)} classNames={{popoverContent: "border-2 border-borders"}} onInputChange={getProductsDebounced} listboxProps={{emptyContent: ""}}
+                      onSelectionChange={handleSelectionChange} label={"Select a product"} color={"primary"} disabledKeys={["loading"]} autoFocus>
+            { !loading? products.map(product =>
                 <AutocompleteItem key={product.id} value={product.name}>{product.name}</AutocompleteItem>
-            )}
+            ):
+                <AutocompleteItem key="loading" value="loading">Loading...</AutocompleteItem>
+            }
         </Autocomplete>
     )
 }
