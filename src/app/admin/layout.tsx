@@ -27,7 +27,7 @@ export default function AdminLayout({children}: { children: React.ReactNode }) {
             <AdminSidebar collapsed={collapsed} initialized={sidebarInitialized}/>
             <div className="flex flex-col h-full flex-grow overflow-auto">
                 <SidebarCollapseButton collapsed={collapsed} onCollapsedChange={setCollapsed}/>
-                <div className="flex-grow w-full p-6 bg-background overflow-auto">
+                <div className="flex-grow w-full px-6 bg-background overflow-auto">
                     <Suspense fallback={<div/>}>
                         {children}
                     </Suspense>

@@ -99,26 +99,30 @@ export default function FeaturedProductsForm({className, featuredProducts: saved
             next(false, "No changes")
     }
 
+    function handleRemove(id: number) {
+        setProducts(products.filter(p => p.id !== id))
+    }
+
     return (
         <div className={clsx(className, "border border-borders rounded-xl p-2")}>
             <div className="flex flex-col items-center w-5/6 mx-auto">
                 <p className="w-full my-2 font-bold">Drag the cards to change their order in the home page</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full auto-rows-[1fr]">
                     <Button onPress={handleAddPress}
-                            className="border border-borders rounded-2xl flex flex-col items-center !h-[revert] justify-center bg-transparent [&>svg]:max-w-none">
+                            className={clsx("border border-borders rounded-2xl flex flex-col items-center justify-center bg-transparent [&>svg]:max-w-none", products.length === 0 ? "h-60 sm:h-44 2xl:h-64" : "!h-[revert]")}>
                         <IoMdAddCircle className="h-1/2 w-1/2 text-foreground"/>
                     </Button>
                     <DndContext onDragEnd={handleDragEnd}>
                         <SortableContext items={products.map(p => ({...p, id: p.id}))}>
                             {products.map((product) => (
                                 <Draggable id={product.id} key={product.id}>
-                                    <AdminFeaturedProductCard product={product}/>
+                                    <AdminFeaturedProductCard product={product} removable onRemove={()=>handleRemove(product.id)}/>
                                 </Draggable>
                             ))}
                         </SortableContext>
                     </DndContext>
                 </div>
-                <div className="flex gap-2 mt-2 items-center">
+                <div className="flex gap-2 mt-4 items-center">
                     <Button color="danger" className="w-30 h-10" onPress={handleResetPress}
                             isDisabled={!changed}>Reset</Button>
                     <AwesomeButtonProgress type="primary" disabled={!buttonEnabled} onPress={handleSave}
