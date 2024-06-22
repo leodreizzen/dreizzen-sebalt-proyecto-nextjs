@@ -20,9 +20,9 @@ import {purchase} from "@/lib/paymentAction"
 import {ICardPaymentBrickPayer, ICardPaymentFormData} from "@mercadopago/sdk-react/bricks/cardPayment/type";
 import {v4 as uuidv4} from "uuid";
 import {PurchaseError, PurchaseResult} from "@/lib/definitions";
-import {AwesomeButtonProgress} from "react-awesome-button";
-import 'react-awesome-button/dist/styles.css';
-import "./buttonProgress.css"
+import {AwesomeButtonProgress} from "@leodreizzen/react-awesome-button";
+import '@leodreizzen/react-awesome-button/dist/styles.css';
+import buttonStyles from "./buttonProgress.module.scss"
 import {useShoppingCartContext} from "@/context/ShoppingCartContext";
 enum PurchaseStep {
     EMAIL,
@@ -175,7 +175,8 @@ export default function PurchaseForm({amount_cents}: { amount_cents: number }) {
                             //@ts-ignore
                             onPress={handleFinish}
                             loadingLabel="Processing"
-                            disabled={finishButtonClicked}>
+                            cssModule={buttonStyles}
+                            >
                             Finish purchase
                         </AwesomeButtonProgress>
                         </div>

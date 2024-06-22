@@ -1,9 +1,8 @@
-.finish-purchase-btn .aws-btn{
-    @apply rounded-2xl;
-    @apply overflow-clip;
-}
-
+@import '@leodreizzen/react-awesome-button/src/styles/styles.scss';
 .aws-btn {
+        @apply rounded-2xl;
+        @apply overflow-clip;
+
         --button-default-height: 45px;
         --button-default-font-size: 14px;
         --button-default-border-radius: 6px;

@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import clsx from "clsx";
 import { NextUIProvider } from "@nextui-org/system";
+import {Toaster} from "@/ui/shadcn/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -21,6 +22,7 @@ export default function RootLayout({
           <NextUIProvider className="min-h-screen flex flex-col">
             {children}
           </NextUIProvider>
+          <Toaster/>
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 import {colors, nextui} from '@nextui-org/theme';
 import type { Config } from "tailwindcss";
 import containerQueries from "@tailwindcss/container-queries"
+import animatePlugin from "tailwindcss-animate";
 const config: Config = {
   content: [
     "./src/ui/**/*.{js,ts,jsx,tsx,mdx}",
@@ -68,6 +69,6 @@ const config: Config = {
 
     },
   },
-  plugins: [nextui(), containerQueries],
+  plugins: [nextui(), containerQueries, animatePlugin],
 };
 export default config;

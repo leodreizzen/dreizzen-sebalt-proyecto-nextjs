@@ -11,18 +11,42 @@ import {IoMdAddCircle} from "react-icons/io";
 import AddFeaturedProductModal from "@/ui/admin/featured/AddFeaturedProductModal";
 import {setFeaturedProducts} from "@/lib/actions";
 import Draggable from "@/ui/Draggable";
+import {AwesomeButtonProgress} from "@leodreizzen/react-awesome-button";
+import '@leodreizzen/react-awesome-button/dist/styles.css';
+import AwesomeButtonStyles from './buttonProgress.module.scss';
+import {useToast} from "@/ui/shadcn/use-toast";
 
 export default function FeaturedProductsForm({className, featuredProducts: savedFeaturedProducts}: {
     featuredProducts: ProductWithTagsAndCoverImage[],
     className?: string
 }) {
     const [products, setProducts] = useState(savedFeaturedProducts)
+    const [previousSavedFeaturedProducts, setPreviousSavedFeaturedProducts] = useState(savedFeaturedProducts)
     const [modalOpen, setModalOpen] = useState(false);
     const [changed, setChanged] = useState(false);
+    const [buttonEnabled, setButtonEnabled] = useState(false);
+    const {toast} = useToast();
+    function productsDiffer(p1: { id: number }[], p2: { id: number }[]): boolean {
+        return p1.length !== p2.length || p1.some((product, index) => product.id !== p2[index].id)
+    }
 
     useEffect(() => {
-        setChanged(products.length !== savedFeaturedProducts.length || products.some((product, index) => product.id !== savedFeaturedProducts[index].id))
-    }, [products])
+        if (productsDiffer(savedFeaturedProducts, products)) {
+            setChanged(true)
+            setButtonEnabled(true)
+        } else {
+            setChanged(false)
+            if (productsDiffer(previousSavedFeaturedProducts, products)) {
+                const timeoutId = setTimeout(() => {
+                    setPreviousSavedFeaturedProducts(products)
+                    setButtonEnabled(false)
+                }, 1000) // allow animation to finish
+                return () => clearTimeout(timeoutId)
+            }
+            else
+                setButtonEnabled(false)
+        }
+    }, [savedFeaturedProducts, previousSavedFeaturedProducts, products, setPreviousSavedFeaturedProducts, setButtonEnabled, setChanged])
 
     function handleDragEnd(event: DragEndEvent) {
         const {active, over} = event;
@@ -53,13 +77,26 @@ export default function FeaturedProductsForm({className, featuredProducts: saved
         setProducts(savedFeaturedProducts);
     }
 
-    async function handleSave() {
+    async function handleSave(_: React.MouseEvent<Element, MouseEvent>, next: (endState?: (boolean | undefined), errorLabel?: (string | null | undefined)) => void) {
         if (changed) {
             const result = await setFeaturedProducts(products);
             if (result.success) {
+                next(true)
                 setChanged(false);
+                setTimeout(()=>{
+                    setButtonEnabled(false)
+                }, 1000) // allow animation to finish
+            } else {
+                toast({
+                    title: "Error saving products",
+                    description: result.error,
+                    variant: "destructive",
+                    duration: 5000
+                })
+                next(false, "Error")
             }
-        }
+        } else
+            next(false, "No changes")
     }
 
     return (
@@ -81,11 +118,11 @@ export default function FeaturedProductsForm({className, featuredProducts: saved
                         </SortableContext>
                     </DndContext>
                 </div>
-                <div className="flex gap-2 mt-2">
-                    <Button color="danger" className="mt-2 w-30" onPress={handleResetPress}
+                <div className="flex gap-2 mt-2 items-center">
+                    <Button color="danger" className="w-30 h-10" onPress={handleResetPress}
                             isDisabled={!changed}>Reset</Button>
-                    <Button color="primary" className="mt-2 w-30" isDisabled={!changed}
-                            onClick={handleSave}>Save</Button>
+                    <AwesomeButtonProgress type="primary" disabled={!buttonEnabled} onPress={handleSave}
+                                           cssModule={AwesomeButtonStyles}>Save</AwesomeButtonProgress>
                 </div>
             </div>
             <AddFeaturedProductModal isOpen={modalOpen} onSubmit={handleAddModalSubmit}

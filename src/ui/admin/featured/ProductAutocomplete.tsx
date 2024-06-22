@@ -35,7 +35,7 @@ export default function ProductAutocomplete({className, onValueChange}: {classNa
     }
 
     return (
-        <Autocomplete className={clsx(className)} onInputChange={getProductsDebounced} listboxProps={{emptyContent: ""}} onSelectionChange={handleSelectionChange} label={"Select a product"} color={"primary"}>
+        <Autocomplete className={clsx(className)} onInputChange={getProductsDebounced} listboxProps={{emptyContent: ""}} onSelectionChange={handleSelectionChange} label={"Select a product"} color={"primary"} autoFocus>
             {products.map(product =>
                 <AutocompleteItem key={product.id} value={product.name}>{product.name}</AutocompleteItem>
             )}
