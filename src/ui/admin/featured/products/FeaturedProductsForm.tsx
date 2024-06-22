@@ -4,15 +4,15 @@ import clsx from "clsx";
 import {ProductWithTagsAndCoverImage} from "@/lib/definitions";
 import React, {useEffect, useState} from "react";
 import AdminFeaturedProductCard from "@/ui/admin/featured/AdminFeaturedProductCard";
-import AddFeaturedProductModal from "@/ui/admin/featured/AddFeaturedProductModal";
-import {setFeaturedProducts} from "@/lib/actions";
+import AddFeaturedProductModal from "@/ui/admin/featured/products/AddFeaturedProductModal";
+import {saveFeaturedProducts} from "@/lib/actions";
 import Draggable from "@/ui/Draggable";
 import {AwesomeButtonProgress} from "@leodreizzen/react-awesome-button";
 import '@leodreizzen/react-awesome-button/dist/styles.css';
-import AwesomeButtonStyles from './buttonProgress.module.scss';
+import AwesomeButtonStyles from '../buttonProgress.module.scss';
 import {useToast} from "@/ui/shadcn/use-toast";
 import SortableList from "@/ui/admin/featured/SortableList";
-import {itemsDiffer} from "@/ui/admin/featured/utils";
+import {itemsDifferCheckOrder} from "@/ui/admin/featured/utils";
 
 export default function FeaturedProductsForm({className, featuredProducts: savedFeaturedProducts}: {
     featuredProducts: ProductWithTagsAndCoverImage[],
@@ -26,14 +26,14 @@ export default function FeaturedProductsForm({className, featuredProducts: saved
     const {toast} = useToast();
 
     useEffect(() => {
-        setChanged(itemsDiffer(savedFeaturedProducts, products))
+        setChanged(itemsDifferCheckOrder(savedFeaturedProducts, products))
     }, [products, savedFeaturedProducts]);
 
     useEffect(() => {
-        if (itemsDiffer(savedFeaturedProducts, products)) {
+        if (itemsDifferCheckOrder(savedFeaturedProducts, products)) {
             setButtonEnabled(true)
         } else {
-            if (itemsDiffer(previousSavedFeaturedProducts, savedFeaturedProducts)) {
+            if (itemsDifferCheckOrder(previousSavedFeaturedProducts, savedFeaturedProducts)) {
                 const timeoutId = setTimeout(() => {
                     setPreviousSavedFeaturedProducts(products)
                     setButtonEnabled(false)
@@ -66,7 +66,7 @@ export default function FeaturedProductsForm({className, featuredProducts: saved
 
     async function handleSave(_: React.MouseEvent<Element, MouseEvent>, next: (endState?: (boolean | undefined), errorLabel?: (string | null | undefined)) => void) {
         if (changed) {
-            const result = await setFeaturedProducts(products);
+            const result = await saveFeaturedProducts(products);
             if (result.success) {
                 next(true)
                 setChanged(false);

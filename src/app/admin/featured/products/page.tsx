@@ -1,7 +1,7 @@
-import FeaturedProductsForm from "@/ui/admin/featured/FeaturedProductsForm";
-import {fetchFeaturedProducts} from "@/lib/data";
+import FeaturedProductsForm from "@/ui/admin/featured/products/FeaturedProductsForm";
+import {fetchFeaturedProducts, fetchFeaturedSales} from "@/lib/data";
 
-export default async function FeaturedProductsPage() {
+export default async function FeaturedProductsAdminPage() {
     const featuredProducts = await fetchFeaturedProducts()
     const sortedProducts = featuredProducts.sort((a, b) => a.order - b.order).map(product => product.product)
     return (

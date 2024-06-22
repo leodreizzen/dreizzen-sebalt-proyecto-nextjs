@@ -1,9 +1,9 @@
 import {NextRequest, NextResponse} from "next/server";
-import {AdminProductsAPIResponse} from "@/app/api/internal/admin/products/types";
 import {auth} from "@/auth";
 import prisma from "@/lib/prisma";
+import {AdminSalesAPIResponse} from "@/app/api/internal/admin/sales/types";
 
-export async function GET(request: NextRequest): Promise<NextResponse<AdminProductsAPIResponse>>{
+export async function GET(request: NextRequest): Promise<NextResponse<AdminSalesAPIResponse>>{
 
     const authorized = (await auth())?.user?.isAdmin!!
     if(!authorized){
@@ -15,25 +15,29 @@ export async function GET(request: NextRequest): Promise<NextResponse<AdminProdu
     if(query === null){
         return new NextResponse('Missing query parameter', {status: 400})
     }
-
     else{
-        return NextResponse.json(await prisma.product.findMany({
+        return NextResponse.json(await prisma.productSale.findMany({
             where: {
-                name:{
-                    contains: query,
-                    mode: "insensitive"
-                },
+                product:{
+                    name:{
+                        contains: query,
+                        mode: "insensitive"
+                    },
+                }
             },
             include: {
-                coverImage: true,
-                tags: {
+                product:{
                     include:{
-                        tag: true
+                        coverImage: true,
+                        tags: {
+                            include:{
+                                tag: true
+                            }
+                        }
                     }
                 }
             },
             take: 20
         }))
     }
-
 }

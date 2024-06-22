@@ -31,7 +31,7 @@ export interface AdminProduct extends ProductWithTagsAndCoverImage {
     purchases: PurchaseItem[]
 }
 
-export interface FeaturedSaleWithProduct extends ProductSale{
+export interface ProductSaleWithProduct extends ProductSale{
     product: ProductWithTagsAndCoverImage
 }
 
