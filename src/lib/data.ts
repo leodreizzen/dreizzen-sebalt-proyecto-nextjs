@@ -3,7 +3,7 @@ import prisma from './prisma';
 import {
     AdminProduct, FeaturedProductSaleWithProduct,
     FeaturedProductWithProduct,
-    FeaturedSaleWithProduct,
+    ProductSaleWithProduct,
     FeaturedTagWithTagAndImage,
     ProductForDetail,
     ProductWithCoverImage,
@@ -63,7 +63,7 @@ export async function fetchDropdownTags(): Promise<Tag[]>{
 }
 
 export async function fetchFeaturedSales(){
-    const data: FeaturedSaleWithProduct[] = await prisma.productSale.findMany({
+    const data: ProductSaleWithProduct[] = await prisma.productSale.findMany({
         where: {
             isFeatured: true
         },

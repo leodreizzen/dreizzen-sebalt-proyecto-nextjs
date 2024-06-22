@@ -1,9 +1,10 @@
 import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from "@nextui-org/modal";
-import ProductAutocomplete from "@/ui/admin/featured/ProductAutocomplete";
+import ProductAutocomplete from "@/ui/admin/featured/products/ProductAutocomplete";
 import {ProductWithTagsAndCoverImage} from "@/lib/definitions";
 import {useState} from "react";
 import AdminFeaturedProductCard from "@/ui/admin/featured/AdminFeaturedProductCard";
 import {Button} from "@nextui-org/button";
+import clsx from "clsx";
 
 function AddFeaturedProductModalContent({onClose, onSubmit}: {
     onClose: () => void,
@@ -41,12 +42,12 @@ function AddFeaturedProductModalContent({onClose, onSubmit}: {
 export default function AddFeaturedProductModal({className, isOpen, onClose, onSubmit}: {
     className?: string,
     isOpen: boolean,
-    onClose: (product: ProductWithTagsAndCoverImage | null) => void,
+    onClose: () => void,
     onSubmit: (product: ProductWithTagsAndCoverImage) => void
 }) {
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose.bind(null, null)} placement="center">
+        <Modal className={clsx(className)} isOpen={isOpen} onClose={onClose} placement="center">
             <ModalContent>{
                 (onClose) => (
                     <AddFeaturedProductModalContent onClose={onClose} onSubmit={onSubmit}/>

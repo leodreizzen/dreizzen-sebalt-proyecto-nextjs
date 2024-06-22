@@ -37,9 +37,14 @@ export default function ProductAutocomplete({className, onValueChange}: {
             onValueChange(null)
         }
     }
+    function handleInputChange(value: string) {
+        if(value === "")
+            setLoading(true)
+        getProductsDebounced(value)
+    }
 
     return (
-        <Autocomplete className={clsx(className)} classNames={{popoverContent: "border-2 border-borders"}} onInputChange={getProductsDebounced} listboxProps={{emptyContent: ""}}
+        <Autocomplete className={clsx(className)} classNames={{popoverContent: "border-2 border-borders"}} onInputChange={handleInputChange} listboxProps={{emptyContent: ""}}
                       onSelectionChange={handleSelectionChange} label={"Select a product"} color={"primary"} disabledKeys={["loading"]} autoFocus>
             { !loading? products.map(product =>
                 <AutocompleteItem key={product.id} value={product.name}>{product.name}</AutocompleteItem>
