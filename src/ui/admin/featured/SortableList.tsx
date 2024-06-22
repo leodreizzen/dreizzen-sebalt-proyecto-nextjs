@@ -4,17 +4,20 @@ import clsx from "clsx";
 import {IoMdAddCircle} from "react-icons/io";
 import {DndContext, DragEndEvent, UniqueIdentifier} from "@dnd-kit/core";
 import {arrayMove, SortableContext} from "@dnd-kit/sortable";
+import Draggable from "@/ui/Draggable";
 export default function SortableList<T extends { id: UniqueIdentifier }>({
                                                                    items,
                                                                    onItemsOrderChange,
                                                                    className,
                                                                    children,
+                                                                             draggablesClassname,
                                                                    onAddPress
                                                                }: {
     items: T[],
     onItemsOrderChange: (reorderItems: (items: T[]) => T[]) => void,
     className?: string,
     onAddPress: () => void,
+    draggablesClassname?: string
     children: (item: T, index: number) => ReactNode
 }) {
 
@@ -42,8 +45,10 @@ export default function SortableList<T extends { id: UniqueIdentifier }>({
             <DndContext onDragEnd={handleDragEnd}>
                 <SortableContext items={items.map(p => ({...p, id: p.id}))}>
                     {items.map((item, index) => (
-                        children(item, index)
-                    ))}
+                        <Draggable className={clsx(draggablesClassname)} id={item.id} key={item.id}>
+                            {children(item, index)}
+                        </Draggable>
+                        ))}
                 </SortableContext>
             </DndContext>
         </div>

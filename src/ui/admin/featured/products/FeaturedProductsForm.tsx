@@ -6,7 +6,6 @@ import React, {useEffect, useState} from "react";
 import AdminFeaturedProductCard from "@/ui/admin/featured/AdminFeaturedProductCard";
 import AddFeaturedProductModal from "@/ui/admin/featured/products/AddFeaturedProductModal";
 import {saveFeaturedProducts} from "@/lib/actions";
-import Draggable from "@/ui/Draggable";
 import {AwesomeButtonProgress} from "@leodreizzen/react-awesome-button";
 import '@leodreizzen/react-awesome-button/dist/styles.css';
 import AwesomeButtonStyles from '../buttonProgress.module.scss';
@@ -91,11 +90,9 @@ export default function FeaturedProductsForm({className, featuredProducts: saved
             <div className="flex flex-col items-center w-5/6 mx-auto">
                 <p className="w-full my-2 font-bold">Drag the cards to change their order in the home page</p>
                 <SortableList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full auto-rows-[1fr]" items={products} onItemsOrderChange={p=>setProducts(p)} onAddPress={handleAddPress}>
-                    {(product, index) => (
-                        <Draggable id={product.id} key={product.id}>
+                    {(product) => (
                             <AdminFeaturedProductCard product={product} removable
                                                       onRemove={() => handleRemove(product.id)}/>
-                        </Draggable>
                     )}
                 </SortableList>
 
