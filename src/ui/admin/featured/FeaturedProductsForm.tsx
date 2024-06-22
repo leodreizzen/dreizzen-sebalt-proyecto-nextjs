@@ -10,6 +10,7 @@ import {IoMdAddCircle} from "react-icons/io";
 
 import AddFeaturedProductModal from "@/ui/admin/featured/AddFeaturedProductModal";
 import {setFeaturedProducts} from "@/lib/actions";
+import Draggable from "@/ui/Draggable";
 
 export default function FeaturedProductsForm({className, featuredProducts: savedFeaturedProducts}: {
     featuredProducts: ProductWithTagsAndCoverImage[],
@@ -53,9 +54,9 @@ export default function FeaturedProductsForm({className, featuredProducts: saved
     }
 
     async function handleSave() {
-        if(changed) {
+        if (changed) {
             const result = await setFeaturedProducts(products);
-            if(result.success){
+            if (result.success) {
                 setChanged(false);
             }
         }
@@ -73,14 +74,18 @@ export default function FeaturedProductsForm({className, featuredProducts: saved
                     <DndContext onDragEnd={handleDragEnd}>
                         <SortableContext items={products.map(p => ({...p, id: p.id}))}>
                             {products.map((product) => (
-                                <AdminFeaturedProductCard product={product} key={product.id}/>
+                                <Draggable id={product.id} key={product.id}>
+                                    <AdminFeaturedProductCard product={product}/>
+                                </Draggable>
                             ))}
                         </SortableContext>
                     </DndContext>
                 </div>
                 <div className="flex gap-2 mt-2">
-                    <Button color="danger" className="mt-2 w-30" onPress={handleResetPress} isDisabled={!changed}>Reset</Button>
-                    <Button color="primary" className="mt-2 w-30" isDisabled={!changed} onClick={handleSave}>Save</Button>
+                    <Button color="danger" className="mt-2 w-30" onPress={handleResetPress}
+                            isDisabled={!changed}>Reset</Button>
+                    <Button color="primary" className="mt-2 w-30" isDisabled={!changed}
+                            onClick={handleSave}>Save</Button>
                 </div>
             </div>
             <AddFeaturedProductModal isOpen={modalOpen} onSubmit={handleAddModalSubmit}
