@@ -5,8 +5,6 @@ export default async function AdminPurchasesPage({searchParams}: {searchParams: 
     const currentPage = searchParams.page ? parseInt(searchParams.page) : 1
     const purchases = await fetchPurchases(currentPage)
     const totalPages = await fetchPurchasesPages();
-    if (totalPages === 0) hidden = true;
-
     return (
         <div>
             <div className={"justify-center items-center flex flex-col"}>
