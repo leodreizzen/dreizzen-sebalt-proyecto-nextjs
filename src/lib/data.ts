@@ -7,12 +7,13 @@ import {
     FeaturedTagWithTagAndImage,
     ProductForDetail,
     ProductWithCoverImage,
-    ProductWithTagsAndCoverImage, removeReadOnlyForNumArray
+    ProductWithTagsAndCoverImage, removeReadOnlyForNumArray, PurchaseWithInvoiceData, PurchaseWithItemsAndInvoiceData
 } from "./definitions";
 import {getCart} from "@/lib/session-data";
 import {Tag} from "@prisma/client";
 
 const TOTAL_ITEMS_PER_PAGE = 6;
+const PURCHASE_ITEMS_PER_PAGE = 8;
 
 export async function fetchUser( email: string ) {
     return await prisma.user.findUnique({
@@ -415,4 +416,24 @@ export async function fetchProducts(page: number, query: string) {
         take: TOTAL_ITEMS_PER_PAGE
     })
     return data
+}
+
+export async function fetchPurchases(page: number) {
+    const data: PurchaseWithItemsAndInvoiceData[] = await prisma.purchase.findMany({
+        include: {
+            products: true,
+            invoiceData: true
+        },
+        orderBy: {
+            purchaseDate: 'desc'
+        },
+        skip: (page - 1) * PURCHASE_ITEMS_PER_PAGE,
+        take: PURCHASE_ITEMS_PER_PAGE
+    })
+    return data
+}
+
+export async function fetchPurchasesPages() {
+    const data = await prisma.purchase.count()
+    return Math.ceil(data / PURCHASE_ITEMS_PER_PAGE)
 }

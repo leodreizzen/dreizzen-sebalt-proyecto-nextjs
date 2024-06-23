@@ -86,6 +86,10 @@ export interface PurchaseWithInvoiceData extends Purchase{
     invoiceData: InvoiceData
 }
 
+export interface PurchaseWithItemsAndInvoiceData extends PurchaseWithInvoiceData{
+    products: PurchaseItem[]
+}
+
 export enum PurchaseError {
     VALIDATION_ERROR,
     PAYMENT_REJECTED_BAD_FILLED,
