@@ -1,7 +1,7 @@
 import {fetchFeaturedSales} from "@/lib/data";
 import FeaturedSalesForm from "@/ui/admin/featured/sales/FeaturedSalesForm";
 
-export default async function FeaturedSalesAdminPage() {
+export default async function AdminFeaturedSalesPage() {
     const featuredSales = await fetchFeaturedSales()
     return (
         <div className="flex flex-col">

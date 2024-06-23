@@ -1,22 +1,18 @@
 "use client"
 import {Button} from "@nextui-org/button";
 import clsx from "clsx";
-import {ProductSaleWithProduct, ProductWithTagsAndCoverImage} from "@/lib/definitions";
+import {ProductSaleWithProduct} from "@/lib/definitions";
 import React, {useEffect, useState} from "react";
 import AdminFeaturedProductCard from "@/ui/admin/featured/AdminFeaturedProductCard";
-import AddFeaturedProductModal from "@/ui/admin/featured/products/AddFeaturedProductModal";
-import {saveFeaturedProducts, saveFeaturedSales} from "@/lib/actions";
-import Draggable from "@/ui/Draggable";
+import {saveFeaturedSales} from "@/lib/actions";
 import {AwesomeButtonProgress} from "@leodreizzen/react-awesome-button";
 import '@leodreizzen/react-awesome-button/dist/styles.css';
 import AwesomeButtonStyles from '../buttonProgress.module.scss';
 import {useToast} from "@/ui/shadcn/use-toast";
-import SortableList from "@/ui/admin/featured/SortableList";
-import {itemsDifferCheckOrder, itemsDifferIgnoreOrder} from "@/ui/admin/featured/utils";
-import {ProductSale} from "@prisma/client";
+import {itemsDifferIgnoreOrder} from "@/ui/admin/featured/utils";
 import {IoMdAddCircle} from "react-icons/io";
 import AddFeaturedSaleModal from "@/ui/admin/featured/sales/AddFeaturedSaleModal";
-import {MAX_SALES} from "@/lib/config";
+import {MAX_FEATURED_SALES} from "@/lib/config";
 
 export default function FeaturedSalesForm({className, featuredSales: savedFeaturedSales}: {
     featuredSales: ProductSaleWithProduct[],
@@ -94,10 +90,9 @@ export default function FeaturedSalesForm({className, featuredSales: savedFeatur
     return (
         <div className={clsx(className, "border border-borders rounded-xl p-2")}>
             <div className="flex flex-col items-center w-5/6 mx-auto">
-                <p className="w-full my-2 font-bold">Drag the cards to change their order in the home page</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full auto-rows-[1fr]">
-                    {sales.length < MAX_SALES && <Button onPress={handleAddPress}
-                                                             className={clsx("border border-borders rounded-2xl flex flex-col items-center justify-center bg-transparent [&>svg]:max-w-none", sales.length === 0 ? "h-60 sm:h-44 2xl:h-64" : "!h-[revert]")}>
+                    {sales.length < MAX_FEATURED_SALES && <Button onPress={handleAddPress}
+                                                                  className={clsx("border border-borders rounded-2xl flex flex-col items-center justify-center bg-transparent [&>svg]:max-w-none", sales.length === 0 ? "h-60 sm:h-44 2xl:h-64" : "!h-[revert]")}>
                         <IoMdAddCircle className="h-1/2 w-1/2 text-foreground"/>
                     </Button>
                     }

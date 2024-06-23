@@ -20,7 +20,9 @@ export default function SaleAutocomplete({className, onValueChange}: {
     }, [getProductsDebounced])
 
     function getSales(query: string) {
-        fetch(`/api/internal/admin/sales?q=${query}`).then(async (res) => {
+        const searchParams = new URLSearchParams()
+        searchParams.append("q", query)
+        fetch(`/api/internal/admin/sales?${searchParams.toString()}`).then(async (res) => {
             if (res.ok) {
                 setSales((await res.json()) as AdminSalesAPIResponse)
                 setLoading(false)

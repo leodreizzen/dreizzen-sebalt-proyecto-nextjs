@@ -1,21 +1,24 @@
 import {
     Company,
-    Image,
-    Product,
-    Tag,
-    Video,
-    Purchase,
-    InvoiceData,
-    ProductTag,
+    FeaturedProduct,
     FeaturedTag,
+    Image,
+    InvoiceData,
+    Product,
     ProductSale,
-    VideoSource,
-    PurchaseItem, FeaturedProduct
+    ProductTag,
+    Purchase,
+    PurchaseItem,
+    Tag,
+    Video
 } from "@prisma/client";
 
 export function removeReadOnlyForNumArray(arr: readonly number[]): number[] {
     return arr as number[]
 }
+export type ArrayElement<ArrayType extends readonly unknown[]> =
+    ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
+
 
 export type ShoppingCart = number[];
 
@@ -99,3 +102,4 @@ export type PurchaseResult = {
     success: false,
     error: PurchaseError
 }
+export type AdminOperationResult = { success: true } | { success: false, error: string }

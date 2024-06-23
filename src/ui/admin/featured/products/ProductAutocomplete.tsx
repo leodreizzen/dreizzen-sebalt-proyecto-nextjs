@@ -19,7 +19,9 @@ export default function ProductAutocomplete({className, onValueChange}: {
     }, [getProductsDebounced])
 
     function getProducts(query: string) {
-        fetch(`/api/internal/admin/products?q=${query}`).then(async (res) => {
+        const searchParams = new URLSearchParams()
+        searchParams.append("q", query)
+        fetch(`/api/internal/admin/products?${searchParams.toString()}`).then(async (res) => {
             if (res.ok) {
                 setProducts((await res.json()) as AdminProductsAPIResponse)
                 setLoading(false)

@@ -9,6 +9,7 @@ function ImageUploaderModalContent({onClose, onSubmit}: {
     onSubmit: (url: string, alt: string) => void,
 }) {
     const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const [file, setFile] = useState<File | null>(null);
     const [alt, setAlt] = useState<string>("");
 
 
@@ -19,12 +20,24 @@ function ImageUploaderModalContent({onClose, onSubmit}: {
         }
     }
 
+    function handleFileChange(newFile: File | null) {
+        setFile(newFile)
+        if (newFile) {
+            if(imageUrl)
+                URL.revokeObjectURL(imageUrl)
+            const url = URL.createObjectURL(newFile)
+            setImageUrl(url)
+        } else {
+            setImageUrl(null)
+        }
+    }
+
     return (
         <>
             <ModalHeader onAbort={onClose}>Add image</ModalHeader>
             <ModalBody>
-                <ImagePicker imageUrl={imageUrl} onImageUrlChange={setImageUrl} alt={alt}
-                             onAltChange={setAlt}/>
+                <ImagePicker file={file} onFileChange={handleFileChange} alt={alt}
+                             onAltChange={setAlt} url={imageUrl}/>
             </ModalBody>
             <ModalFooter>
                 <Button onClick={onClose} color={"danger"}>Cancel</Button>

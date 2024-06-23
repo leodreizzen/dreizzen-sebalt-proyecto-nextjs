@@ -149,3 +149,23 @@ enum VideoSource {
   CLOUDINARY
   STEAMCDN
 }
+
+model PendingMedia {
+  id        Int                @id @default(autoincrement())
+  source    PendingMediaSource
+  type      PendingMediaType
+  publicId  String
+  folder    String
+  timestamp DateTime           @default(now())
+
+  @@unique([folder, publicId])
+}
+
+enum PendingMediaSource {
+  CLOUDINARY
+}
+
+enum PendingMediaType {
+  IMAGE
+  VIDEO
+}
