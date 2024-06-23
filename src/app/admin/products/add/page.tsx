@@ -2,6 +2,7 @@
 import ImageUploader from "@/ui/admin/products/add/ImageUploader";
 import React, {useState} from "react";
 import ImageUploadCard from "@/ui/cards/ImageUploadCard";
+import useHTMLTextEditor from "@/ui/admin/TextEditor";
 
 type FileItem = {
     file: File,
@@ -11,6 +12,7 @@ type FileItem = {
 export default function AdminProductsPage() {
     const [images, setImages] = useState<string[]>([]);
     const [files, setFiles] = useState<FileItem[]>([]);
+     const {View: DescriptionView, getHtml} = useHTMLTextEditor();
 
     function handleUpload(file: File, alt: string) {
         setFiles([...files, {file, alt}]);
@@ -30,7 +32,7 @@ export default function AdminProductsPage() {
             <div className={"border-1 border-borders w-full justify-center flex flex-col items-center p-2 rounded-xl"}>
                 <div className={"flex flex-col gap-3 justify-start"}>
                     <input type={"text"} placeholder={"Product name"} className={"border-1 border-borders rounded-2xl p-2 text-black"}/>
-                    <div className={"flex flex-row gap-1"}>
+                    <div className={"grid grid-cols-1 lg:grid-cols-2 gap-1"}>
                         <input type={"number"} placeholder={"Product original price"} className={"border-1 border-borders rounded-2xl p-2 text-black"}/>
                         <input type={"number"} placeholder={"Product current price"}  className={"border-1 border-borders rounded-2xl p-2 text-black"}/>
                     </div>
@@ -44,6 +46,10 @@ export default function AdminProductsPage() {
                     {images.map((url, index) => (
                         <ImageUploadCard imageUrl={url} key={index} onClose={handleClose} id={index}/>
                     ))}
+                </div>
+                <div className={"flex flex-col w-full p-6 border-1 border-borders mt-2 rounded-2xl"}>
+                    <h1 className={"mb-3 justify-center"}>Product description</h1>
+                    <DescriptionView className="w-full h-96"/>
                 </div>
             </div>
         </div>

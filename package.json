@@ -13,6 +13,9 @@
     "updateShortDescriptions": "npx esrun scripts/updateShortDescriptions.ts"
   },
   "dependencies": {
+    "@blocknote/core": "^0.14.1",
+    "@blocknote/mantine": "^0.14.1",
+    "@blocknote/react": "^0.14.1",
     "@cloudinary/react": "^1.13.0",
     "@cloudinary/url-gen": "^1.19.0",
     "@dnd-kit/core": "^6.1.0",
