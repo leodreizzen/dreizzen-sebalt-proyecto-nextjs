@@ -137,7 +137,7 @@ export default function AdminProductsPage() {
                         {publishers.length === 0 && <CompanyChip className={"invisible"} name={""} onClose={() => {
                         }}/>}
                         {publishers.map((company, index) => (
-                            <CompanyChip name={company.name} onClose={() => handlePublisherDelete(index)}/>
+                            <CompanyChip key={index} name={company.name} onClose={() => handlePublisherDelete(index)}/>
                         ))}
                     </div>
                 </div>
@@ -151,7 +151,7 @@ export default function AdminProductsPage() {
                         {developers.length === 0 && <CompanyChip className={"invisible"} name={""} onClose={() => {
                         }}/>}
                         {developers.map((company, index) => (
-                            <CompanyChip name={company.name} onClose={() => handleDeveloperDelete(index)}/>
+                            <CompanyChip key={index} name={company.name} onClose={() => handleDeveloperDelete(index)}/>
                         ))}
                     </div>
                 </div>
