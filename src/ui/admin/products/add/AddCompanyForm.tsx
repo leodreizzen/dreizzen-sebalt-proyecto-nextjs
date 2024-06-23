@@ -1,6 +1,7 @@
 import {useState} from "react";
 import AddCompanyModal from "@/ui/admin/products/add/AddCompanyModal";
 import {CompanyItem} from "@/app/admin/products/add/page";
+import {Button} from "@nextui-org/button";
 
 
 export default function AddCompanyForm({onSubmit, className, type}: {
@@ -20,7 +21,7 @@ export default function AddCompanyForm({onSubmit, className, type}: {
 
 
     return <>
-        <button onClick={handleAddPress} className={"bg-primary text-white p-2 rounded-2xl"}>Add {type}</button>
+        <Button size={"sm"} onClick={handleAddPress} className={"bg-primary text-white p-2 rounded-2xl"}>Add</Button>
         <AddCompanyModal className={className} isOpen={isOpen} onClose={onClose} onSubmit={onSubmit} type={type}/>
     </>;
 }

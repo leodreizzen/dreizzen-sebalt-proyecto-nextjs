@@ -88,7 +88,7 @@ export default function VideoUploaderModal({onSubmit, className}: {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
     return (
-        <div className={clsx(className, "border-1 border-borders rounded-2xl p-6")}>
+        <div className={clsx(className, "flex flex-col border-1 border-borders rounded-2xl p-6 items-center justify-center aspect-video")}>
             <Button onClick={onOpen}>Upload video</Button>
             <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true}>
                 <ModalContent>

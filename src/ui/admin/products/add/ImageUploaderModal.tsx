@@ -57,7 +57,7 @@ export default function ImageUploaderModal({onSubmit, className}: {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
     return (
-        <div className={clsx(className, "border-1 border-borders rounded-2xl p-6")}>
+        <div className={clsx(className, "flex flex-col items-center justify-center border-1 border-borders rounded-2xl p-6 aspect-video")}>
             <Button onClick={onOpen}>Upload image</Button>
             <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true}>
                 <ModalContent>
