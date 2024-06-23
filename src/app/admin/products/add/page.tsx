@@ -5,9 +5,16 @@ import ImageUploadCard from "@/ui/cards/ImageUploadCard";
 import useHTMLTextEditor from "@/ui/admin/TextEditor";
 import RAWGModal from "@/ui/admin/products/add/RAWGModal";
 import AddCompanyForm from "@/ui/admin/products/add/AddCompanyForm";
+import VideoUploaderModal from "@/ui/admin/products/add/VideoUploaderModal";
 
 type ImageItem = {
     url: string,
+    alt: string
+}
+
+type VideoItem = {
+    url: string,
+    thumbnail: string,
     alt: string
 }
 
@@ -26,6 +33,7 @@ export type CompanyItem = CompanyExistent | CompanyCreate
 
 export default function AdminProductsPage() {
     const [images, setImages] = useState<ImageItem[]>([]);
+    const [videos, setVideos] = useState<VideoItem[]>([]);
     const [publishers, setPublishers] = useState<CompanyItem[]>([]);
     const [developers, setDevelopers] = useState<CompanyItem[]>([]);
     const {View: DescriptionView, getHtml} = useHTMLTextEditor();
@@ -34,8 +42,16 @@ export default function AdminProductsPage() {
         setImages([...images, {url, alt}]);
     }
 
-    function handleClose(index: number) {
+    function handleVideoAdd(url: string, alt: string, thumbnail: string) {
+        setVideos([...videos, {url, alt, thumbnail}]);
+    }
+
+    function handleImageClose(index: number) {
         setImages(images.filter((_, i) => i !== index));
+    }
+
+    function handleVideoClose(index: number) {
+        setVideos(videos.filter((_, i) => i !== index));
     }
 
     function handlePublisherAdd(company: CompanyItem) {
@@ -101,7 +117,16 @@ export default function AdminProductsPage() {
                 <div
                     className={"grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 w-full auto-rows-[1fr] border-1 border-borders rounded-2xl p-6"}>
                     {images.map((img, index) => (
-                        <ImageUploadCard imageUrl={img.url} key={index} onClose={handleClose} id={index}/>
+                        <ImageUploadCard imageUrl={img.url} key={index} onClose={handleImageClose} id={index}/>
+                    ))}
+                </div>
+                <h1 className={"m-2 justify-center"}>Game videos</h1>
+                <VideoUploaderModal onSubmit={handleVideoAdd}/>
+                <h1 className={"p-6"}>Videos added</h1>
+                <div
+                    className={"grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 w-full auto-rows-[1fr] border-1 border-borders rounded-2xl p-6"}>
+                    {videos.map((video, index) => (
+                        <ImageUploadCard imageUrl={video.thumbnail} key={index} onClose={handleVideoClose} id={index}/>
                     ))}
                 </div>
                 <RAWGModal onSubmit={product => console.log(product)}/>
