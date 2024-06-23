@@ -8,8 +8,8 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@nextui-org/theme/dist/components/(accordion|autocomplete|badge|button|card|checkbox|chip|divider|dropdown|image|link|modal|navbar|slider|ripple|spinner|input|listbox|popover|scroll-shadow|menu).js"
-],
+    "./node_modules/@nextui-org/theme/dist/components/(accordion|autocomplete|badge|button|card|checkbox|chip|divider|dropdown|image|link|modal|navbar|slider|ripple|radio|spinner|input|listbox|popover|scroll-shadow|menu).js"
+  ],
   theme: {
     extend: {
       colors: {
@@ -28,7 +28,7 @@ const config: Config = {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+            "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       screens:{
         "xs": "360px",
@@ -43,7 +43,7 @@ const config: Config = {
 
         marqueeSlowX: "marqueeXA 40s linear infinite",
         marqueeSlowX2: "marqueeXB 40s linear infinite",
-        
+
         marqueeY: "marqueeYA 10s linear infinite",
         marqueeY2: "marqueeYB 10s linear infinite",
       },
@@ -56,7 +56,7 @@ const config: Config = {
           "0%": {transform: "translateX(100%)"},
           "100%": {transform: "translateX(0%)"}
         },
-        
+
         marqueeYA:{
           "0%": {transform: "translateY(0%)"},
           "100%": {transform: "translateY(-100%)"}
