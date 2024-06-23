@@ -3,6 +3,7 @@ import ImageUploaderModal from "@/ui/admin/products/add/ImageUploaderModal";
 import React, {useState} from "react";
 import ImageUploadCard from "@/ui/cards/ImageUploadCard";
 import useHTMLTextEditor from "@/ui/admin/TextEditor";
+import RAWGModal from "@/ui/admin/products/add/RAWGModal";
 
 type ImageItem = {
     url: string,
@@ -43,6 +44,7 @@ export default function AdminProductsPage() {
                         <ImageUploadCard imageUrl={img.url} key={index} onClose={handleClose} id={index}/>
                     ))}
                 </div>
+                <RAWGModal onSubmit={product => console.log(product)}/>
                 <div className={"flex flex-col w-full p-6 border-1 border-borders mt-2 rounded-2xl"}>
                     <h1 className={"mb-3 justify-center"}>Product description</h1>
                     <DescriptionView className="w-full h-96"/>
