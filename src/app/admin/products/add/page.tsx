@@ -1,26 +1,22 @@
 "use client"
-import ImageUploader from "@/ui/admin/products/add/ImageUploader";
+import ImageUploaderModal from "@/ui/admin/products/add/ImageUploaderModal";
 import React, {useState} from "react";
 import ImageUploadCard from "@/ui/cards/ImageUploadCard";
 
-type FileItem = {
-    file: File,
+type ImageItem = {
+    url: string,
     alt: string
 }
 
 export default function AdminProductsPage() {
-    const [images, setImages] = useState<string[]>([]);
-    const [files, setFiles] = useState<FileItem[]>([]);
+    const [images, setImages] = useState<ImageItem[]>([]);
 
-    function handleUpload(file: File, alt: string) {
-        setFiles([...files, {file, alt}]);
-        const url = URL.createObjectURL(file);
-        setImages([...images, url]);
+    function handleImageAdd(url: string, alt: string) {
+        setImages([...images, {url, alt}]);
     }
 
     function handleClose(index: number) {
         setImages(images.filter((_, i) => i !== index));
-        setFiles(files.filter((_, i) => i !== index));
     }
 
 
@@ -37,12 +33,12 @@ export default function AdminProductsPage() {
                     <input type={"text"} placeholder={"Product short description"} className={"border-1 border-borders rounded-2xl p-2 text-black"}/>
                 </div>
                 <h1 className={"m-2 justify-center"}>Game images</h1>
-                <ImageUploader onUpload={handleUpload}/>
+                <ImageUploaderModal onSubmit={handleImageAdd}/>
                 <h1 className={"p-6"}>Images added</h1>
                 <div
                     className={"grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 w-full auto-rows-[1fr] border-1 border-borders rounded-2xl p-6"}>
-                    {images.map((url, index) => (
-                        <ImageUploadCard imageUrl={url} key={index} onClose={handleClose} id={index}/>
+                    {images.map((img, index) => (
+                        <ImageUploadCard imageUrl={img.url} key={index} onClose={handleClose} id={index}/>
                     ))}
                 </div>
             </div>

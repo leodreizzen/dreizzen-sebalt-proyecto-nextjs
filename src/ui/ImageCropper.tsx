@@ -3,8 +3,8 @@ import 'react-advanced-cropper/dist/style.css'
 import {useState} from "react";
 
 
-export default function ImageCropper({src, onCrop}: { src: string, onCrop: (blob: Blob) => void }) {
-    const [image, setImage] = useState<string | null>(src)
+export default function ImageCropper({className, src, onCrop}: { className?:string, src: string, onCrop: (blob: Blob) => void }) {
+    const [originalImage] = useState<string | null>(src)
 
     const onChange = (cropper: CropperRef) => {
         const canvas = cropper.getCanvas()
@@ -18,7 +18,9 @@ export default function ImageCropper({src, onCrop}: { src: string, onCrop: (blob
 
     return (
         <Cropper
-            src={image}
+
+            className={className}
+            src={originalImage}
             onChange={onChange}
             stencilProps={{
                 aspectRatio: 16/9,
