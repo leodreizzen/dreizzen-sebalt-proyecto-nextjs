@@ -25,7 +25,7 @@ function RAWGModalContent({onClose, onSubmit}: {
 
 
     return <>
-        <ModalHeader onAbort={onClose}>Add featured product</ModalHeader>
+        <ModalHeader onAbort={onClose}>Import from RAWG</ModalHeader>
         <ModalBody>
             <RAWGAutocomplete onValueChange={handleProductChange}/>
         </ModalBody>

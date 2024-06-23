@@ -4,14 +4,30 @@ import React, {useState} from "react";
 import ImageUploadCard from "@/ui/cards/ImageUploadCard";
 import useHTMLTextEditor from "@/ui/admin/TextEditor";
 import RAWGModal from "@/ui/admin/products/add/RAWGModal";
+import AddCompanyForm from "@/ui/admin/products/add/AddCompanyForm";
 
 type ImageItem = {
     url: string,
     alt: string
 }
 
+type CompanyExistent = {
+    isNew: false,
+    name: string,
+    id: number,
+}
+
+type CompanyCreate = {
+    isNew: true,
+    name: string,
+}
+
+export type CompanyItem = CompanyExistent | CompanyCreate
+
 export default function AdminProductsPage() {
     const [images, setImages] = useState<ImageItem[]>([]);
+    const [publishers, setPublishers] = useState<CompanyItem[]>([]);
+    const [developers, setDevelopers] = useState<CompanyItem[]>([]);
     const {View: DescriptionView, getHtml} = useHTMLTextEditor();
 
     function handleImageAdd(url: string, alt: string) {
@@ -20,6 +36,22 @@ export default function AdminProductsPage() {
 
     function handleClose(index: number) {
         setImages(images.filter((_, i) => i !== index));
+    }
+
+    function handlePublisherAdd(company: CompanyItem) {
+        setPublishers([...publishers, company]);
+    }
+
+    function handleDeveloperAdd(company: CompanyItem) {
+        setDevelopers([...developers, company]);
+    }
+
+    function handlePublisherDelete(index: number) {
+        setPublishers(publishers.filter((_, i) => i !== index));
+    }
+
+    function handleDeveloperDelete(index: number) {
+        setDevelopers(developers.filter((_, i) => i !== index));
     }
 
 
@@ -34,6 +66,34 @@ export default function AdminProductsPage() {
                         <input type={"number"} placeholder={"Product current price"}  className={"border-1 border-borders rounded-2xl p-2 text-black"}/>
                     </div>
                     <input type={"text"} placeholder={"Product short description"} className={"border-1 border-borders rounded-2xl p-2 text-black"}/>
+                </div>
+                <h1 className={"m-2 justify-center"}>Publishers</h1>
+                <div className={"flex flex-col gap-2 items-center"}>
+                    <div>
+                        <AddCompanyForm onSubmit={handlePublisherAdd} type={"publisher"}/>
+                    </div>
+                    <div className={"grid grid-cols-1 lg:grid-cols-2 gap-2"}>
+                        {publishers.map((company, index) => (
+                            <div key={index} className={"flex flex-row gap-2 items-center"}>
+                                <p>{company.name}</p>
+                                <button className={"bg-danger text-white p-2 rounded-2xl"} onClick={() => handlePublisherDelete(index)}>Remove</button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <h1 className={"m-2 justify-center"}>Developers</h1>
+                <div className={"flex flex-col gap-2 items-center"}>
+                    <div>
+                        <AddCompanyForm onSubmit={handleDeveloperAdd} type={"developer"}/>
+                    </div>
+                    <div className={"grid grid-cols-1 lg:grid-cols-2 gap-2 items-center"}>
+                        {developers.map((company, index) => (
+                            <div key={index} className={"flex flex-row gap-2 items-center"}>
+                                <p>{company.name}</p>
+                                <button className={"bg-danger text-white p-2 rounded-2xl"} onClick={() => handleDeveloperDelete(index)}>Remove</button>
+                            </div>
+                        ))}
+                    </div>
                 </div>
                 <h1 className={"m-2 justify-center"}>Game images</h1>
                 <ImageUploaderModal onSubmit={handleImageAdd}/>
