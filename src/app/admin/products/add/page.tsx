@@ -3,13 +3,17 @@ import ImageUploader from "@/ui/admin/products/add/ImageUploader";
 import React, {useState} from "react";
 import ImageUploadCard from "@/ui/cards/ImageUploadCard";
 
+type FileItem = {
+    file: File,
+    alt: string
+}
 
 export default function AdminProductsPage() {
     const [images, setImages] = useState<string[]>([]);
-    const [files, setFiles] = useState<File[]>([]);
+    const [files, setFiles] = useState<FileItem[]>([]);
 
-    function handleUpload(file: File) {
-        setFiles([...files, file]);
+    function handleUpload(file: File, alt: string) {
+        setFiles([...files, {file, alt}]);
         const url = URL.createObjectURL(file);
         setImages([...images, url]);
     }
