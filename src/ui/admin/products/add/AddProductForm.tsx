@@ -16,6 +16,7 @@ import {RAWGGame} from "@/app/api/internal/admin/rawg-game/types";
 import {createProductClient} from "@/lib/clientActions";
 import {useToast} from "@/ui/shadcn/use-toast";
 import {useRouter} from "next/navigation";
+import AddTagForm from "@/ui/admin/products/add/AddTagForm";
 
 export type ExistingImage = {
     isNew: false,
@@ -29,6 +30,19 @@ export type UrlImage = {
     url: string,
     alt: string
 }
+
+export type ExistingTag = {
+    isNew: false,
+    id: number,
+    name: string
+}
+
+export type NewTag = {
+    isNew: true,
+    name: string
+}
+
+export type TagItem = ExistingTag | NewTag
 
 export type FileImage = {
     isNew: true
@@ -89,6 +103,7 @@ export default function AdminProductForm({initialData}: {
         currentPrice: number | null,
         shortDescription: string,
         description: string,
+        tags: TagItem[],
         coverImage: ImageItem
         images: ImageItem[],
         videos: VideoItem[],
@@ -102,6 +117,7 @@ export default function AdminProductForm({initialData}: {
     const [isOnSale, setIsOnSale] = useState<boolean>(initialData ? (initialData.currentPrice !== initialData.originalPrice) : false);
     const [publishers, setPublishers] = useState<CompanyItem[]>(initialData?.publishers ?? []);
     const [developers, setDevelopers] = useState<CompanyItem[]>(initialData?.developers ?? []);
+    const [tags, setTags] = useState<TagItem[]>(initialData?.tags ?? []);
     const [coverImage, setCoverImage] = useState<ImageItem | null>(initialData?.coverImage ?? null);
     const {View: DescriptionView, getHtml, setHtml} = useHTMLTextEditor(initialData?.description);
     const [inputsState, setInputsState] = useState<
@@ -169,6 +185,10 @@ export default function AdminProductForm({initialData}: {
         setInputsState({...inputsState, launchDate: date});
     }
 
+    function handleTagAdd(tag: TagItem) {
+        setTags([...tags, tag]);
+    }
+
     function handleOriginalPriceChange(e: React.ChangeEvent<HTMLInputElement>) {
         let newPrice: number | null = parseFloat(e.target.value);
         if (isNaN(newPrice) || newPrice < 0)
@@ -212,6 +232,7 @@ export default function AdminProductForm({initialData}: {
             alt: rawgData.name,
             thumbnail: {isNew: true, type: "url", url: movie.preview, alt: rawgData.name}
         })));
+        setTags(rawgData.genres.map(genre => ({isNew: true, name: genre.name})));
         await setHtml(rawgData.description);
     }
 
@@ -328,6 +349,22 @@ export default function AdminProductForm({initialData}: {
                             placeholder="Enter your short description"
                             className="max-w-full col-span-2"
                         />
+                    </div>
+                </div>
+                <div
+                    className={"flex flex-col gap-2 items-center border-1 border-borders p-2 rounded-2xl justify-center w-full"}>
+                    <div className={"flex flex-row items-center"}>
+                        <h1 className={"m-2 justify-center text-xl"}>Tags</h1>
+                        <div className="flex justify-end">
+                            <AddTagForm onSubmit={handleTagAdd}/>
+                        </div>
+                    </div>
+                    <div className={"grid grid-cols-1 lg:grid-cols-2 gap-2"}>
+                        {tags.length === 0 && <CompanyChip className={"invisible"} name={""} onClose={() => {
+                        }}/>}
+                        {tags.map((company, index) => (
+                            <CompanyChip key={index} name={company.name} onClose={() => handlePublisherDelete(index)}/>
+                        ))}
                     </div>
                 </div>
                 <div
