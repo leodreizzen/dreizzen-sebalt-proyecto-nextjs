@@ -98,6 +98,10 @@ export interface PurchaseWithCompleteItemsAndInvoiceData extends PurchaseWithInv
     products: PurchaseItemWithProduct[]
 }
 
+export interface TagWithProducts extends Tag{
+    productTags: ProductTag[]
+}
+
 export enum PurchaseError {
     VALIDATION_ERROR,
     PAYMENT_REJECTED_BAD_FILLED,
