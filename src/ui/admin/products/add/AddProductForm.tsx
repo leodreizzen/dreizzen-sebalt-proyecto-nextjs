@@ -278,7 +278,7 @@ export default function AdminProductForm({initialData}: {
                 coverImage: coverImage!,
                 images: images as NewImage[],
                 videos: videos as NewVideo[],
-                tags: []
+                tags: tags
             })
             if (result.success)
                 router.push("/admin/products")

@@ -550,8 +550,13 @@ export async function addProduct(_formProduct: ProductToAddServer): Promise<Admi
         isNew: true
     })[]
 
-    try{return await prisma.$transaction(async tx => {
-            const product = await prisma.product.create({
+    const newTags = productData.tags.filter(t => t.isNew)  as (ArrayElement<typeof productData.developers> & {
+        isNew: true
+    }) []
+
+    try {
+        return await prisma.$transaction(async tx => {
+            const product = await tx.product.create({
                 data: {
                     name: productData.name,
                     publishers: {
@@ -612,37 +617,36 @@ export async function addProduct(_formProduct: ProductToAddServer): Promise<Admi
                     }
                 }
             })
-            await prisma.product.update({
-                where: {
-                    id: product.id
-                },
-                data: {
-                    tags: {
-                        create: productData.tags.map((tag, index) => ({
-                            product: {
-                                connect: {
-                                    id: product.id
-                                }
-                            },
-                            order: index,
-                            tag: tag.isNew ? {
-                                create: {
-                                    name: tag.name,
-                                    inDropdown: false
-                                }
-                            } : {
-                                connect: {
-                                    id: tag.id
-                                }
-                            }
-                        }))
-                    }
-                }
+            await tx.tag.createMany({
+                data: newTags.map(t=>({
+                    name: t.name,
+                    inDropdown: false
+                }))
             })
+            for(let i = 0; i < productData.tags.length; i++){
+                const tag = productData.tags[i]
+                await tx.productTag.create({
+                    data: {
+                        product: {
+                            connect: {
+                                id: product.id
+                            }
+                        },
+                        tag: {
+                            connect: tag.isNew ? {
+                                name: tag.name
+                            }: {
+                                id: tag.id
+                            }
+                        },
+                        order: i
+                    }
+                })
+            }
             revalidatePath("/", "layout");
             return {success: true}
-        }
-    )}catch(e){
+        }, {isolationLevel: "Serializable", maxWait: 10000, timeout: 30000})
+    } catch (e) {
         console.error(e)
         return {success: false, error: "Internal error"}
     }
