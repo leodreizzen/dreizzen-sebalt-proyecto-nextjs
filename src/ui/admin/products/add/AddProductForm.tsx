@@ -13,6 +13,9 @@ import {Button} from "@nextui-org/button";
 import {DateInput} from "@nextui-org/date-input";
 import {CalendarDate} from "@internationalized/date";
 import {RAWGGame} from "@/app/api/internal/admin/rawg-game/types";
+import {createProductClient} from "@/lib/clientActions";
+import {useToast} from "@/ui/shadcn/use-toast";
+import {useRouter} from "next/navigation";
 
 export type ExistingImage = {
     isNew: false,
@@ -34,8 +37,9 @@ export type FileImage = {
     url: string,
     alt: string
 }
+export type NewImage = UrlImage | FileImage
 
-type ImageItem = ExistingImage | UrlImage | FileImage
+export type ImageItem = ExistingImage | NewImage
 
 type ExistingVideo = {
     isNew: false,
@@ -54,7 +58,7 @@ type FileVideo = {
 type URLVideo = {
     isNew: true,
     type: "url",
-    source: "YouTube" | "SteamDB"
+    source: "YouTube" | "SteamCdn"
     thumbnail: UrlImage,
     url: string,
     alt: string
@@ -62,7 +66,7 @@ type URLVideo = {
 
 export type NewVideo = FileVideo | URLVideo
 
-type VideoItem = ExistingVideo | NewVideo
+export type VideoItem = ExistingVideo | NewVideo
 
 type CompanyExistent = {
     isNew: false,
@@ -122,6 +126,8 @@ export default function AdminProductForm({initialData}: {
             currentPrice: null,
             shortDescription: ""
         })
+    const {toast} = useToast()
+    const router = useRouter();
 
     function handleImageAdd(image: FileImage) {
         setImages([...images, image]);
@@ -192,11 +198,16 @@ export default function AdminProductForm({initialData}: {
         setPublishers(rawgData.publishers.map(publisher => ({isNew: true, name: publisher.name})));
         setDevelopers(rawgData.developers.map(developer => ({isNew: true, name: developer.name})));
         setCoverImage({isNew: true, type: "url", url: rawgData.background_image, alt: rawgData.name});
-        setImages(rawgData.screenshots.map((screenshot) => ({isNew: true, type: "url", url: screenshot.image, alt: rawgData.name})));
+        setImages(rawgData.screenshots.map((screenshot) => ({
+            isNew: true,
+            type: "url",
+            url: screenshot.image,
+            alt: rawgData.name
+        })));
         setVideos(rawgData.movies.map((movie) => ({
             isNew: true,
             type: "url",
-            source: "SteamDB",
+            source: "SteamCdn",
             url: movie.video,
             alt: rawgData.name,
             thumbnail: {isNew: true, type: "url", url: movie.preview, alt: rawgData.name}
@@ -207,8 +218,60 @@ export default function AdminProductForm({initialData}: {
     function handleCoverImageAdd(image: FileImage) {
         setCoverImage(image);
     }
+
     function handleCoverImageClose() {
         setCoverImage(null);
+    }
+
+    async function onSavePress() {
+        if (!inputsState.name || !inputsState.launchDate || !inputsState.shortDescription || !coverImage || !inputsState.originalPrice || isOnSale && ( !inputsState.currentPrice || inputsState.currentPrice > inputsState.originalPrice)){
+            toast({
+                title: "Error",
+                description: "Check your data",
+                variant: "destructive",
+                duration: 5000
+            })
+            return
+        }
+        let html: string | null = null
+        try{
+            html = await getHtml();
+        } catch(e){
+            console.error(e)
+            return
+        }
+
+        if(!html)
+            return
+
+        if (!initialData) {
+            const result = await createProductClient({
+                original_price_cents: Math.floor(inputsState.originalPrice * 100),
+                current_price_cents: Math.floor((isOnSale && inputsState.currentPrice) ? inputsState.currentPrice * 100 : inputsState.originalPrice * 100),
+                publishers: publishers,
+                developers: developers,
+                name: inputsState.name,
+                launchDate: inputsState.launchDate.toString(),
+                shortDescription: inputsState.shortDescription,
+                description: html,
+                coverImage: coverImage!,
+                images: images as NewImage[],
+                videos: videos as NewVideo[],
+                tags: []
+            })
+            if (result.success)
+                router.push("/admin/products")
+            else
+                toast({
+                    title: "Error saving tags",
+                    description: result.error,
+                    variant: "destructive",
+                    duration: 5000
+                })
+
+        }
+
+
     }
 
     return (
@@ -217,7 +280,7 @@ export default function AdminProductForm({initialData}: {
                 <h1 className={"m-2 justify-center text-2xl font-bold"}>Add products</h1>
                 <div className="flex gap-4">
                     <RAWGModal className="" onSubmit={handleRawgSubmit}/>
-                    <Button color="primary">Save</Button>
+                    <Button color="primary" onPress={onSavePress}>Save</Button>
                 </div>
             </div>
             <div
@@ -302,8 +365,8 @@ export default function AdminProductForm({initialData}: {
                     <h1 className={"justify-center text-xl"}>Cover Image</h1>
                     <div
                         className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full auto-rows-[1fr] rounded-2xl p-3"}>
-                        { !coverImage && <ImageUploaderModal onSubmit={handleCoverImageAdd}/>}
-                        { coverImage && <ImageUploadCard imageUrl={coverImage.url} onClose={handleCoverImageClose}/>}
+                        {!coverImage && <ImageUploaderModal onSubmit={handleCoverImageAdd}/>}
+                        {coverImage && <ImageUploadCard imageUrl={coverImage.url} onClose={handleCoverImageClose}/>}
 
                     </div>
                 </div>
@@ -314,7 +377,7 @@ export default function AdminProductForm({initialData}: {
                         className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full auto-rows-[1fr] rounded-2xl p-3"}>
                         <ImageUploaderModal onSubmit={handleImageAdd}/>
                         {images.map((img, index) => (
-                            <ImageUploadCard imageUrl={img.url} key={index} onClose={()=>handleImageClose(index)}/>
+                            <ImageUploadCard imageUrl={img.url} key={index} onClose={() => handleImageClose(index)}/>
                         ))}
                     </div>
                 </div>
@@ -325,8 +388,9 @@ export default function AdminProductForm({initialData}: {
                         className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full auto-rows-[1fr] rounded-2xl p-3"}>
                         <VideoUploaderModal onSubmit={handleVideoAdd}/>
                         {videos.map((video, index) => (
-                            <ImageUploadCard imageUrl={video.thumbnail.url} key={index} onClose={()=>handleVideoClose(index)}
-                                             />
+                            <ImageUploadCard imageUrl={video.thumbnail.url} key={index}
+                                             onClose={() => handleVideoClose(index)}
+                            />
                         ))}
                     </div>
                 </div>

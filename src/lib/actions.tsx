@@ -5,18 +5,20 @@ import {revalidatePath, revalidateTag} from "next/cache";
 import {auth, signIn} from "@/auth";
 import {AuthError} from "next-auth";
 import {CallbackRouteError} from "@auth/core/errors";
-import {$Enums, PendingMediaType, Product, ProductSale} from "@prisma/client";
+import {$Enums, PendingMediaType, Product, ProductSale, VideoSource} from "@prisma/client";
 import {z} from "zod";
 import prisma from "@/lib/prisma";
-import {FEATURED_TAG_IMAGE_FOLDER, MAX_FEATURED_SALES, MAX_FEATURED_TAGS} from "@/lib/config";
+import {FEATURED_TAG_IMAGE_FOLDER, MAX_FEATURED_SALES, MAX_FEATURED_TAGS, PRODUCT_IMAGE_FOLDER} from "@/lib/config";
 import {v2 as cloudinaryV2} from "cloudinary";
 import {randomUUID} from "node:crypto";
 import PendingMediaSource = $Enums.PendingMediaSource;
+import {redirect} from "next/navigation";
+
 if (!process.env.CLOUDINARY_API_SECRET)
     throw new Error("Missing CLOUDINARY_API_SECRET")
 
 const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET
-if(!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME){
+if (!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME) {
     throw new Error("NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME not set")
 }
 const cloudinaryCloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
@@ -220,6 +222,16 @@ export async function authorizeFeaturedTagImageUpload(): Promise<AuthorizeImageU
     return _internalAuthorizeImageUpload(FEATURED_TAG_IMAGE_FOLDER)
 }
 
+export async function authorizeProductImageUpload(): Promise<AuthorizeImageUploadResult> {
+    const isAuthorized = (await auth())?.user?.isAdmin;
+    if (!isAuthorized)
+        return {
+            success: false,
+            error: "Unauthorized"
+        }
+    return _internalAuthorizeImageUpload(PRODUCT_IMAGE_FOLDER)
+}
+
 async function _internalAuthorizeImageUpload(folder: string): Promise<AuthorizeImageUploadResult> {
     const timestamp = Math.round((new Date).getTime() / 1000);
     const id = randomUUID();
@@ -252,7 +264,7 @@ export type SaveFeaturedTagsParam = {
     image: SaveFeaturedTagsImage
 }[]
 
-const ImageToSaveModel = z.union([
+const FeaturedTagImageToSaveModel = z.union([
     z.object({
         isNew: z.literal(true),
         publicId: z.string(),
@@ -268,13 +280,12 @@ const ImageToSaveModel = z.union([
 const SaveFeaturedTagsImageZodModel = z.array(z.object(
     {
         id: z.number().int(),
-        image: ImageToSaveModel
+        image: FeaturedTagImageToSaveModel
     }
 ))
 
 
-export type SaveFeaturedTagsImage = z.infer<typeof ImageToSaveModel>
-
+export type SaveFeaturedTagsImage = z.infer<typeof FeaturedTagImageToSaveModel>
 
 
 export async function saveFeaturedTags(_formTags: SaveFeaturedTagsParam): Promise<AdminOperationResult> {
@@ -292,7 +303,7 @@ export async function saveFeaturedTags(_formTags: SaveFeaturedTagsParam): Promis
             error: "Invalid data"
         }
     const tagsData = tags.data;
-    if(tagsData.length > MAX_FEATURED_TAGS){
+    if (tagsData.length > MAX_FEATURED_TAGS) {
         return {
             success: false,
             error: `Too many featured tags. The maximum is ${MAX_FEATURED_TAGS}`
@@ -311,7 +322,7 @@ export async function saveFeaturedTags(_formTags: SaveFeaturedTagsParam): Promis
             success: false,
             error: "One of the new images does not exist in the server"
         }
-    if(newImages.some(i => i.folder !== FEATURED_TAG_IMAGE_FOLDER))
+    if (newImages.some(i => i.folder !== FEATURED_TAG_IMAGE_FOLDER))
         return {
             success: false,
             error: "One of the new images is in the wrong folder"
@@ -410,7 +421,6 @@ export async function saveFeaturedTags(_formTags: SaveFeaturedTagsParam): Promis
 }
 
 
-
 async function imageExists(folder: string, publicId: string): Promise<boolean> {
     const url = getImageUrl(folder, publicId)
     const res = await fetch(url, {method: "HEAD"});
@@ -421,9 +431,239 @@ function getImageUrl(folder: string, publicId: string): string {
     return cloudinaryV2.utils.url(`${folder}/${publicId}`, {resource_type: "image", cloud_name: cloudinaryCloudName})
 }
 
-async function asyncSome<T>(arr: T[], predicate: (el: T)=>Promise<boolean>){
+async function asyncSome<T>(arr: T[], predicate: (el: T) => Promise<boolean>) {
     for (let e of arr) {
         if (await predicate(e)) return true;
     }
     return false;
 };
+
+const ProductImageToSaveModel = z.union([
+    z.object({
+        type: z.literal("file"),
+        isNew: z.literal(true),
+        publicId: z.string(),
+        folder: z.string(),
+        alt: z.string().min(1)
+    }),
+    z.object({
+        type: z.literal("url"),
+        isNew: z.literal(true),
+        url: z.string().min(1),
+        alt: z.string().min(1)
+    }),
+    z.object({
+        isNew: z.literal(false),
+        id: z.number()
+    })
+])
+
+
+const VideoToSaveModel = z.union([
+    z.object({
+        isNew: z.literal(false),
+        id: z.number()
+    }),
+    z.object({
+        isNew: z.literal(true),
+        sourceId: z.string(),
+        source: z.enum(["YouTube", "SteamCdn", "Cloudinary"]),
+        thumbnail: ProductImageToSaveModel,
+        alt: z.string().min(1)
+    }),
+])
+
+const CompanyModel = z.union([
+    z.object({
+        isNew: z.literal(false),
+        id: z.number(),
+    }),
+    z.object({
+        isNew: z.literal(true),
+        name: z.string().min(1),
+    }),
+])
+
+const TagModel = z.union([
+    z.object({
+        isNew: z.literal(false),
+        id: z.number()
+    }),
+    z.object({
+        isNew: z.literal(true),
+        name: z.string().min(1),
+    }),
+])
+const NewImageModel = z.intersection(ProductImageToSaveModel, z.object({isNew: z.literal(true)}))
+const ProductToAddModel = z.object({
+    name: z.string().min(1),
+    description: z.string().min(1),
+    current_price_cents: z.number().int().positive(),
+    original_price_cents: z.number().int().positive(),
+    shortDescription: z.string().optional(),
+    launchDate: z.string().date("Invalid date"),
+    developers: z.array(CompanyModel),
+    publishers: z.array(CompanyModel),
+    coverImage: ProductImageToSaveModel,
+    images: z.array(NewImageModel),
+    videos: z.array(z.intersection(VideoToSaveModel, z.object({isNew: z.literal(true), thumbnail: NewImageModel}))),
+    tags: z.array(TagModel)
+})
+
+export type ProductVideoToSave = z.infer<typeof VideoToSaveModel>
+export type ProductToAddServer = z.infer<typeof ProductToAddModel>
+export type ProductImageToSave = z.infer<typeof ProductImageToSaveModel>
+
+export async function addProduct(_formProduct: ProductToAddServer): Promise<AdminOperationResult> {
+    const isAuthorized = (await auth())?.user?.isAdmin;
+    if (!isAuthorized)
+        return {
+            success: false,
+            error: "Unauthorized"
+        }
+    const product = ProductToAddModel.safeParse(_formProduct);
+    if (!product.success) {
+        console.error(product.error.errors)
+        return {
+            success: false,
+            error: "Invalid data"
+        }
+    }
+    const productData = product.data;
+
+    if (productData.current_price_cents > productData.original_price_cents)
+        return {
+            success: false,
+            error: "Current price must be less than or equal to original price"
+        }
+
+    const existingPublishers = productData.publishers.filter(p => !p.isNew) as (ArrayElement<typeof productData.publishers> & {
+        isNew: false
+    })[]
+    const existingDevelopers = productData.developers.filter(p => !p.isNew) as (ArrayElement<typeof productData.developers> & {
+        isNew: false
+    })[]
+    const newPublishers = productData.publishers.filter(p => p.isNew) as (ArrayElement<typeof productData.publishers> & {
+        isNew: true
+    })[]
+    const newDevelopers = productData.developers.filter(p => p.isNew) as (ArrayElement<typeof productData.developers> & {
+        isNew: true
+    })[]
+
+    try{return await prisma.$transaction(async tx => {
+            const product = await prisma.product.create({
+                data: {
+                    name: productData.name,
+                    publishers: {
+                        connectOrCreate: newPublishers.map(pub => ({
+                            where: {name: pub.name},
+                            create: {
+                                name: pub.name
+                            }
+                        })),
+                        connect: existingPublishers.map(pub => ({
+                            id: pub.id
+                        }))
+                    },
+                    developers: {
+                        connectOrCreate: newDevelopers.map(pub => ({
+                            where: {name: pub.name},
+                            create: {
+                                name: pub.name
+                            }
+                        })),
+                        connect: existingDevelopers.map(pub => ({
+                            id: pub.id
+                        }))
+                    },
+                    currentPrice_cents: productData.current_price_cents,
+                    originalPrice_cents: productData.original_price_cents,
+                    coverImage: productData.coverImage.isNew ? {
+                        create: {
+                            url: getProductImageUrl(productData.coverImage),
+                            alt: productData.coverImage.alt,
+                        }
+                    } : {
+                        connect: {
+                            id: productData.coverImage.id
+                        }
+                    },
+                    shortDescription: productData.shortDescription,
+                    description: productData.description,
+                    launchDate: productData.launchDate + "T00:00:00.000Z",
+                    descriptionImages: {
+                        create: productData.images.map(img => ({
+                            url: getProductImageUrl(img),
+                            alt: img.alt
+                        }))
+                    },
+                    videos: {
+                        create: productData.videos.map(video => ({
+                            source: mapVideoSource(video),
+                            sourceId: video.sourceId,
+                            alt: video.alt,
+                            thumbnail: {
+                                create: {
+                                    url: getProductImageUrl(video.thumbnail),
+                                    alt: video.thumbnail.alt
+                                }
+                            }
+                        }))
+                    }
+                }
+            })
+            await prisma.product.update({
+                where: {
+                    id: product.id
+                },
+                data: {
+                    tags: {
+                        create: productData.tags.map((tag, index) => ({
+                            product: {
+                                connect: {
+                                    id: product.id
+                                }
+                            },
+                            order: index,
+                            tag: tag.isNew ? {
+                                create: {
+                                    name: tag.name,
+                                    inDropdown: false
+                                }
+                            } : {
+                                connect: {
+                                    id: tag.id
+                                }
+                            }
+                        }))
+                    }
+                }
+            })
+            revalidatePath("/", "layout");
+            return {success: true}
+        }
+    )}catch(e){
+        console.error(e)
+        return {success: false, error: "Internal error"}
+    }
+
+}
+
+
+function getProductImageUrl(coverImage: ProductImageToSave & { isNew: true }): string {
+    if (coverImage.type === "url")
+        return coverImage.url
+    else
+        return getImageUrl(coverImage.folder, coverImage.publicId)
+
+}
+
+function mapVideoSource(video: ProductVideoToSave & { isNew: true }): VideoSource {
+    if (video.source === "SteamCdn")
+        return VideoSource.STEAMCDN
+    else if (video.source === "YouTube")
+        return VideoSource.YOUTUBE
+    else if (video.source === "Cloudinary")
+        return VideoSource.CLOUDINARY
+    else throw new Error("Invalid video source")
+}
