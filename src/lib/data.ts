@@ -51,6 +51,9 @@ export async function fetchFeaturedProducts() {
                 }
             },
         },
+        orderBy: {
+            order: 'asc'
+        }
     });
     return data
 }
