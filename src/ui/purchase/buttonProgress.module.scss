@@ -1,0 +1,25 @@
+@import '@leodreizzen/react-awesome-button/src/styles/styles.scss';
+.aws-btn {
+        @apply rounded-2xl;
+        @apply overflow-clip;
+
+        --button-default-height: 45px;
+        --button-default-font-size: 14px;
+        --button-default-border-radius: 6px;
+        --button-horizontal-padding: 10px;
+        --button-raise-level: 0px;
+        --button-hover-pressure: 0;
+        --transform-speed: 0.185s;
+
+        --button-primary-color: green;
+        --button-primary-color-hover: #006400;
+        --button-primary-color-active: #006400;
+        --button-primary-border: 2px solid #2b3041;
+
+        --button-danger-color: #3db64b;
+        --button-danger-color-dark: #d2e054;
+        --button-danger-color-light: #ffffff;
+        --button-danger-color-hover: #3aae48;
+        --button-danger-color-active: #37a343;
+        --button-danger-border: 2px solid #d2e054;
+}

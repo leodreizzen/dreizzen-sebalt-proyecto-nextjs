@@ -1,0 +1,171 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Product {
+  id                  Int              @id @default(autoincrement())
+  name                String           @unique
+  originalPrice_cents Int
+  currentPrice_cents  Int
+  description         String
+  shortDescription    String?
+  launchDate          DateTime
+  coverImageId        Int              @unique
+  available           Boolean          @default(true)
+  featured            FeaturedProduct?
+  descriptionImages   Image[]          @relation("description_images")
+  coverImage          Image            @relation("cover_image", fields: [coverImageId], references: [id], map: "cover_image_fk")
+  developers          Company[]        @relation("developer")
+  publishers          Company[]        @relation("publisher")
+  sale                ProductSale?
+  tags                ProductTag[]
+  purchases           PurchaseItem[]
+  videos              Video[]
+}
+
+model Company {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  developed Product[] @relation("developer")
+  published Product[] @relation("publisher")
+}
+
+model ProductSale {
+  id                  Int     @id @default(autoincrement())
+  productId           Int     @unique
+  originalPrice_cents Int
+  currentPrice_cents  Int
+  isFeatured          Boolean
+  product             Product @relation(fields: [productId], references: [id])
+}
+
+model ProductTag {
+  order     Int
+  tagId     Int
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  tag       Tag     @relation(fields: [tagId], references: [id])
+
+  @@id([productId, tagId])
+  @@unique([productId, order])
+}
+
+model Tag {
+  id          Int          @id @default(autoincrement())
+  inDropdown  Boolean
+  name        String       @unique
+  featured    FeaturedTag?
+  productTags ProductTag[]
+}
+
+model FeaturedTag {
+  order   Int   @unique
+  tagId   Int   @id
+  imageId Int
+  image   Image @relation(fields: [imageId], references: [id])
+  tag     Tag   @relation(fields: [tagId], references: [id])
+}
+
+model FeaturedProduct {
+  productId Int     @id
+  order     Int
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Video {
+  id          Int         @id @default(autoincrement())
+  productId   Int?
+  source      VideoSource
+  alt         String
+  thumbnailId Int?        @unique
+  sourceId    String
+  product     Product?    @relation(fields: [productId], references: [id])
+  thumbnail   Image?      @relation(fields: [thumbnailId], references: [id])
+
+  @@unique([source, sourceId])
+}
+
+model Image {
+  id                     Int           @id @default(autoincrement())
+  url                    String
+  alt                    String
+  inProductDescriptionId Int?          @map("productDescriptionId")
+  inFeaturedTag          FeaturedTag[]
+  inDescription          Product?      @relation("description_images", fields: [inProductDescriptionId], references: [id], map: "product_description_fk")
+  inProductCover         Product?      @relation("cover_image")
+  inVideoThumbnail       Video?
+}
+
+model PurchaseItem {
+  originalPrice_cents Int
+  currentPrice_cents  Int
+  purchaseId          Int
+  productId           Int
+  product             Product  @relation(fields: [productId], references: [id])
+  purchase            Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+
+  @@id([productId, purchaseId])
+}
+
+model Purchase {
+  id             Int            @id @default(autoincrement())
+  paymentId      Int?           @unique
+  idempotencyKey String         @unique
+  invoiceDataId  Int            @unique
+  invoiceData    InvoiceData    @relation(fields: [invoiceDataId], references: [id], onDelete: Cascade)
+  purchaseDate   DateTime       @default(now())
+  products       PurchaseItem[]
+}
+
+model InvoiceData {
+  id         Int       @id @default(autoincrement())
+  customerId Int
+  firstName  String
+  lastName   String
+  address1   String
+  address2   String?
+  city       String
+  state      String
+  country    String
+  email      String
+  purchase   Purchase?
+}
+
+model User {
+  id           Int     @id @default(autoincrement())
+  email        String  @unique
+  passwordHash String
+  isAdmin      Boolean @default(false)
+}
+
+enum VideoSource {
+  YOUTUBE
+  CLOUDINARY
+  STEAMCDN
+}
+
+model PendingMedia {
+  id        Int                @id @default(autoincrement())
+  source    PendingMediaSource
+  type      PendingMediaType
+  publicId  String
+  folder    String
+  timestamp DateTime           @default(now())
+
+  @@unique([folder, publicId])
+}
+
+enum PendingMediaSource {
+  CLOUDINARY
+}
+
+enum PendingMediaType {
+  IMAGE
+  VIDEO
+}
