@@ -124,7 +124,7 @@ async function uploadImage(image: File, alt: string, uploadData: UploadData): Pr
     data.append("folder", uploadData.folder)
     data.append("file", image)
     try {
-        await axios.post(`http://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`, data)
+        await axios.post(`https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`, data)
         return {
             success: true,
             image: {
