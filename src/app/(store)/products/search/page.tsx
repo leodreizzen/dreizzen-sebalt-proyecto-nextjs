@@ -52,7 +52,7 @@ export default async function Page({ searchParams }: { searchParams: { q?: strin
 
     return (
         <div className="flex flex-col items-center justify-center 2xl:w-3/4 mx-auto gap-6 mt-3 mb-3 p-0 border border-borders rounded-3xl">
-                <h1 className="text-3xl font-bold text-center px-1 mt-4">Resultados de la búsqueda</h1>
+                <h1 className="text-3xl font-bold text-center px-1 mt-4">Search results</h1>
                 <SearchBoxBar placeholder="Buscar" />
                 <div className="flex flex-col lg:flex-row w-full 2xl:w-3/4 border border-borders rounded-3xl">
                     <div className="p-6">
@@ -66,7 +66,7 @@ export default async function Page({ searchParams }: { searchParams: { q?: strin
                             <Pagination totalPages={totalPages} />
                         </div>
                         <div className={hidden ? "flex justify-center mb-2" : "hidden"}>
-                            <p>No hay resultados.</p>
+                            <p>No results.</p>
                         </div>
                     </div>
                 </div>

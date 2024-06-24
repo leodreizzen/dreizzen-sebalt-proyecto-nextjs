@@ -50,18 +50,18 @@ export default function Navbar({ className, dropdownTags }: { className?: string
 
   const menuItems: MenuItem[] = [
     {
-      name: "Inicio",
+      name: "Home",
       type: "normal",
       pathname: "/",
     },
     {
-      name: "Géneros",
+      name: "Tags",
       type: "dropdown",
       baseUrl: "/products/featured/tag",
       children: genreLinks
     },
-    { name: "Más vendidos", type: "normal", pathname: "/products/topsellers" },
-    { name: "Ofertas", type: "normal", pathname: "/products/discounts" },
+    { name: "Top sellers", type: "normal", pathname: "/products/topsellers" },
+    { name: "Sales", type: "normal", pathname: "/products/discounts" },
   ]
 
   return (
@@ -74,11 +74,11 @@ export default function Navbar({ className, dropdownTags }: { className?: string
     >
       <NavbarContent justify="start" className={clsx(searchOpen && "max-md:!flex-grow-[0.5] max-lg:!flex-grow-[0.5]")}>
         <NavbarMenuToggle
-          aria-label={isMenuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
+          aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
           className="sm:hidden"
         />
         <NavbarBrand>
-          <NextUILink as={Link} href="/" aria-label="Ir a home"><VaporLogo className={"fill-white mr-1"} h={"51.2px"} w={"110px"}/></NextUILink>
+          <NextUILink as={Link} href="/" aria-label="Go to home"><VaporLogo className={"fill-white mr-1"} h={"51.2px"} w={"110px"}/></NextUILink>
         </NavbarBrand>
 
       </NavbarContent>
@@ -131,7 +131,7 @@ function NavbarItemComponent({ item, selected }: { item: MenuItem, selected: boo
           {item.name}
         </Button>
       </DropdownTrigger>
-      <DropdownMenu aria-label={`Menú desplegable de ${item.name}`}>
+      <DropdownMenu aria-label={`Dropdown menu of ${item.name}`}>
         {
           item.children.map(child => (
             <DropdownItem key={child.name} textValue={child.name} variant="solid"

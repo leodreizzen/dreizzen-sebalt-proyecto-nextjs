@@ -13,7 +13,7 @@ export default function ShoppingCartButton(){
     const {shoppingCart} = useShoppingCartContext()
     const cartItems = shoppingCart.dataAvailable ? shoppingCart.data.length: 0;
     return (
-        <Button aria-label="Ir al carrito" as={Link} href="/cart" variant="flat" className="pl-0 pr-2 min-w-0 bg-transparent py-1 flex items-center">
+        <Button aria-label="Go to cart" as={Link} href="/cart" variant="flat" className="pl-0 pr-2 min-w-0 bg-transparent py-1 flex items-center">
             <CartItemsBadge items={cartItems}>
                 <ShoppingCartIcon className={clsx("mr-1 pt-0 w-6 h-6", {"text-foreground": !selected, "text-primary": selected})} />
             </CartItemsBadge>

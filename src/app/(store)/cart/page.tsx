@@ -13,7 +13,7 @@ export default async function CartPage({}) {
     const products = await fetchCartProducts()
     return (
         <main className="flex flex-col items-center min-h-full">
-            <h1 className="text-center text-3xl font-bold my-3 h-full">Carrito</h1>
+            <h1 className="text-center text-3xl font-bold my-3 h-full">Cart</h1>
             {products.length > 0 ?
                 <CartWithItemsPage products={products} className="w-full sm:w-10/12 gap-4 mb-4 sm:px-4"/>
                 : <EmptyCartPage className="w-full sm:w-10/12 gap-4 mb-4 sm:px-4"/>
@@ -64,7 +64,7 @@ function CartWithItemsPage({products, className}: { products: ProductWithCoverIm
                 <span className="pl-2 pr-4">{formatPrice(total)}</span>
                 <Button as={Link} href="/purchase"
                         className="font-bold bg-transparent text-foreground border-foreground border" size="md"
-                >Comprar ahora</Button>
+                >Buy now</Button>
             </div>
         </div>
     )
@@ -76,8 +76,8 @@ function EmptyCartPage({className}: { className?: String }) {
             <div className="aspect-square w-1/5">
                 <BsCartX className="size-full"/>
             </div>
-            <p className="pt-3 text-center">Tu carrito está vacío. Agrega productos para comprarlos</p>
-            <Button as={Link} href="/" className="text-center bg-primary text-foreground mt-2">Elegir productos</Button>
+            <p className="pt-3 text-center">Your cart is empty. Add products to buy them.</p>
+            <Button as={Link} href="/" className="text-center bg-primary text-foreground mt-2">Choose products</Button>
         </div>
     )
 }
