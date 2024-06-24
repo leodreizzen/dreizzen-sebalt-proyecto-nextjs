@@ -4,7 +4,7 @@ import Image from "next/image";
 import {FaX} from "react-icons/fa6";
 import RemoveCardButton from "@/ui/admin/RemoveCardButton";
 
-export default function ImageUploadCard({imageUrl, className, onClose, id} : {imageUrl: string; className?: string, onClose: (id: number) => void; id: number}) {
+export default function ImageUploadCard({imageUrl, className, onClose} : {imageUrl: string; className?: string, onClose: () => void}) {
 
     const onPress = () => {
         console.log("Pressed");
@@ -15,7 +15,7 @@ export default function ImageUploadCard({imageUrl, className, onClose, id} : {im
     return (
         <div className={"relative"}>
             <div className={"absolute top-0 right-1 z-10"}>
-                <RemoveCardButton onPress={() => onClose(id)}/>
+                <RemoveCardButton onPress={onClose}/>
             </div>
             <div className={clsx("gap-3 @container", className)}>
             <Card isFooterBlurred className={"w-full h-full"} onPress={onPress} isPressable={isPressable}>

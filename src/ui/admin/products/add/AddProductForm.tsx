@@ -97,6 +97,7 @@ export default function AdminProductForm({initialData}: {
     const [isOnSale, setIsOnSale] = useState<boolean>(initialData ? (initialData.currentPrice !== initialData.originalPrice) : false);
     const [publishers, setPublishers] = useState<CompanyItem[]>(initialData?.publishers ?? []);
     const [developers, setDevelopers] = useState<CompanyItem[]>(initialData?.developers ?? []);
+    const [coverImage, setCoverImage] = useState<ImageItem | null>(null);
     const {View: DescriptionView, getHtml, setHtml} = useHTMLTextEditor(initialData?.description);
     const [inputsState, setInputsState] = useState<
         {
@@ -190,6 +191,13 @@ export default function AdminProductForm({initialData}: {
         await setHtml(rawgData.description);
     }
 
+    function handleCoverImageAdd(image: FileImage) {
+        setCoverImage(image);
+    }
+    function handleCoverImageClose() {
+        setCoverImage(null);
+    }
+
     return (
         <div className={"justify-center items-center flex flex-col gap-3 mx-auto xl:w-3/4"}>
             <div className="flex justify-between w-full">
@@ -278,12 +286,22 @@ export default function AdminProductForm({initialData}: {
                 </div>
                 <div
                     className={"flex flex-col border-1 border-borders items-center justify-center rounded-2xl w-full p-4"}>
+                    <h1 className={"justify-center text-xl"}>Cover Image</h1>
+                    <div
+                        className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full auto-rows-[1fr] rounded-2xl p-3"}>
+                        { !coverImage && <ImageUploaderModal onSubmit={handleCoverImageAdd}/>}
+                        { coverImage && <ImageUploadCard imageUrl={coverImage.url} onClose={handleCoverImageClose}/>}
+
+                    </div>
+                </div>
+                <div
+                    className={"flex flex-col border-1 border-borders items-center justify-center rounded-2xl w-full p-4"}>
                     <h1 className={"justify-center text-xl"}>Game images</h1>
                     <div
                         className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full auto-rows-[1fr] rounded-2xl p-3"}>
                         <ImageUploaderModal onSubmit={handleImageAdd}/>
                         {images.map((img, index) => (
-                            <ImageUploadCard imageUrl={img.url} key={index} onClose={handleImageClose} id={index}/>
+                            <ImageUploadCard imageUrl={img.url} key={index} onClose={()=>handleImageClose(index)} id={index}/>
                         ))}
                     </div>
                 </div>
@@ -294,7 +312,7 @@ export default function AdminProductForm({initialData}: {
                         className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full auto-rows-[1fr] rounded-2xl p-3"}>
                         <VideoUploaderModal onSubmit={handleVideoAdd}/>
                         {videos.map((video, index) => (
-                            <ImageUploadCard imageUrl={video.thumbnail.url} key={index} onClose={handleVideoClose}
+                            <ImageUploadCard imageUrl={video.thumbnail.url} key={index} onClose={()=>handleImageClose(index)}
                                              id={index}/>
                         ))}
                     </div>
