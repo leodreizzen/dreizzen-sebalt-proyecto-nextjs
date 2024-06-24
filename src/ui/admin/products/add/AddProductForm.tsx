@@ -318,7 +318,7 @@ export default function AdminProductForm({initialData}: {
                         <label htmlFor="launch_date">Launch date</label>
                         <DateInput id="launch_date" aria-label="Launch date" value={inputsState.launchDate}
                                    onChange={handleDateChange}
-                                   className="flex-grow !text-black rounded-2xl"></DateInput>
+                                   className="flex-grow !text-black rounded-2xl" classNames={{segment:"!text-black"}}></DateInput>
                     </div>
                     <div className="flex flex-col gap-2">
                         <label htmlFor="original_price">Original price</label>
