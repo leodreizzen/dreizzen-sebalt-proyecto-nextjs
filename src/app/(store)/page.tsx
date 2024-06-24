@@ -19,7 +19,7 @@ export default async function Home() {
                             <h2 className="text-center text-large pb-2">Featured</h2>
                         </div>
 
-                        <div className="sm:border border-borders px-2 pt-4 rounded-3xl ">
+                        <div className="sm:border border-borders px-2 pt-4 rounded-3xl mb-4">
                             <FeaturedProductsCarousel products={featuredProducts}
                                                       className="mx-auto lg:w-11/12 xl:w-10/12 2xl:w-9/12 mb-10"/>
                         </div>
