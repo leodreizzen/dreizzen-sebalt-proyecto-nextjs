@@ -189,6 +189,18 @@ export default function AdminProductForm({initialData}: {
             name: rawgData.name,
             launchDate: rawgData.released ? new CalendarDate(date.getFullYear(), date.getMonth(), date.getDate()) : null,
         })
+        setPublishers(rawgData.publishers.map(publisher => ({isNew: true, name: publisher.name})));
+        setDevelopers(rawgData.developers.map(developer => ({isNew: true, name: developer.name})));
+        setCoverImage({isNew: true, type: "url", url: rawgData.background_image, alt: rawgData.name});
+        setImages(rawgData.screenshots.map((screenshot) => ({isNew: true, type: "url", url: screenshot.image, alt: rawgData.name})));
+        setVideos(rawgData.movies.map((movie) => ({
+            isNew: true,
+            type: "url",
+            source: "SteamDB",
+            url: movie.video,
+            alt: rawgData.name,
+            thumbnail: {isNew: true, type: "url", url: movie.preview, alt: rawgData.name}
+        })));
         await setHtml(rawgData.description);
     }
 
