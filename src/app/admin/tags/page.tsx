@@ -13,7 +13,7 @@ export default async function AdminPurchasesPage({searchParams}: {searchParams: 
     return (
         <div>
             <div className={"justify-center items-center flex flex-col"}>
-                <h1 className={"text-white mb-2 text-2xl"}>Purchases</h1>
+                <h1 className={"text-white mb-2 text-2xl"}>Tags</h1>
                 <div className={"flex flex-col w-full justify-center items-center"}>
                     <TagTable tags={tags} />
                     <div className={tags.length === 0 ? "hidden" : "flex justify-center mb-2 mt-4"}>

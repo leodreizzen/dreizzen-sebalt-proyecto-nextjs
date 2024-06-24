@@ -2,16 +2,19 @@ import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure}
 import {Button} from "@nextui-org/button";
 import {FaTrash} from "react-icons/fa";
 import React from "react";
+import {useToast} from "@/ui/shadcn/use-toast";
+import {deleteTag, setTagDropdown} from "@/lib/actions";
 
 export default function DeleteTagButton({ tagId }: { tagId: number }) {
 
-
-    const handleDelete = async () => {
-        //TODO: Implement delete
+    const {toast} = useToast();
+    const {isOpen, onOpen, onClose, onOpenChange} = useDisclosure();
+    async function handleDelete(){
+        const result = await deleteTag(tagId)
+        if(!result.success)
+            toast({title: "Error deleting product", description: result.error, duration: 5000, variant: "destructive"})
+        onClose()
     };
-
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
-
 
 
     return (
@@ -37,7 +40,7 @@ export default function DeleteTagButton({ tagId }: { tagId: number }) {
                                 <Button color="danger" variant="light" onPress={onClose}>
                                     Cancel
                                 </Button>
-                                <Button color="primary" onPress={onClose}>
+                                <Button color="primary" onPress={handleDelete}>
                                     Delete
                                 </Button>
                             </ModalFooter>

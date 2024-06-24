@@ -3,15 +3,20 @@ import {Button} from "@nextui-org/button";
 import {FaStar} from "react-icons/fa";
 import React from "react";
 import {FaX} from "react-icons/fa6";
+import {deleteProduct, setTagDropdown} from "@/lib/actions";
+import {useToast} from "@/ui/shadcn/use-toast";
 
 export default function RemoveFromDropdownButton({ tagId }: { tagId: number }) {
-
-
-    const putInDropdown = async () => {
-        //TODO: Implement putting in dropdown
+    const {toast} = useToast();
+    const {isOpen, onOpen, onClose, onOpenChange} = useDisclosure();
+    const removeFromDropdown = async () => {
+        const result = await setTagDropdown(tagId, false)
+        if(!result.success)
+            toast({title: "Error removing product from dropdown", description: result.error, duration: 5000, variant: "destructive"})
+        onClose()
     };
 
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+
 
 
 
@@ -38,7 +43,7 @@ export default function RemoveFromDropdownButton({ tagId }: { tagId: number }) {
                                 <Button color="danger" variant="light" onPress={onClose}>
                                     Cancel
                                 </Button>
-                                <Button color="primary" onPress={onClose}>
+                                <Button color="primary" onPress={removeFromDropdown}>
                                     Delete
                                 </Button>
                             </ModalFooter>

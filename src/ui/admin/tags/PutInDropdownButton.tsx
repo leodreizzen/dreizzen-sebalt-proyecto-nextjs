@@ -2,16 +2,19 @@ import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure}
 import {Button} from "@nextui-org/button";
 import {FaStar} from "react-icons/fa";
 import React from "react";
+import {useToast} from "@/ui/shadcn/use-toast";
+import {setTagDropdown} from "@/lib/actions";
 
 export default function PutInDropdownButton({ tagId }: { tagId: number }) {
 
-
+    const {toast} = useToast();
+    const {isOpen, onOpen, onClose, onOpenChange} = useDisclosure();
     const putInDropdown = async () => {
-        //TODO: Implement putting in dropdown
+        const result = await setTagDropdown(tagId, true)
+        if(!result.success)
+            toast({title: "Error putting product in dropdown", description: result.error, duration: 5000, variant: "destructive"})
+        onClose()
     };
-
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
-
 
 
     return (
@@ -37,8 +40,8 @@ export default function PutInDropdownButton({ tagId }: { tagId: number }) {
                                 <Button color="danger" variant="light" onPress={onClose}>
                                     Cancel
                                 </Button>
-                                <Button color="primary" onPress={onClose}>
-                                    Delete
+                                <Button color="primary" onPress={putInDropdown}>
+                                    Yes
                                 </Button>
                             </ModalFooter>
                         </>
