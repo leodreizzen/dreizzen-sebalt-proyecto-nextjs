@@ -20,7 +20,7 @@ import {Tag} from "@prisma/client";
 const TOTAL_ITEMS_PER_PAGE = 6;
 const PURCHASE_ITEMS_PER_PAGE = 8;
 
-export async function fetchUser( email: string ) {
+export async function fetchUser(email: string) {
     return await prisma.user.findUnique({
         where: {
             email: email
@@ -29,7 +29,7 @@ export async function fetchUser( email: string ) {
 
 }
 
-export async function fetchFeaturedProducts(){
+export async function fetchFeaturedProducts() {
     const data: FeaturedProductWithProduct[] = await prisma.featuredProduct.findMany({
         include: {
             product: {
@@ -37,6 +37,9 @@ export async function fetchFeaturedProducts(){
                     tags: {
                         include: {
                             tag: true
+                        },
+                        orderBy: {
+                            order: 'asc'
                         }
                     },
                     coverImage: true
@@ -47,7 +50,7 @@ export async function fetchFeaturedProducts(){
     return data
 }
 
-export async function fetchFeaturedTags(){
+export async function fetchFeaturedTags() {
     const data: FeaturedTagWithTagAndImage[] = await prisma.featuredTag.findMany(
         {
             include: {
@@ -59,7 +62,7 @@ export async function fetchFeaturedTags(){
     return data
 }
 
-export async function fetchDropdownTags(): Promise<Tag[]>{
+export async function fetchDropdownTags(): Promise<Tag[]> {
     const data = await prisma.tag.findMany({
         where: {
             inDropdown: true
@@ -68,7 +71,7 @@ export async function fetchDropdownTags(): Promise<Tag[]>{
     return data
 }
 
-export async function fetchFeaturedSales(){
+export async function fetchFeaturedSales() {
     const data: ProductSaleWithProduct[] = await prisma.productSale.findMany({
         where: {
             isFeatured: true
@@ -79,6 +82,9 @@ export async function fetchFeaturedSales(){
                     tags: {
                         include: {
                             tag: true
+                        },
+                        orderBy: {
+                            order: 'asc'
                         }
                     },
                     coverImage: true
@@ -96,7 +102,7 @@ export async function fetchGenrePages(id: number) {
                 some: {
                     tag: {
                         id: id
-                    }   
+                    }
                 }
             }
         }
@@ -120,6 +126,9 @@ export async function fetchByGenre(tagId: number, page: number) {
             tags: {
                 include: {
                     tag: true
+                },
+                orderBy: {
+                    order: 'asc'
                 }
             }
         },
@@ -142,6 +151,9 @@ export async function fetchCartProducts(): Promise<ProductWithCoverImage[]> {
             tags: {
                 include: {
                     tag: true
+                },
+                orderBy: {
+                    order: 'asc'
                 }
             }
         }
@@ -160,7 +172,7 @@ export async function fetchValidProducts(ids: number[]): Promise<number[]> {
     return data.map(product => product.id)
 }
 
-export async function validateProduct(id: number): Promise<boolean>{
+export async function validateProduct(id: number): Promise<boolean> {
     return await prisma.product.findUnique({
         where: {
             id: id
@@ -177,7 +189,7 @@ export async function fetchTagName(id: number) {
     return data
 }
 
-export async function fetchAllTags(){
+export async function fetchAllTags() {
     const data = await prisma.tag.findMany()
     return data
 }
@@ -206,7 +218,7 @@ export async function fetchTags(query: string, filter: number[], priceRange: num
                                     }
                                 }
                             })),
-                            sale: onSale ? { isNot: null } : {},
+                            sale: onSale ? {isNot: null} : {},
                         }
                     }
                 }
@@ -232,6 +244,9 @@ export async function fetchSaleSearch(query: string) {
                     tags: {
                         include: {
                             tag: true
+                        },
+                        orderBy: {
+                            order: 'asc'
                         }
                     }
                 }
@@ -266,13 +281,16 @@ export async function fetchSearch(query: string, page: number, filter: number[],
                     }
                 }
             })),
-            sale: onSale ? { isNot: null } : {},
+            sale: onSale ? {isNot: null} : {},
         },
         include: {
             coverImage: true,
             tags: {
                 include: {
                     tag: true
+                },
+                orderBy: {
+                    order: 'asc'
                 }
             }
         },
@@ -302,7 +320,7 @@ export async function fetchSearchPages(query: string, filter: number[], priceRan
                     }
                 }
             })),
-            sale: onSale ? { isNot: null } : {},
+            sale: onSale ? {isNot: null} : {},
         }
     })
     return Math.ceil(data / TOTAL_ITEMS_PER_PAGE)
@@ -310,24 +328,27 @@ export async function fetchSearchPages(query: string, filter: number[], priceRan
 
 export async function fetchMostSold(currentPage: number) {
     const data = await prisma.product.findMany({
-            where: {
-                purchases: {
-                    some: {}
+        where: {
+            purchases: {
+                some: {}
+            }
+        },
+        include: {
+            coverImage: true,
+            tags: {
+                include: {
+                    tag: true
+                },
+                orderBy: {
+                    order: 'asc'
                 }
             },
-            include: {
-                coverImage: true,
-                tags: {
-                    include: {
-                    tag: true
-                    }
-                },
-                _count: {
-                    select: {
-                        purchases: true
-                    }
+            _count: {
+                select: {
+                    purchases: true
                 }
             }
+        }
     })
 
     const filteredData = data.filter((product) => product._count.purchases > 1)
@@ -346,7 +367,7 @@ export async function fetchMostSoldPages() {
             coverImage: true,
             tags: {
                 include: {
-                tag: true
+                    tag: true
                 }
             },
             _count: {
@@ -373,6 +394,9 @@ export async function fetchProduct(id: number): Promise<ProductForDetail | null>
             tags: {
                 include: {
                     tag: true
+                },
+                orderBy: {
+                    order: 'asc'
                 }
             },
             videos: {
@@ -413,6 +437,9 @@ export async function fetchProducts(page: number, query: string) {
             tags: {
                 include: {
                     tag: true
+                },
+                orderBy: {
+                    order: 'asc'
                 }
             },
             purchases: true
@@ -465,7 +492,7 @@ export async function fetchPurchase(id: number) {
 }
 
 export async function fetchTagsAdmin(page: number) {
-    const data : TagWithProducts[] = await prisma.tag.findMany({
+    const data: TagWithProducts[] = await prisma.tag.findMany({
         include: {
             productTags: true
         },
