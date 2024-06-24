@@ -706,12 +706,19 @@ export async function addProduct(_formProduct: ProductToAddServer): Promise<Admi
                         isFeatured: false
                     }
                 })
-            await tx.tag.createMany({
-                data: newTags.map(t => ({
-                    name: t.name,
-                    inDropdown: false
-                }))
-            })
+            for (const tag of newTags){
+                await tx.tag.upsert({
+                    where:{
+                        name: tag.name
+                    },
+                    update:{},
+                    create: {
+                        name: tag.name,
+                        inDropdown: false
+                    }
+                })
+            }
+
             for (let i = 0; i < productData.tags.length; i++) {
                 const tag = productData.tags[i]
                 await tx.productTag.create({
@@ -997,12 +1004,18 @@ export async function editProduct(_formProduct: ProductToEditServer): Promise<Ad
                         productId: productData.id
                     }
                 })
-            await tx.tag.createMany({
-                data: newTags.map(t => ({
-                    name: t.name,
-                    inDropdown: false
-                }))
-            })
+            for (const tag of newTags){
+                await tx.tag.upsert({
+                    where:{
+                        name: tag.name
+                    },
+                    update:{},
+                    create: {
+                        name: tag.name,
+                        inDropdown: false
+                    }
+                })
+            }
             for (let i = 0; i < productData.tags.length; i++) {
                 const tag = productData.tags[i]
                 await tx.productTag.create({
