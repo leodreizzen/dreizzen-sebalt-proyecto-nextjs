@@ -3,8 +3,13 @@ import {Tag} from "@prisma/client";
 import {ArrayElement} from "@/lib/definitions";
 import {
     addProduct,
-    authorizeFeaturedTagImageUpload, authorizeProductImageUpload, authorizeProductVideoUpload, ProductImageToSave,
-    ProductToAddServer, ProductVideoToSave,
+    authorizeFeaturedTagImageUpload,
+    authorizeProductImageUpload,
+    authorizeProductVideoUpload,
+    editProduct,
+    ProductImageToSave,
+    ProductToAddServer,
+    ProductVideoToSave,
     saveFeaturedTags,
     SaveFeaturedTagsImage,
     UploadData
@@ -196,6 +201,10 @@ interface ProductToAddClient extends Omit<ProductToAddServer, "images" | "videos
     coverImage: ImageItem
 }
 
+interface ProductToEditClient extends ProductToAddClient{
+    id: number
+}
+
 async function uploadProductVideoIfNew(video: VideoItem): Promise<ProductUploadVideoResult> {
     if (!video.isNew)
         return {success: true, video: {isNew: false, id: video.id}}
@@ -251,7 +260,7 @@ async function uploadProductVideo(video: NewVideo & {type: "file"}, thumbnail: P
 
 
 
-export async function createProductClient(product: ProductToAddClient & { videos: NewVideo[], images: NewImage[] }) {
+export async function createProductClient(product: ProductToAddClient) {
     const imagePromises = product.images.map(image => uploadProductImageIfNew(image))
     const imageResults = (await Promise.all(imagePromises))
     const failed = imageResults.filter(r => !r.success) as (ArrayElement<typeof imageResults> & { success: false })[]
@@ -281,6 +290,40 @@ export async function createProductClient(product: ProductToAddClient & { videos
             message: "Failed to upload cover image"
         }
     const coverImage = coverImageUploadResult.image
-    // @ts-ignore
     return await addProduct({...product, images, videos, coverImage})
+}
+
+
+
+export async function editProductClient(product: ProductToEditClient) {
+    const imagePromises = product.images.map(image => uploadProductImageIfNew(image))
+    const imageResults = (await Promise.all(imagePromises))
+    const failed = imageResults.filter(r => !r.success) as (ArrayElement<typeof imageResults> & { success: false })[]
+    if (failed.length > 0) {
+        const errors = failed.map(r => r.error).join("\n")
+        return {success: false, error: "Failed to upload images. Errors: \n" + errors}
+    }
+
+    const videoPromises = product.videos.map(video => uploadProductVideoIfNew(video))
+    const videoResults = await Promise.all(videoPromises)
+    const videoFailed = videoResults.filter(r => !r.success) as (ArrayElement<typeof videoResults> & {
+        success: false
+    })[]
+    if (videoFailed.length > 0) {
+        const errors = videoFailed.map(r => r.error).join("\n")
+        return {success: false, error: "Failed to upload videos. Errors: \n" + errors}
+    }
+
+    const images = (imageResults as (ArrayElement<typeof imageResults> & { success: true })[])
+        .map(r => r.image)
+    const videos = (videoResults as (ArrayElement<typeof videoResults> & { success: true })[]).map(r => r.video)
+
+    const coverImageUploadResult = await uploadProductImageIfNew(product.coverImage)
+    if (!coverImageUploadResult.success)
+        return {
+            success: false,
+            message: "Failed to upload cover image"
+        }
+    const coverImage = coverImageUploadResult.image
+    return await editProduct({...product, images, videos, coverImage})
 }

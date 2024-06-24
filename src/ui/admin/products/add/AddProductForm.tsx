@@ -13,7 +13,7 @@ import {Button} from "@nextui-org/button";
 import {DateInput} from "@nextui-org/date-input";
 import {CalendarDate} from "@internationalized/date";
 import {RAWGGame} from "@/app/api/internal/admin/rawg-game/types";
-import {createProductClient} from "@/lib/clientActions";
+import {createProductClient, editProductClient} from "@/lib/clientActions";
 import {useToast} from "@/ui/shadcn/use-toast";
 import {useRouter} from "next/navigation";
 import AddTagForm from "@/ui/admin/products/add/AddTagForm";
@@ -94,6 +94,7 @@ type CompanyCreate = {
 }
 
 export type InitialDataType = {
+    id: number,
     name: string,
     launchDate: Date | null,
     originalPrice: number | null,
@@ -267,8 +268,9 @@ export default function AdminProductForm({initialData}: {
         if(!html)
             return
 
+        let result;
         if (!initialData) {
-            const result = await createProductClient({
+            result = await createProductClient({
                 original_price_cents: Math.floor(inputsState.originalPrice * 100),
                 current_price_cents: Math.floor((isOnSale && inputsState.currentPrice) ? inputsState.currentPrice * 100 : inputsState.originalPrice * 100),
                 publishers: publishers,
@@ -278,23 +280,41 @@ export default function AdminProductForm({initialData}: {
                 shortDescription: inputsState.shortDescription,
                 description: html,
                 coverImage: coverImage!,
-                images: images as NewImage[],
-                videos: videos as NewVideo[],
+                images: images,
+                videos: videos,
                 tags: tags
             })
-            if (result.success)
-                router.push("/admin/products")
-            else
-                toast({
-                    title: "Error saving tags",
-                    description: result.error,
-                    variant: "destructive",
-                    duration: 5000
-                })
-
         }
+        else
+            result = await editProductClient({
+                id: initialData.id,
+                original_price_cents: Math.floor(inputsState.originalPrice * 100),
+                current_price_cents: Math.floor((isOnSale && inputsState.currentPrice) ? inputsState.currentPrice * 100 : inputsState.originalPrice * 100),
+                publishers: publishers,
+                developers: developers,
+                name: inputsState.name,
+                launchDate: inputsState.launchDate.toString(),
+                shortDescription: inputsState.shortDescription,
+                description: html,
+                coverImage: coverImage!,
+                images: images,
+                videos: videos,
+                tags: tags
+            })
+        if (result.success)
+            router.push("/admin/products")
+        else
+            toast({
+                title: "Error saving tags",
+                description: result.error,
+                variant: "destructive",
+                duration: 5000
+            })
 
+    }
 
+    function handleTagDelete(index: number) {
+        setTags(tags.filter((_, i) => i !== index))
     }
 
     return (
@@ -365,7 +385,7 @@ export default function AdminProductForm({initialData}: {
                         {tags.length === 0 && <CompanyChip className={"invisible"} name={""} onClose={() => {
                         }}/>}
                         {tags.map((company, index) => (
-                            <CompanyChip key={index} name={company.name} onClose={() => handlePublisherDelete(index)}/>
+                            <CompanyChip key={index} name={company.name} onClose={() => handleTagDelete(index)}/>
                         ))}
                     </div>
                 </div>

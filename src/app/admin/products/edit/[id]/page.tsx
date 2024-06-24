@@ -13,6 +13,7 @@ export default async function EditProductPage({params} : {params: {id: string}})
         notFound();
 
     const initialData: InitialDataType = {
+        id: product.id,
         name: product.name,
         description: product.description,
         launchDate: product.launchDate,
