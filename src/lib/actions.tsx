@@ -8,7 +8,13 @@ import {CallbackRouteError} from "@auth/core/errors";
 import {$Enums, PendingMediaType, Product, ProductSale, VideoSource} from "@prisma/client";
 import {z} from "zod";
 import prisma from "@/lib/prisma";
-import {FEATURED_TAG_IMAGE_FOLDER, MAX_FEATURED_SALES, MAX_FEATURED_TAGS, PRODUCT_IMAGE_FOLDER} from "@/lib/config";
+import {
+    FEATURED_TAG_IMAGE_FOLDER,
+    MAX_FEATURED_SALES,
+    MAX_FEATURED_TAGS,
+    PRODUCT_IMAGE_FOLDER,
+    PRODUCT_VIDEO_FOLDER
+} from "@/lib/config";
 import {v2 as cloudinaryV2} from "cloudinary";
 import {randomUUID} from "node:crypto";
 import PendingMediaSource = $Enums.PendingMediaSource;
@@ -204,7 +210,7 @@ export type UploadData = {
 }
 
 
-type AuthorizeImageUploadResult = {
+type AuthorizeMediaUploadResult = {
     success: true
     uploadData: UploadData
 } | {
@@ -212,7 +218,8 @@ type AuthorizeImageUploadResult = {
     error: string
 }
 
-export async function authorizeFeaturedTagImageUpload(): Promise<AuthorizeImageUploadResult> {
+
+export async function authorizeFeaturedTagImageUpload(): Promise<AuthorizeMediaUploadResult> {
     const isAuthorized = (await auth())?.user?.isAdmin;
     if (!isAuthorized)
         return {
@@ -222,7 +229,7 @@ export async function authorizeFeaturedTagImageUpload(): Promise<AuthorizeImageU
     return _internalAuthorizeImageUpload(FEATURED_TAG_IMAGE_FOLDER)
 }
 
-export async function authorizeProductImageUpload(): Promise<AuthorizeImageUploadResult> {
+export async function authorizeProductImageUpload(): Promise<AuthorizeMediaUploadResult> {
     const isAuthorized = (await auth())?.user?.isAdmin;
     if (!isAuthorized)
         return {
@@ -232,7 +239,44 @@ export async function authorizeProductImageUpload(): Promise<AuthorizeImageUploa
     return _internalAuthorizeImageUpload(PRODUCT_IMAGE_FOLDER)
 }
 
-async function _internalAuthorizeImageUpload(folder: string): Promise<AuthorizeImageUploadResult> {
+export async function authorizeProductVideoUpload(): Promise<AuthorizeMediaUploadResult> {
+    const isAuthorized = (await auth())?.user?.isAdmin;
+    if (!isAuthorized)
+        return {
+            success: false,
+            error: "Unauthorized"
+        }
+    return _internalAuthorizeVideoUpload(PRODUCT_VIDEO_FOLDER)
+}
+
+export async function _internalAuthorizeVideoUpload(folder: string): Promise<AuthorizeMediaUploadResult>{
+    const timestamp = Math.round((new Date).getTime() / 1000);
+    const id = randomUUID();
+    const resource_type = "video";
+    try {
+        const signature = cloudinaryV2.utils.api_sign_request({
+            timestamp: timestamp,
+            folder: folder,
+            public_id: id
+        }, CLOUDINARY_API_SECRET);
+
+        await prisma.pendingMedia.create({
+            data: {
+                publicId: id,
+                folder,
+                type: PendingMediaType.VIDEO,
+                source: PendingMediaSource.CLOUDINARY
+            }
+        })
+        return {success: true, uploadData: {resource_type, folder, id, timestamp, signature}};
+
+    } catch (e) {
+        console.error(e)
+        return {success: false, error: "Internal error"}
+    }
+}
+
+async function _internalAuthorizeImageUpload(folder: string): Promise<AuthorizeMediaUploadResult> {
     const timestamp = Math.round((new Date).getTime() / 1000);
     const id = randomUUID();
     const resource_type = "image";
