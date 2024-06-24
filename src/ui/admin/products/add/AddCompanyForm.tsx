@@ -1,7 +1,7 @@
 import {useState} from "react";
 import AddCompanyModal from "@/ui/admin/products/add/AddCompanyModal";
-import {CompanyItem} from "@/app/admin/products/add/page";
 import {Button} from "@nextui-org/button";
+import {CompanyItem} from "@/ui/admin/products/add/AddProductForm";
 
 
 export default function AddCompanyForm({onSubmit, className, type}: {

@@ -20,10 +20,20 @@ export default function useHTMLTextEditor(initialHtml?: string) {
     }, [isClient]);
 
     useEffect(() => {
-        if (editor && initialHtml)
-            editor.tryParseHTMLToBlocks(initialHtml).catch(console.error)
+        if (editor && initialHtml) {
+            const blocks =  editor.tryParseHTMLToBlocks(initialHtml).then(blocks=> editor.replaceBlocks(editor.document, blocks))
+        }
     }, [editor, initialHtml]);
 
+    const parseHtml = useCallback(async (html: string) => {
+        console.log(editor, html)
+        if (!editor)
+            return null
+        else {
+            const blocks =  await editor.tryParseHTMLToBlocks(html);
+            editor.replaceBlocks(editor.document, blocks)
+        }
+    }, [editor])
 
     const getHtml = useCallback(async () => {
         if (!editor)
@@ -46,7 +56,8 @@ export default function useHTMLTextEditor(initialHtml?: string) {
 
     return {
         View: View,
-        getHtml: getHtml
+        getHtml: getHtml,
+        setHtml: parseHtml
     }
 
 }

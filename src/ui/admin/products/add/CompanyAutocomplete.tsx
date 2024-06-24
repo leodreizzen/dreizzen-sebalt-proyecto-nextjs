@@ -5,7 +5,7 @@ import {Autocomplete, AutocompleteItem} from "@nextui-org/autocomplete";
 import clsx from "clsx";
 import {Company} from "@prisma/client";
 import {AdminCompaniesAPIResponse} from "@/app/api/internal/admin/companies/types";
-import {CompanyItem} from "@/app/admin/products/add/page";
+import {CompanyItem} from "@/ui/admin/products/add/AddProductForm";
 
 export default function CompanyAutocomplete({className, onValueChange}: {
     className?: string,
