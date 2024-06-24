@@ -3,10 +3,11 @@ import {Button} from "@nextui-org/button";
 import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure} from "@nextui-org/modal";
 import clsx from "clsx";
 import {ImagePicker} from "@/ui/admin/ImagePicker";
+import {FileImage} from "@/ui/admin/products/add/AddProductForm";
 
 function ImageUploaderModalContent({onClose, onSubmit}: {
     onClose: () => void,
-    onSubmit: (url: string, alt: string) => void,
+    onSubmit: (image: FileImage) => void,
 }) {
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [file, setFile] = useState<File | null>(null);
@@ -14,8 +15,8 @@ function ImageUploaderModalContent({onClose, onSubmit}: {
 
 
     function handleAdd() {
-        if (imageUrl && alt !== "") {
-            onSubmit(imageUrl, alt);
+        if (imageUrl && file && alt !== "") {
+            onSubmit({type: "file", file, alt, isNew: true, url: imageUrl});
             onClose();
         }
     }
@@ -23,7 +24,7 @@ function ImageUploaderModalContent({onClose, onSubmit}: {
     function handleFileChange(newFile: File | null) {
         setFile(newFile)
         if (newFile) {
-            if(imageUrl)
+            if (imageUrl)
                 URL.revokeObjectURL(imageUrl)
             const url = URL.createObjectURL(newFile)
             setImageUrl(url)
@@ -51,13 +52,14 @@ function ImageUploaderModalContent({onClose, onSubmit}: {
 }
 
 export default function ImageUploaderModal({onSubmit, className}: {
-    onSubmit: (url: string, alt: string) => void,
+    onSubmit: (image: FileImage) => void,
     className?: string,
 }) {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
     return (
-        <div className={clsx(className, "flex flex-col items-center justify-center border-1 border-borders rounded-2xl p-6 aspect-video")}>
+        <div
+            className={clsx(className, "flex flex-col items-center justify-center border-1 border-borders rounded-2xl p-6 aspect-video")}>
             <Button onClick={onOpen}>Upload image</Button>
             <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true}>
                 <ModalContent>

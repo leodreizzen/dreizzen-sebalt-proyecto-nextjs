@@ -3,7 +3,7 @@ import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from "@nextui-
 import {Button} from "@nextui-org/button";
 import clsx from "clsx";
 import CompanyAutocomplete from "@/ui/admin/products/add/CompanyAutocomplete";
-import {CompanyItem} from "@/app/admin/products/add/page";
+import {CompanyItem} from "@/ui/admin/products/add/AddProductForm";
 
 
 function AddCompanyModalContent({onClose, onSubmit, type}: {

@@ -14,16 +14,55 @@ import {DateInput} from "@nextui-org/date-input";
 import {CalendarDate} from "@internationalized/date";
 import {RAWGGame} from "@/app/api/internal/admin/rawg-game/types";
 
-type ImageItem = {
+export type ExistingImage = {
+    isNew: false,
+    id: number,
+    url: string
+}
+
+export type UrlImage = {
+    isNew: true
+    type: "url"
     url: string,
     alt: string
 }
 
-type VideoItem = {
+export type FileImage = {
+    isNew: true
+    type: "file"
+    file: File
     url: string,
-    thumbnail: string,
     alt: string
 }
+
+type ImageItem = ExistingImage | UrlImage | FileImage
+
+type ExistingVideo = {
+    isNew: false,
+    id: number
+    thumbnail: ExistingImage,
+}
+
+type FileVideo = {
+    isNew: true,
+    type: "file",
+    thumbnail: FileImage,
+    file: File,
+    alt: string
+}
+
+type URLVideo = {
+    isNew: true,
+    type: "url",
+    source: "YouTube" | "SteamDB"
+    thumbnail: UrlImage,
+    url: string,
+    alt: string
+}
+
+export type NewVideo = FileVideo | URLVideo
+
+type VideoItem = ExistingVideo | NewVideo
 
 type CompanyExistent = {
     isNew: false,
@@ -55,7 +94,7 @@ export default function AdminProductForm({initialData}: {
 }) {
     const [images, setImages] = useState<ImageItem[]>(initialData?.images ?? []);
     const [videos, setVideos] = useState<VideoItem[]>(initialData?.videos ?? []);
-    const [isOnSale, setIsOnSale] = useState<boolean>(initialData? (initialData.currentPrice !== initialData.originalPrice) : false);
+    const [isOnSale, setIsOnSale] = useState<boolean>(initialData ? (initialData.currentPrice !== initialData.originalPrice) : false);
     const [publishers, setPublishers] = useState<CompanyItem[]>(initialData?.publishers ?? []);
     const [developers, setDevelopers] = useState<CompanyItem[]>(initialData?.developers ?? []);
     const {View: DescriptionView, getHtml, setHtml} = useHTMLTextEditor(initialData?.description);
@@ -82,12 +121,12 @@ export default function AdminProductForm({initialData}: {
             shortDescription: ""
         })
 
-    function handleImageAdd(url: string, alt: string) {
-        setImages([...images, {url, alt}]);
+    function handleImageAdd(image: FileImage) {
+        setImages([...images, image]);
     }
 
-    function handleVideoAdd(url: string, alt: string, thumbnail: string) {
-        setVideos([...videos, {url, alt, thumbnail}]);
+    function handleVideoAdd(video: NewVideo) {
+        setVideos([...videos, video]);
     }
 
     function handleImageClose(index: number) {
@@ -255,7 +294,7 @@ export default function AdminProductForm({initialData}: {
                         className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full auto-rows-[1fr] rounded-2xl p-3"}>
                         <VideoUploaderModal onSubmit={handleVideoAdd}/>
                         {videos.map((video, index) => (
-                            <ImageUploadCard imageUrl={video.thumbnail} key={index} onClose={handleVideoClose}
+                            <ImageUploadCard imageUrl={video.thumbnail.url} key={index} onClose={handleVideoClose}
                                              id={index}/>
                         ))}
                     </div>
