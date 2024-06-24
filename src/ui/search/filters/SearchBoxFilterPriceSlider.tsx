@@ -27,7 +27,7 @@ export default function SearchBoxFilterPriceSlider({minPrice, maxPrice}: {minPri
         return values[0].split(',').map(price => parseInt(price));
     }
     return (<Slider
-                label="Rango de precios"
+                label="Price range"
                 step={1}
                 minValue={minPrice}
                 maxValue={maxPrice}

@@ -16,7 +16,7 @@ export default async function Page({ searchParams }: { searchParams: { page?: st
 
     return (
         <div className="items-center justify-center px-1">
-            <h1 className="text-3xl font-bold mt-6 mb-3 text-center">Productos más vendidos</h1>
+            <h1 className="text-3xl font-bold mt-6 mb-3 text-center">Top sellers</h1>
             <div className="p-3 2xl:px-64">
                 <FeaturedBoxList products={products} />
                 <div className={hidden ? "hidden" : "flex justify-center mt-2"}>

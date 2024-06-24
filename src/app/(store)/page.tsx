@@ -16,7 +16,7 @@ export default async function Home() {
                 {featuredProducts.length > 0 &&
                     <>
                         <div>
-                            <h2 className="text-center text-large pb-2">Destacados</h2>
+                            <h2 className="text-center text-large pb-2">Featured</h2>
                         </div>
 
                         <div className="sm:border border-borders px-2 pt-4 rounded-3xl ">
@@ -26,14 +26,14 @@ export default async function Home() {
                     </>
                 }
                 <div className="flex flex-col px-3 ">
-                    <h2 className="text-center pb-1 text-large">Géneros destacados</h2>
+                    <h2 className="text-center pb-1 text-large">Featured tags</h2>
                     <div
                         className="flex flex-col sm:grid sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-2 lg:gap-4 border border-borders px-4 sm:px-8 md:px-10 pb-4 pt-5 rounded-3xl">
                         {featuredTags.map(tag => <GenreCard key={tag.order} genre={tag}/>)}
                     </div>
                 </div>
                 <div className="p-2 mt-8">
-                    <h2 className="text-center pb-2 text-large">Más vendidos</h2>
+                    <h2 className="text-center pb-2 text-large">Top sellers</h2>
                     <div className="xs:border border-borders rounded-3xl p-4">
                         <div className="mx-auto gap-3 flex flex-col items-center rounded-3xl">
                             {
@@ -43,7 +43,7 @@ export default async function Home() {
                             }
                             <span className="px-16 w-full">
                   <Button as={Link} className="w-full bg-content1 text-white border border-borders"
-                          href="/products/topsellers">Ver más</Button>
+                          href="/products/topsellers">See more</Button>
                 </span>
                         </div>
                     </div>

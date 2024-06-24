@@ -15,9 +15,9 @@ export default function SearchBoxFilters({ tags, selectedTags } : { tags: Tag[],
     return (
         <div>
             <div className="flex flex-col gap-2">
-                <h1 className="text-2xl font-bold">Filtros</h1>
+                <h1 className="text-2xl font-bold">Filters</h1>
                 <div className="flex flex-col gap-2 mr-2 w-full lg:w-[350px]">
-                    <h1 className="text-xl font-bold">Tags seleccionados</h1>
+                    <h1 className="text-xl font-bold">Selected tags</h1>
                     <div className="flex flex-wrap gap-2">
                         {selectedTags.map(genre => (
                             <SearchBoxFilterChip key={genre.id} tag={genre} selected={true}/>
