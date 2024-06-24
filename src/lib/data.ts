@@ -1,13 +1,18 @@
 import "server-only";
 import prisma from './prisma';
 import {
-    AdminProduct, FeaturedProductSaleWithProduct,
+    AdminProduct,
+    FeaturedProductSaleWithProduct,
     FeaturedProductWithProduct,
     ProductSaleWithProduct,
     FeaturedTagWithTagAndImage,
     ProductForDetail,
     ProductWithCoverImage,
-    ProductWithTagsAndCoverImage, removeReadOnlyForNumArray, PurchaseWithInvoiceData, PurchaseWithItemsAndInvoiceData
+    ProductWithTagsAndCoverImage,
+    removeReadOnlyForNumArray,
+    PurchaseWithInvoiceData,
+    PurchaseWithItemsAndInvoiceData,
+    PurchaseWithCompleteItemsAndInvoiceData, TagWithProducts
 } from "./definitions";
 import {getCart} from "@/lib/session-data";
 import {Tag} from "@prisma/client";
@@ -436,4 +441,41 @@ export async function fetchPurchases(page: number) {
 export async function fetchPurchasesPages() {
     const data = await prisma.purchase.count()
     return Math.ceil(data / PURCHASE_ITEMS_PER_PAGE)
+}
+
+export async function fetchPurchase(id: number) {
+    const data: PurchaseWithCompleteItemsAndInvoiceData | null = await prisma.purchase.findUnique({
+        where: {
+            id: id
+        },
+        include: {
+            products: {
+                include: {
+                    product: {
+                        include: {
+                            coverImage: true
+                        }
+                    }
+                }
+            },
+            invoiceData: true
+        }
+    })
+    return data
+}
+
+export async function fetchTagsAdmin(page: number) {
+    const data : TagWithProducts[] = await prisma.tag.findMany({
+        include: {
+            productTags: true
+        },
+        skip: (page - 1) * TOTAL_ITEMS_PER_PAGE,
+        take: TOTAL_ITEMS_PER_PAGE
+    })
+    return data
+}
+
+export async function fetchTagsAdminPages() {
+    const data = await prisma.tag.count()
+    return Math.ceil(data / TOTAL_ITEMS_PER_PAGE)
 }
