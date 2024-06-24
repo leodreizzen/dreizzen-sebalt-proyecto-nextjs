@@ -85,6 +85,7 @@ export default function AdminProductForm({initialData}: {
         currentPrice: number | null,
         shortDescription: string,
         description: string,
+        coverImage: ImageItem
         images: ImageItem[],
         videos: VideoItem[],
         isOnSale: boolean,
@@ -97,7 +98,7 @@ export default function AdminProductForm({initialData}: {
     const [isOnSale, setIsOnSale] = useState<boolean>(initialData ? (initialData.currentPrice !== initialData.originalPrice) : false);
     const [publishers, setPublishers] = useState<CompanyItem[]>(initialData?.publishers ?? []);
     const [developers, setDevelopers] = useState<CompanyItem[]>(initialData?.developers ?? []);
-    const [coverImage, setCoverImage] = useState<ImageItem | null>(null);
+    const [coverImage, setCoverImage] = useState<ImageItem | null>(initialData?.coverImage ?? null);
     const {View: DescriptionView, getHtml, setHtml} = useHTMLTextEditor(initialData?.description);
     const [inputsState, setInputsState] = useState<
         {
@@ -301,7 +302,7 @@ export default function AdminProductForm({initialData}: {
                         className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full auto-rows-[1fr] rounded-2xl p-3"}>
                         <ImageUploaderModal onSubmit={handleImageAdd}/>
                         {images.map((img, index) => (
-                            <ImageUploadCard imageUrl={img.url} key={index} onClose={()=>handleImageClose(index)} id={index}/>
+                            <ImageUploadCard imageUrl={img.url} key={index} onClose={()=>handleImageClose(index)}/>
                         ))}
                     </div>
                 </div>
@@ -312,8 +313,8 @@ export default function AdminProductForm({initialData}: {
                         className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full auto-rows-[1fr] rounded-2xl p-3"}>
                         <VideoUploaderModal onSubmit={handleVideoAdd}/>
                         {videos.map((video, index) => (
-                            <ImageUploadCard imageUrl={video.thumbnail.url} key={index} onClose={()=>handleImageClose(index)}
-                                             id={index}/>
+                            <ImageUploadCard imageUrl={video.thumbnail.url} key={index} onClose={()=>handleVideoClose(index)}
+                                             />
                         ))}
                     </div>
                 </div>
