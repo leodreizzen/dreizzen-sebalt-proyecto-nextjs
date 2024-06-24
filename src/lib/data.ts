@@ -42,6 +42,9 @@ export async function fetchFeaturedProducts() {
                     tags: {
                         include: {
                             tag: true
+                        },
+                        orderBy: {
+                            order: 'asc'
                         }
                     },
                     coverImage: true,
@@ -87,6 +90,9 @@ export async function fetchFeaturedSales() {
                     tags: {
                         include: {
                             tag: true
+                        },
+                        orderBy: {
+                            order: 'asc'
                         }
                     },
                     coverImage: true
@@ -132,17 +138,17 @@ export async function fetchByGenre(tagId: number, page: number) {
         },
         include: {
             coverImage: true,
-            tags:
-                {
-                    include: {
-                        tag: true
-                    }
+            tags: {
+                include: {
+                    tag: true
+                },
+                orderBy: {
+                    order: 'asc'
                 }
-        }
-        ,
+            }
+        },
         skip: (page - 1) * TOTAL_ITEMS_PER_PAGE,
-        take:
-        TOTAL_ITEMS_PER_PAGE
+        take: TOTAL_ITEMS_PER_PAGE
     })
     return data
 }
@@ -161,6 +167,9 @@ export async function fetchCartProducts(): Promise<ProductWithCoverImage[]> {
             tags: {
                 include: {
                     tag: true
+                },
+                orderBy: {
+                    order: 'asc'
                 }
             }
         }
@@ -254,6 +263,9 @@ export async function fetchSaleSearch(query: string) {
                     tags: {
                         include: {
                             tag: true
+                        },
+                        orderBy: {
+                            order: 'asc'
                         }
                     }
                 }
@@ -296,6 +308,9 @@ export async function fetchSearch(query: string, page: number, filter: number[],
             tags: {
                 include: {
                     tag: true
+                },
+                orderBy: {
+                    order: 'asc'
                 }
             }
         },
@@ -345,6 +360,9 @@ export async function fetchMostSold(currentPage: number) {
             tags: {
                 include: {
                     tag: true
+                },
+                orderBy: {
+                    order: 'asc'
                 }
             },
             _count: {
@@ -400,6 +418,9 @@ export async function fetchProduct(id: number): Promise<ProductForDetail | null>
             tags: {
                 include: {
                     tag: true
+                },
+                orderBy: {
+                    order: 'asc'
                 }
             },
             videos: {
@@ -442,6 +463,9 @@ export async function fetchProducts(page: number, query: string) {
             tags: {
                 include: {
                     tag: true
+                },
+                orderBy: {
+                    order: 'asc'
                 }
             },
             purchases: true

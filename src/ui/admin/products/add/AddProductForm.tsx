@@ -58,7 +58,7 @@ export type ImageItem = ExistingImage | NewImage
 type ExistingVideo = {
     isNew: false,
     id: number
-    thumbnail: ExistingImage,
+    thumbnail?: ExistingImage,
 }
 
 type FileVideo = {
@@ -93,24 +93,26 @@ type CompanyCreate = {
     name: string,
 }
 
+export type InitialDataType = {
+    name: string,
+    launchDate: Date | null,
+    originalPrice: number | null,
+    currentPrice: number | null,
+    shortDescription: string,
+    description: string,
+    tags: TagItem[],
+    coverImage: ImageItem
+    images: ImageItem[],
+    videos: VideoItem[],
+    isOnSale: boolean,
+    publishers: CompanyItem[],
+    developers: CompanyItem[],
+}
+
 export type CompanyItem = CompanyExistent | CompanyCreate
 
 export default function AdminProductForm({initialData}: {
-    initialData?: {
-        name: string,
-        launchDate: CalendarDate | null,
-        originalPrice: number | null,
-        currentPrice: number | null,
-        shortDescription: string,
-        description: string,
-        tags: TagItem[],
-        coverImage: ImageItem
-        images: ImageItem[],
-        videos: VideoItem[],
-        isOnSale: boolean,
-        publishers: CompanyItem[],
-        developers: CompanyItem[],
-    }
+    initialData?: InitialDataType
 }) {
     const [images, setImages] = useState<ImageItem[]>(initialData?.images ?? []);
     const [videos, setVideos] = useState<VideoItem[]>(initialData?.videos ?? []);
@@ -130,7 +132,7 @@ export default function AdminProductForm({initialData}: {
         }
     >(initialData ? {
             name: initialData.name,
-            launchDate: initialData.launchDate,
+            launchDate: initialData.launchDate ? new CalendarDate(initialData.launchDate.getFullYear(), initialData.launchDate.getMonth() + 1, initialData.launchDate.getDate()) : null,
             originalPrice: initialData.originalPrice,
             currentPrice: initialData.currentPrice,
             shortDescription: initialData.shortDescription,
@@ -298,7 +300,7 @@ export default function AdminProductForm({initialData}: {
     return (
         <div className={"justify-center items-center flex flex-col gap-3 mx-auto xl:w-3/4"}>
             <div className="flex justify-between w-full">
-                <h1 className={"m-2 justify-center text-2xl font-bold"}>Add products</h1>
+                <h1 className={"m-2 justify-center text-2xl font-bold"}>{initialData ? "Edit product" : "Add product"}</h1>
                 <div className="flex gap-4">
                     <RAWGModal className="" onSubmit={handleRawgSubmit}/>
                     <Button color="primary" onPress={onSavePress}>Save</Button>
@@ -425,7 +427,7 @@ export default function AdminProductForm({initialData}: {
                         className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full auto-rows-[1fr] rounded-2xl p-3"}>
                         <VideoUploaderModal onSubmit={handleVideoAdd}/>
                         {videos.map((video, index) => (
-                            <ImageUploadCard imageUrl={video.thumbnail.url} key={index}
+                            <ImageUploadCard imageUrl={video.thumbnail?.url || "https://static-00.iconduck.com/assets.00/image-x-generic-symbolic-icon-512x512-39rql7k5.png"} key={index}
                                              onClose={() => handleVideoClose(index)}
                             />
                         ))}
