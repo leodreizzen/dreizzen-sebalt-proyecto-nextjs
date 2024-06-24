@@ -1,22 +1,27 @@
-"use client";
-
+"use client"
 import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from "@nextui-org/modal";
 import { useDisclosure } from "@nextui-org/modal";
 import {FaTrash} from "react-icons/fa";
 import React from "react";
 import {Button} from "@nextui-org/button";
+import {deleteProduct} from "@/lib/actions";
+import {useToast} from "@/ui/shadcn/use-toast";
 
 
-export default function DeleteButton({ productId }: { productId: number }) {
+export default function DeleteButton({ productId }: { productId: number}) {
 
 
-    const handleDelete = async () => {
-        //TODO: Implement delete
-    };
+    const {isOpen, onOpen,onClose, onOpenChange} = useDisclosure();
 
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {toast} = useToast();
 
 
+    async function handleDelete() {
+        const result = await deleteProduct(productId)
+        if(!result.success)
+            toast({title: "Error deleting product", description: result.error, duration: 5000, variant: "destructive"})
+        onClose()
+    }
 
     return (
         <>
@@ -41,7 +46,7 @@ export default function DeleteButton({ productId }: { productId: number }) {
                                 <Button color="danger" variant="light" onPress={onClose}>
                                     Cancel
                                 </Button>
-                                <Button color="primary" onPress={onClose}>
+                                <Button color="primary" onPress={handleDelete}>
                                     Delete
                                 </Button>
                             </ModalFooter>

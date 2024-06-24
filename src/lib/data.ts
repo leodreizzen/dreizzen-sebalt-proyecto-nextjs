@@ -20,7 +20,7 @@ import {Tag} from "@prisma/client";
 const TOTAL_ITEMS_PER_PAGE = 6;
 const PURCHASE_ITEMS_PER_PAGE = 8;
 
-export async function fetchUser( email: string ) {
+export async function fetchUser(email: string) {
     return await prisma.user.findUnique({
         where: {
             email: email
@@ -29,8 +29,13 @@ export async function fetchUser( email: string ) {
 
 }
 
-export async function fetchFeaturedProducts(){
+export async function fetchFeaturedProducts() {
     const data: FeaturedProductWithProduct[] = await prisma.featuredProduct.findMany({
+        where: {
+            product: {
+                available: true
+            }
+        },
         include: {
             product: {
                 include: {
@@ -39,15 +44,15 @@ export async function fetchFeaturedProducts(){
                             tag: true
                         }
                     },
-                    coverImage: true
+                    coverImage: true,
                 }
-            }
+            },
         },
     });
     return data
 }
 
-export async function fetchFeaturedTags(){
+export async function fetchFeaturedTags() {
     const data: FeaturedTagWithTagAndImage[] = await prisma.featuredTag.findMany(
         {
             include: {
@@ -59,7 +64,7 @@ export async function fetchFeaturedTags(){
     return data
 }
 
-export async function fetchDropdownTags(): Promise<Tag[]>{
+export async function fetchDropdownTags(): Promise<Tag[]> {
     const data = await prisma.tag.findMany({
         where: {
             inDropdown: true
@@ -68,10 +73,13 @@ export async function fetchDropdownTags(): Promise<Tag[]>{
     return data
 }
 
-export async function fetchFeaturedSales(){
+export async function fetchFeaturedSales() {
     const data: ProductSaleWithProduct[] = await prisma.productSale.findMany({
         where: {
-            isFeatured: true
+            isFeatured: true,
+            product: {
+                available: true
+            }
         },
         include: {
             product: {
@@ -94,9 +102,12 @@ export async function fetchGenrePages(id: number) {
         where: {
             tags: {
                 some: {
+                    product: {
+                        available: true
+                    },
                     tag: {
                         id: id
-                    }   
+                    }
                 }
             }
         }
@@ -109,6 +120,10 @@ export async function fetchByGenre(tagId: number, page: number) {
         where: {
             tags: {
                 some: {
+                    product: {
+                        available: true
+                    }
+                    ,
                     tag: {
                         id: tagId
                     }
@@ -117,14 +132,17 @@ export async function fetchByGenre(tagId: number, page: number) {
         },
         include: {
             coverImage: true,
-            tags: {
-                include: {
-                    tag: true
+            tags:
+                {
+                    include: {
+                        tag: true
+                    }
                 }
-            }
-        },
+        }
+        ,
         skip: (page - 1) * TOTAL_ITEMS_PER_PAGE,
-        take: TOTAL_ITEMS_PER_PAGE
+        take:
+        TOTAL_ITEMS_PER_PAGE
     })
     return data
 }
@@ -133,6 +151,7 @@ export async function fetchCartProducts(): Promise<ProductWithCoverImage[]> {
     const cartIds = await getCart()
     const data = await prisma.product.findMany({
         where: {
+            available: true,
             id: {
                 in: removeReadOnlyForNumArray(cartIds)
             }
@@ -160,9 +179,10 @@ export async function fetchValidProducts(ids: number[]): Promise<number[]> {
     return data.map(product => product.id)
 }
 
-export async function validateProduct(id: number): Promise<boolean>{
+export async function validateProduct(id: number): Promise<boolean> {
     return await prisma.product.findUnique({
         where: {
+            available: true,
             id: id
         }
     }) !== null
@@ -177,7 +197,7 @@ export async function fetchTagName(id: number) {
     return data
 }
 
-export async function fetchAllTags(){
+export async function fetchAllTags() {
     const data = await prisma.tag.findMany()
     return data
 }
@@ -189,6 +209,7 @@ export async function fetchTags(query: string, filter: number[], priceRange: num
                 productTags: {
                     some: {
                         product: {
+                            available: true,
                             name: {
                                 contains: query,
                                 mode: 'insensitive'
@@ -206,7 +227,7 @@ export async function fetchTags(query: string, filter: number[], priceRange: num
                                     }
                                 }
                             })),
-                            sale: onSale ? { isNot: null } : {},
+                            sale: onSale ? {isNot: null} : {},
                         }
                     }
                 }
@@ -221,8 +242,9 @@ export async function fetchSaleSearch(query: string) {
         where: {
             product: {
                 name: {
-                    contains: query
-                }
+                    contains: query,
+                },
+                available: true
             }
         },
         include: {
@@ -249,6 +271,7 @@ export async function fetchSalePages() {
 export async function fetchSearch(query: string, page: number, filter: number[], priceRange: number[], onSale: boolean) {
     let data: ProductWithTagsAndCoverImage[] = await prisma.product.findMany({
         where: {
+            available: true,
             name: {
                 contains: query,
                 mode: 'insensitive'
@@ -266,7 +289,7 @@ export async function fetchSearch(query: string, page: number, filter: number[],
                     }
                 }
             })),
-            sale: onSale ? { isNot: null } : {},
+            sale: onSale ? {isNot: null} : {},
         },
         include: {
             coverImage: true,
@@ -285,6 +308,7 @@ export async function fetchSearch(query: string, page: number, filter: number[],
 export async function fetchSearchPages(query: string, filter: number[], priceRange: number[], onSale: boolean) {
     const data = await prisma.product.count({
         where: {
+            available: true,
             name: {
                 contains: query,
                 mode: 'insensitive'
@@ -302,7 +326,7 @@ export async function fetchSearchPages(query: string, filter: number[], priceRan
                     }
                 }
             })),
-            sale: onSale ? { isNot: null } : {},
+            sale: onSale ? {isNot: null} : {},
         }
     })
     return Math.ceil(data / TOTAL_ITEMS_PER_PAGE)
@@ -310,24 +334,25 @@ export async function fetchSearchPages(query: string, filter: number[], priceRan
 
 export async function fetchMostSold(currentPage: number) {
     const data = await prisma.product.findMany({
-            where: {
-                purchases: {
-                    some: {}
+        where: {
+            available: true,
+            purchases: {
+                some: {}
+            }
+        },
+        include: {
+            coverImage: true,
+            tags: {
+                include: {
+                    tag: true
                 }
             },
-            include: {
-                coverImage: true,
-                tags: {
-                    include: {
-                    tag: true
-                    }
-                },
-                _count: {
-                    select: {
-                        purchases: true
-                    }
+            _count: {
+                select: {
+                    purchases: true
                 }
             }
+        }
     })
 
     const filteredData = data.filter((product) => product._count.purchases > 1)
@@ -338,6 +363,7 @@ export async function fetchMostSold(currentPage: number) {
 export async function fetchMostSoldPages() {
     const data = await prisma.product.findMany({
         where: {
+            available: true,
             purchases: {
                 some: {}
             }
@@ -346,7 +372,7 @@ export async function fetchMostSoldPages() {
             coverImage: true,
             tags: {
                 include: {
-                tag: true
+                    tag: true
                 }
             },
             _count: {
@@ -364,7 +390,8 @@ export async function fetchMostSoldPages() {
 export async function fetchProduct(id: number): Promise<ProductForDetail | null> {
     const data: ProductForDetail | null = await prisma.product.findUnique({
         where: {
-            id: id
+            id: id,
+            available: true,
         },
         include: {
             coverImage: true,
@@ -390,6 +417,7 @@ export async function fetchProductPages(query: string) {
     const data = await prisma.product.count(
         {
             where: {
+                available: true,
                 name: {
                     contains: query,
                     mode: 'insensitive'
@@ -403,6 +431,7 @@ export async function fetchProductPages(query: string) {
 export async function fetchProducts(page: number, query: string) {
     const data: AdminProduct[] = await prisma.product.findMany({
         where: {
+            available: true,
             name: {
                 contains: query,
                 mode: 'insensitive'
@@ -424,6 +453,7 @@ export async function fetchProducts(page: number, query: string) {
 }
 
 export async function fetchPurchases(page: number) {
+    //We dont check available product as we want to see old purchases
     const data: PurchaseWithItemsAndInvoiceData[] = await prisma.purchase.findMany({
         include: {
             products: true,
@@ -465,7 +495,7 @@ export async function fetchPurchase(id: number) {
 }
 
 export async function fetchTagsAdmin(page: number) {
-    const data : TagWithProducts[] = await prisma.tag.findMany({
+    const data: TagWithProducts[] = await prisma.tag.findMany({
         include: {
             productTags: true
         },

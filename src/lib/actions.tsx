@@ -249,7 +249,7 @@ export async function authorizeProductVideoUpload(): Promise<AuthorizeMediaUploa
     return _internalAuthorizeVideoUpload(PRODUCT_VIDEO_FOLDER)
 }
 
-export async function _internalAuthorizeVideoUpload(folder: string): Promise<AuthorizeMediaUploadResult>{
+export async function _internalAuthorizeVideoUpload(folder: string): Promise<AuthorizeMediaUploadResult> {
     const timestamp = Math.round((new Date).getTime() / 1000);
     const id = randomUUID();
     const resource_type = "video";
@@ -594,7 +594,7 @@ export async function addProduct(_formProduct: ProductToAddServer): Promise<Admi
         isNew: true
     })[]
 
-    const newTags = productData.tags.filter(t => t.isNew)  as (ArrayElement<typeof productData.developers> & {
+    const newTags = productData.tags.filter(t => t.isNew) as (ArrayElement<typeof productData.developers> & {
         isNew: true
     }) []
 
@@ -662,12 +662,12 @@ export async function addProduct(_formProduct: ProductToAddServer): Promise<Admi
                 }
             })
             await tx.tag.createMany({
-                data: newTags.map(t=>({
+                data: newTags.map(t => ({
                     name: t.name,
                     inDropdown: false
                 }))
             })
-            for(let i = 0; i < productData.tags.length; i++){
+            for (let i = 0; i < productData.tags.length; i++) {
                 const tag = productData.tags[i]
                 await tx.productTag.create({
                     data: {
@@ -679,7 +679,7 @@ export async function addProduct(_formProduct: ProductToAddServer): Promise<Admi
                         tag: {
                             connect: tag.isNew ? {
                                 name: tag.name
-                            }: {
+                            } : {
                                 id: tag.id
                             }
                         },
@@ -714,4 +714,30 @@ function mapVideoSource(video: ProductVideoToSave & { isNew: true }): VideoSourc
     else if (video.source === "Cloudinary")
         return VideoSource.CLOUDINARY
     else throw new Error("Invalid video source")
+}
+
+export async function deleteProduct(_formID: number) {
+    const id = z.number().int().safeParse(_formID)
+    if (!id.success)
+        return {
+            success: false,
+            error: "Invalid data"
+        }
+    else {
+        try {
+            await prisma.product.update({
+                where: {
+                    id: id.data
+                },
+                data: {
+                    available: false
+                }
+            })
+            revalidatePath("/", "layout");
+            return {success: true}
+        } catch (e) {
+            console.error(e)
+            return {success: false, error: "Internal error"}
+        }
+    }
 }
