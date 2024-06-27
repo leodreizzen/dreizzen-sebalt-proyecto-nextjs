@@ -4,15 +4,15 @@ import {
     AdminProduct,
     FeaturedProductSaleWithProduct,
     FeaturedProductWithProduct,
-    ProductSaleWithProduct,
     FeaturedTagWithTagAndImage,
     ProductForDetail,
+    ProductSaleWithProduct,
     ProductWithCoverImage,
     ProductWithTagsAndCoverImage,
-    removeReadOnlyForNumArray,
-    PurchaseWithInvoiceData,
+    PurchaseWithCompleteItemsAndInvoiceData,
     PurchaseWithItemsAndInvoiceData,
-    PurchaseWithCompleteItemsAndInvoiceData, TagWithProducts
+    removeReadOnlyForNumArray,
+    TagWithProducts
 } from "./definitions";
 import {getCart} from "@/lib/session-data";
 import {Tag} from "@prisma/client";
@@ -356,7 +356,7 @@ export async function fetchMostSold(currentPage: number) {
             available: true,
             purchases: {
                 some: {}
-            }
+            },
         },
         include: {
             coverImage: true,
@@ -373,12 +373,10 @@ export async function fetchMostSold(currentPage: number) {
                     purchases: true
                 }
             }
-        }
+        },
     })
-
     const filteredData = data.filter((product) => product._count.purchases > 1)
-
-    return filteredData
+    return filteredData.slice((currentPage - 1) * TOTAL_ITEMS_PER_PAGE, currentPage * TOTAL_ITEMS_PER_PAGE)
 }
 
 export async function fetchMostSoldPages() {
