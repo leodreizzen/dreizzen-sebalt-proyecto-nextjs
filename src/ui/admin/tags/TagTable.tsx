@@ -10,32 +10,30 @@ import PutInDropdownButton from "@/ui/admin/tags/PutInDropdownButton";
 import RemoveFromDropdownButton from "@/ui/admin/tags/RemoveFromDropdownButton";
 
 
-export default function TagTable({tags}: { tags: TagWithProducts[]}) {
+export default function TagTable({tags}: { tags: TagWithProducts[] }) {
     return (
-        <div className="w-full bg-black rounded-md text-white">
-            <div className="grid gap-4 sm:hidden">
+        <div className="w-full rounded-md text-white @container">
+            <div className="grid gap-4 @sm:hidden">
                 {tags.map((tag) => (
-                    <Card key={tag.id}>
-                        <CardContent className="flex flex-col items-center !p-4 w-full">
-                            <div className="flex w-full">
-                                <div className="flex flex-col w-6/12">
-                                    <div className="flex items-center grow">
-                                        <p className="font-medium">#{tag.id}</p>
-                                    </div>
-                                    <div className="">{tag.productTags.length} games</div>
-                                    <div className="flex flex-col w-7/12">
-                                        <p className="font-medium">{tag.name}</p>
-                                    </div>
+                    <Card key={tag.id} className="rounded-2xl">
+                        <CardContent className="flex flex-col items-center !p-3 w-full">
+                            <div className="flex w-full justify-center">
+                                <div className="flex flex-col w-fit items-center">
+                                    <span>#{tag.id}</span>
+                                    <span className="font-bold">{tag.name}</span>
+                                    <span className="">{tag.productTags.length} games</span>
                                 </div>
                             </div>
-                            <div className="flex items-center col-span-2 mt-2">
+                            <div className="flex items-center col-span-2 mt-2 gap-2">
+                                {!tag.inDropdown ? <PutInDropdownButton tagId={tag.id}/> :
+                                    <RemoveFromDropdownButton tagId={tag.id}/>}
                                 <DeleteTagButton tagId={tag.id}/>
                             </div>
                         </CardContent>
                     </Card>
                 ))}
             </div>
-            <div className="hidden sm:block border border-borders">
+            <div className="hidden @sm:block border border-borders bg-black rounded-xl">
                 <Table color={"black"}>
                     <TableHeader>
                         <TableRow>
@@ -52,9 +50,10 @@ export default function TagTable({tags}: { tags: TagWithProducts[]}) {
                                 <TableCell
                                     className="font-medium">{tag.name}</TableCell>
                                 <TableCell>{tag.productTags.length}</TableCell>
-                                <TableCell>
+                                <TableCell className="flex gap-2">
+                                    {!tag.inDropdown ? <PutInDropdownButton tagId={tag.id}/> :
+                                        <RemoveFromDropdownButton tagId={tag.id}/>}
                                     <DeleteTagButton tagId={tag.id}/>
-                                    {!tag.inDropdown ? <PutInDropdownButton tagId={tag.id}/> : <RemoveFromDropdownButton tagId={tag.id}/>}
                                 </TableCell>
                             </TableRow>
                         ))}

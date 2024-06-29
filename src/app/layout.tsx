@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={clsx(inter.className, "min-h-screen min-w-screen bg-background flex flex-col text-foreground")}>
+      <body className={clsx(inter.className, "min-h-screen min-w-screen bg-background flex flex-col text-foreground dark")}>
           <NextUIProvider className="min-h-screen flex flex-col">
             {children}
           </NextUIProvider>
