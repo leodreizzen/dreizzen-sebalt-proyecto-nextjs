@@ -41,13 +41,13 @@ export default function SortableList<T extends { id: UniqueIdentifier }>({
     return (
         <div className={clsx(className)}>
             {(maxCount === undefined || items.length < maxCount) &&<Button onPress={onAddPress}
-                    className={clsx("border border-borders rounded-2xl flex flex-col items-center justify-center bg-transparent [&>svg]:max-w-none", items.length === 0 ? "h-60 sm:h-44 2xl:h-64" : "!h-[revert]")}>
+                    className={clsx("border border-borders rounded-2xl flex flex-col items-center justify-center bg-transparent [&>svg]:max-w-none", items.length === 0 ? "h-48 @xs:h-60 @sm:h-60 @md:h-64 @xl:h-80 @2xl:h-56 @4xl:h-56 @5xl:h-72" : "!h-[revert]")}>
                 <IoMdAddCircle className="h-1/2 w-1/2 text-foreground"/>
             </Button>}
             <DndContext onDragEnd={handleDragEnd}>
                 <SortableContext items={items.map(p => ({...p, id: p.id}))}>
                     {items.map((item, index) => (
-                        <Draggable className={clsx(draggablesClassname)} id={item.id} key={item.id}>
+                        <Draggable className={clsx(draggablesClassname, "touch-none")} id={item.id} key={item.id}>
                             {children(item, index)}
                         </Draggable>
                     ))}

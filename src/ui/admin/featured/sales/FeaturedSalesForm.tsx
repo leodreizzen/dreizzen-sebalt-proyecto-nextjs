@@ -88,9 +88,9 @@ export default function FeaturedSalesForm({className, featuredSales: savedFeatur
     }
 
     return (
-        <div className={clsx(className, "border border-borders rounded-xl p-2")}>
+        <div className={clsx(className, "border border-borders rounded-xl p-2 @container")}>
             <div className="flex flex-col items-center w-5/6 mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full auto-rows-[1fr]">
+                <div className="grid grid-cols-1 @lg:grid-cols-2 @3xl:grid-cols-3 gap-6 w-full auto-rows-[1fr]">
                     {sales.length < MAX_FEATURED_SALES && <Button onPress={handleAddPress}
                                                                   className={clsx("border border-borders rounded-2xl flex flex-col items-center justify-center bg-transparent [&>svg]:max-w-none", sales.length === 0 ? "h-60 sm:h-44 2xl:h-64" : "!h-[revert]")}>
                         <IoMdAddCircle className="h-1/2 w-1/2 text-foreground"/>

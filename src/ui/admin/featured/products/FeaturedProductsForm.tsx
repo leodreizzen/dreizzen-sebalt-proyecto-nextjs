@@ -86,10 +86,10 @@ export default function FeaturedProductsForm({className, featuredProducts: saved
     }
 
     return (
-        <div className={clsx(className, "border border-borders rounded-xl p-2")}>
+        <div className={clsx(className, "border border-borders rounded-xl p-2 @container")}>
             <div className="flex flex-col items-center w-5/6 mx-auto">
                 <p className="w-full my-2 font-bold">Drag the cards to change their order in the home page</p>
-                <SortableList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full auto-rows-[1fr]" items={products} onItemsOrderChange={p=>setProducts(p)} onAddPress={handleAddPress}>
+                <SortableList className="grid grid-cols-1 @lg:grid-cols-2 @3xl:grid-cols-3 gap-6 w-full auto-rows-[1fr]" items={products} onItemsOrderChange={p=>setProducts(p)} onAddPress={handleAddPress}>
                     {(product) => (
                             <AdminFeaturedProductCard product={product} removable
                                                       onRemove={() => handleRemove(product.id)}/>
