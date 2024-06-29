@@ -5,6 +5,7 @@ import {formatFullName, formatPrice, formatPurchaseDateTime} from "@/util/format
 import {Button} from "@nextui-org/button";
 import {IoMdEye} from "react-icons/io";
 import Link from "next/link";
+import {Tooltip} from "@nextui-org/tooltip";
 
 function getTotalPriceCents(purchase: PurchaseWithItemsAndInvoiceData) {
     return purchase.products.reduce((acc, item) => acc + item.currentPrice_cents, 0)
@@ -13,10 +14,10 @@ function getTotalPriceCents(purchase: PurchaseWithItemsAndInvoiceData) {
 
 export default function PurchaseTable({purchases}: { purchases: PurchaseWithItemsAndInvoiceData[] }) {
     return (
-        <div className="w-full bg-black rounded-md text-white">
-            <div className="grid gap-4 sm:hidden">
+        <div className="w-full @container rounded-md text-white">
+            <div className="grid gap-4 @lg:hidden">
                 {purchases.map((purchase) => (
-                    <Card key={purchase.id}>
+                    <Card key={purchase.id} className="rounded-2xl">
                         <CardContent className="flex flex-col items-center !p-4 w-full">
                             <div className="flex w-full">
                                 <div className="flex flex-col w-6/12">
@@ -26,23 +27,27 @@ export default function PurchaseTable({purchases}: { purchases: PurchaseWithItem
                                     <div className="">{purchase.products.length} items</div>
                                     <div className="">{formatPrice(getTotalPriceCents(purchase))}</div>
                                 </div>
-                                <div className="flex flex-col w67/12">
+                                <div className="flex flex-col w-6/12 justify-end">
                                     <div className="font-medium">{formatPurchaseDateTime(purchase.purchaseDate)}</div>
                                     <p className="font-medium">{formatFullName(purchase.invoiceData.firstName, purchase.invoiceData.lastName)}</p>
 
                                 </div>
                             </div>
                             <div className="flex items-center col-span-2 mt-2">
-                                <Button as={Link} href={`/admin/purchase/${purchase.id}`}
-                                        className={"text-white bg-gray-800 rounded-md min-w-0 !h-12 !w-12"} size="sm">
-                                    <IoMdEye className="size-full"/>
-                                </Button>
+                                <Tooltip content="View details">
+                                    <Button as={Link} href={`/admin/purchase/${purchase.id}`}
+                                            className={"text-white bg-gray-800 rounded-md min-w-0 !h-10 !w-10 !p-2"}
+                                            size="sm">
+                                        <IoMdEye className="size-full"/>
+                                    </Button>
+                                </Tooltip>
+
                             </div>
                         </CardContent>
                     </Card>
                 ))}
             </div>
-            <div className="hidden sm:block border border-borders">
+            <div className="hidden @lg:block border border-borders bg-black rounded-2xl">
                 <Table color={"black"}>
                     <TableHeader>
                         <TableRow>
@@ -65,10 +70,12 @@ export default function PurchaseTable({purchases}: { purchases: PurchaseWithItem
                                 <TableCell>{purchase.products.length}</TableCell>
                                 <TableCell>{formatPrice(getTotalPriceCents(purchase))}</TableCell>
                                 <TableCell>
-                                    <Button as={Link} href={`/admin/purchase/${purchase.id}`}
-                                            className={"text-white bg-gray-800 rounded-md min-w-6 h-9"} size="sm">
-                                        <IoMdEye className="h-4 w-4"/>
-                                    </Button>
+                                    <Tooltip content="View details">
+                                        <Button as={Link} href={`/admin/purchase/${purchase.id}`}
+                                                className={"text-white bg-gray-800 rounded-md min-w-6 h-9"} size="sm">
+                                            <IoMdEye className="h-4 w-4"/>
+                                        </Button>
+                                    </Tooltip>
                                 </TableCell>
                             </TableRow>
                         ))}
