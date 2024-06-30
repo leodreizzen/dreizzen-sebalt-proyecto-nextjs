@@ -25,7 +25,7 @@ export default function AdminLayout({children}: { children: React.ReactNode }) {
     const fullScreenNavbar = width != null && width <= Number(tailwindConfig.theme.screens.sm.replace('px', ''));
 
     return (
-        <div className="flex w-screen min-h-dvh bg-background">
+        <div className="flex w-screen h-dvh bg-background">
             <AdminSidebar collapsed={collapsed} initialized={sidebarInitialized} fullScreen={fullScreenNavbar} onCollapsedChange={setCollapsed}/>
             <div className={clsx("flex flex-col h-full flex-grow overflow-auto", fullScreenNavbar && !collapsed && "hidden")}>
                 <SidebarCollapseButton collapsed={collapsed} onCollapsedChange={setCollapsed}/>
