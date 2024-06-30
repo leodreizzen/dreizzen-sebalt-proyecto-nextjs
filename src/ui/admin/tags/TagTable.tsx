@@ -15,7 +15,7 @@ export default function TagTable({tags}: { tags: TagWithProducts[] }) {
         <div className="w-full rounded-md text-white @container">
             <div className="grid gap-4 @sm:hidden">
                 {tags.map((tag) => (
-                    <Card key={tag.id} className="rounded-2xl">
+                    <Card key={tag.id} className="rounded-2xl dark">
                         <CardContent className="flex flex-col items-center !p-3 w-full">
                             <div className="flex w-full justify-center">
                                 <div className="flex flex-col w-fit items-center">

@@ -17,7 +17,7 @@ export default function PurchaseTable({purchases}: { purchases: PurchaseWithItem
         <div className="w-full @container rounded-md text-white">
             <div className="grid gap-4 @lg:hidden">
                 {purchases.map((purchase) => (
-                    <Card key={purchase.id} className="rounded-2xl">
+                    <Card key={purchase.id} className="rounded-2xl dark">
                         <CardContent className="flex flex-col items-center !p-4 w-full">
                             <div className="flex w-full">
                                 <div className="flex flex-col w-6/12">

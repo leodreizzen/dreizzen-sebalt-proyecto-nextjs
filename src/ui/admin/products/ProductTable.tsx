@@ -14,7 +14,7 @@ export default function ProductTable({ products }: {products: AdminProduct[]}) {
         <div className="w-full bg-black rounded-md text-white border-white border-1">
             <div className="grid gap-4 sm:hidden">
                 {products.map((product) => (
-                    <Card key={product.id}>
+                    <Card key={product.id} className="dark">
                         <CardContent className="grid grid-cols-[80px_1fr] gap-4 items-center">
                             <Image src={product.coverImage.url} alt={product.coverImage.alt} width={240} height={190} className="rounded-md mt-4" />
                             <div className="grid gap-2">
