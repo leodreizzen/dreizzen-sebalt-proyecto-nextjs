@@ -318,10 +318,10 @@ export default function AdminProductForm({initialData}: {
     }
 
     return (
-        <div className={"justify-center items-center flex flex-col gap-3 mx-auto xl:w-3/4"}>
-            <div className="flex justify-between w-full">
-                <h1 className={"m-2 justify-center text-2xl font-bold"}>{initialData ? "Edit product" : "Add product"}</h1>
-                <div className="flex gap-4">
+        <div className={"@container justify-center flex flex-col gap-3 mx-auto xl:w-3/4 items-center pt-2"}>
+            <div className="flex flex-col @md:flex-row justify-between w-full @md:items-end gap-y-2">
+                <h1 className={"mx-2 justify-center text-2xl font-bold text-center"}>{initialData ? "Edit product" : "Add product"}</h1>
+                <div className="flex gap-4 justify-center w-full @sm:w-[revert]">
                     <RAWGModal className="" onSubmit={handleRawgSubmit}/>
                     <Button color="primary" onPress={onSavePress}>Save</Button>
                 </div>
