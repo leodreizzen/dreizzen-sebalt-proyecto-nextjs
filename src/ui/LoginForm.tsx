@@ -10,8 +10,7 @@ import React from "react";
 export default function LoginForm() {
     const [errorMessage, login] = useFormState(authenticate, undefined)
     return (
-        <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2">
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col m-auto">
                 <div className="inline-block mx-auto bg-transparent">
                     <VaporLogo className={"fill-white mr-1"} h={"80px"} w={"170px"}/>
                 </div>
@@ -44,6 +43,5 @@ export default function LoginForm() {
                     </form>
                 </div>
             </div>
-        </div>
     )
 }
