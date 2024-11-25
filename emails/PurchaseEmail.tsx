@@ -23,6 +23,7 @@ const tailwindConfigResolved = resolveConfig(tailwindConfig)
 import clsx from "clsx";
 import resolveConfig from "tailwindcss/resolveConfig";
 import {BASE_URL, WEB_NAME} from "@/constants";
+import {currentPrice} from "@/util/productUtils";
 
 
 export interface EmailProduct extends ProductWithCoverImage {
@@ -30,7 +31,7 @@ export interface EmailProduct extends ProductWithCoverImage {
     downloadLink: string;
 }
 
-const totalPlaceholder = productPlaceholders.reduce((acc, product) => acc + product.currentPrice_cents, 0);
+const totalPlaceholder = productPlaceholders.reduce((acc, product) => acc + currentPrice(product), 0);
 
 //@ts-ignore
 const primaryColor = tailwindConfigResolved.theme.colors.primary;
@@ -86,7 +87,7 @@ export default function PurchaseEmail(props:
                                             </CenterRow>
                                             <CenterRow>{product.name}</CenterRow>
                                             <CenterRow> Key: {product.productKey}</CenterRow>
-                                            <CenterRow>{formatPrice(product.currentPrice_cents)}</CenterRow>
+                                            <CenterRow>{formatPrice(currentPrice(product))}</CenterRow>
                                             <CenterRow> <Button style={buttonStyle}
                                                                 href={product.downloadLink}>Download
                                                 now</Button></CenterRow>

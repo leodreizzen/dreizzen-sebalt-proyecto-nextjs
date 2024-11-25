@@ -38,7 +38,11 @@ export interface ProductSaleWithProduct extends ProductSale{
     product: ProductWithTagsAndCoverImage
 }
 
-export interface ProductWithCoverImage extends Product{
+export interface ProductWithSale extends Product{
+    sale: ProductSale | null
+}
+
+export interface ProductWithCoverImage extends ProductWithSale{
     coverImage: Image
 }
 
@@ -61,10 +65,6 @@ export interface VideoWithThumbnail extends Video{
 }
 
 export interface FeaturedProductWithProduct extends FeaturedProduct{
-    product: ProductWithTagsAndCoverImage
-}
-
-export interface FeaturedProductSaleWithProduct extends ProductSale{
     product: ProductWithTagsAndCoverImage
 }
 

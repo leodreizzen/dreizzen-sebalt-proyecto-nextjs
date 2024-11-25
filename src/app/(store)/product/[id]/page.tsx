@@ -14,6 +14,7 @@ import {GoDotFill} from "react-icons/go";
 import Link from "next/link";
 
 import type {Metadata} from 'next'
+import {currentPrice} from "@/util/productUtils";
 
 type Props = {
     params: Promise<{ id: string }>
@@ -87,7 +88,7 @@ export default async function ProductInfoPage({params}: { params: { id: string }
                 className="mt-4 border border-borders w-full md:w-4/6 flex max-sm:flex-col max-sm:gap-2 justify-between items-center p-3 rounded-lg">
                 <span>Buy <strong>{product.name}</strong></span>
                 <div className="flex flex-shrink-0 flex-grow items-center justify-end">
-                    <p className="text-large pr-3">{formatPrice(product.currentPrice_cents)}</p>
+                    <p className="text-large pr-3">{formatPrice(currentPrice(product))}</p>
                     <AddToCartButton className="flex-shrink-0" product={product}/>
                 </div>
             </div>

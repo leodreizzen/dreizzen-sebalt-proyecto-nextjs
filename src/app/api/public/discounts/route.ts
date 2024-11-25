@@ -26,6 +26,4 @@ export async function GET(request: NextRequest): Promise<NextResponse>{
         skip: (queryPage - 1) * queryTake,
         take: 20
     }))
-
-
 }

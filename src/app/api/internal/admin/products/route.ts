@@ -25,6 +25,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<AdminProdu
                 },
             },
             include: {
+                sale: true,
                 coverImage: true,
                 tags: {
                     include:{

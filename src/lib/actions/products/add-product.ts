@@ -90,7 +90,6 @@ export async function addProduct(_formProduct: ProductToAddServer): Promise<Admi
                             id: pub.id
                         }))
                     },
-                    currentPrice_cents: productData.current_price_cents,
                     originalPrice_cents: productData.original_price_cents,
                     coverImage: productData.coverImage.isNew ? {
                         create: {
@@ -145,7 +144,6 @@ export async function addProduct(_formProduct: ProductToAddServer): Promise<Admi
                             }
                         },
                         currentPrice_cents: productData.current_price_cents,
-                        originalPrice_cents: productData.original_price_cents,
                         isFeatured: false
                     }
                 })

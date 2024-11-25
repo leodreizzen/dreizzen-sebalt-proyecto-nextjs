@@ -10,6 +10,7 @@ import MarqueeOnOverflow from "../MarqueeOnOverflow";
 import {ProductWithTagsAndCoverImage} from "@/lib/definitions";
 import {PressEvent} from "react-aria";
 import {forwardRef, Ref} from "react";
+import {currentPrice} from "@/util/productUtils";
 
 function BaseFeaturedProductCard({product, className, isPressable, onPress, showCartButton}: {
     product: ProductWithTagsAndCoverImage;
@@ -42,8 +43,8 @@ function BaseFeaturedProductCard({product, className, isPressable, onPress, show
                         </div>
                     </div>
                     <p className="text-white mr-4 sm:text-medium">{
-                        <s>{product.originalPrice_cents != product.currentPrice_cents ?
-                            <s>{formatPrice(product.originalPrice_cents)}<br/></s> : null}</s>}{formatPrice(product.currentPrice_cents)}</p>
+                        <s>{product.originalPrice_cents != currentPrice(product) ?
+                            <s>{formatPrice(product.originalPrice_cents)}<br/></s> : null}</s>}{formatPrice(currentPrice(product))}</p>
                     {showCartButton && <AddToCartButton className="text-black pr-1 flex-shrink-0" product={product}
                                                         textClassName="hidden @lg:block"/>}
                 </CardFooter>

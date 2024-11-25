@@ -12,7 +12,13 @@ import mercadoPago from "@/lib/mercadoPago";
 import {fetchCartProducts} from "@/lib/data";
 import {Product} from "@prisma/client";
 import {z} from "zod";
-import {ProductWithCoverImage, PurchaseError, PurchaseResult, PurchaseWithInvoiceData} from "@/lib/definitions";
+import {
+    ProductWithCoverImage,
+    ProductWithSale,
+    PurchaseError,
+    PurchaseResult,
+    PurchaseWithInvoiceData
+} from "@/lib/definitions";
 import {PaymentResponse} from "mercadopago/dist/clients/payment/commonTypes";
 import {Payment, PaymentRefund} from "mercadopago";
 import {v4 as uuidv4} from "uuid";
@@ -23,6 +29,8 @@ import {randomUUID} from "node:crypto";
 import { Resend } from 'resend';
 import {clearCart} from "@/lib/actions/cart";
 import {EMAIL_DOMAIN, WEB_NAME} from "@/constants";
+
+import {currentPrice} from "@/util/productUtils";
 if (!process.env.RESEND_API_KEY)
     throw new Error("RESEND_API_KEY not set")
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -134,12 +142,12 @@ async function processPurchase(cartProducts: ProductWithCoverImage[],
     }
 }
 
-function checkCartAmount(cartProducts: Product[], transactionAmount: number): boolean {
-    const cartAmount = cartProducts.reduce((acc, product) => acc + product.currentPrice_cents, 0);
+function checkCartAmount(cartProducts: ProductWithSale[], transactionAmount: number): boolean {
+    const cartAmount = cartProducts.reduce((acc, product) => acc + currentPrice(product), 0);
     return cartAmount > 0 && cartAmount / 100 === transactionAmount
 }
 
-async function saveUnpaidPurchase(products: Product[], invoiceData: purchaseInvoiceDataFields, emailData: purchaseEmailFields, idempotencyKey: string): Promise<{
+async function saveUnpaidPurchase(products: ProductWithSale[], invoiceData: purchaseInvoiceDataFields, emailData: purchaseEmailFields, idempotencyKey: string): Promise<{
     duplicate: boolean,
     purchaseId: number
 }> {
@@ -176,7 +184,7 @@ async function saveUnpaidPurchase(products: Product[], invoiceData: purchaseInvo
                             }
                         },
                         originalPrice_cents: product.originalPrice_cents,
-                        currentPrice_cents: product.currentPrice_cents
+                        currentPrice_cents: currentPrice(product)
                     }))
                 }
             }
@@ -194,7 +202,7 @@ async function deleteFailedPurchase(purchaseId: number) {
     })
 }
 
-async function processPayment(paymentData: purchasePaymentDataFieldsCoerced, cartProducts: Product[], invoiceData: purchaseInvoiceDataFields, idempotency_key: string, purchaseId: number): Promise<PaymentResponse> {
+async function processPayment(paymentData: purchasePaymentDataFieldsCoerced, cartProducts: ProductWithSale[], invoiceData: purchaseInvoiceDataFields, idempotency_key: string, purchaseId: number): Promise<PaymentResponse> {
     const payments = new Payment(mercadoPago)
     return await payments.create({
         body: {
@@ -214,7 +222,7 @@ async function processPayment(paymentData: purchasePaymentDataFieldsCoerced, car
                     title: product.name,
                     description: product.description,
                     quantity: 1,
-                    unit_price: product.currentPrice_cents / 100,
+                    unit_price: currentPrice(product) / 100,
                 }))
             },
             payer: {

@@ -6,6 +6,7 @@ import {ProductSaleWithProduct} from "@/lib/definitions";
 import {Key} from "react-aria";
 import {AdminSalesAPIResponse} from "@/app/api/internal/admin/sales/types";
 import {formatDiscountPercent} from "@/util/formatUtils";
+import {currentPrice} from "@/util/productUtils";
 
 export default function SaleAutocomplete({className, onValueChange}: {
     className?: string,
@@ -58,7 +59,7 @@ export default function SaleAutocomplete({className, onValueChange}: {
         <Autocomplete className={clsx(className)} classNames={{popoverContent: "border-2 border-borders"}} onInputChange={handleInputChange} listboxProps={{emptyContent: ""}}
                       onSelectionChange={handleSelectionChange} label={"Select a product"} color={"primary"} disabledKeys={["loading"]} autoFocus ref={ref} onOpenChange={handleOpenChange}>
             { !loading? sales.map(sale =>
-                    <AutocompleteItem key={sale.id} value={sale.product.name}>{`${sale.product.name} (${formatDiscountPercent(sale.product.originalPrice_cents, sale.product.currentPrice_cents)})`}</AutocompleteItem>
+                    <AutocompleteItem key={sale.id} value={sale.product.name}>{`${sale.product.name} (${formatDiscountPercent(sale.product.originalPrice_cents, currentPrice(sale.product))})`}</AutocompleteItem>
                 ):
                 <AutocompleteItem key="loading" value="loading">Loading...</AutocompleteItem>
             }

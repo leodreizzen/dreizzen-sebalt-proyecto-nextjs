@@ -134,7 +134,6 @@ export async function editProduct(_formProduct: ProductToEditServer): Promise<Ad
                             id: pub.id
                         }))
                     },
-                    currentPrice_cents: productData.current_price_cents,
                     originalPrice_cents: productData.original_price_cents,
                     coverImage: productData.coverImage.isNew ? {
                         create: {
@@ -188,7 +187,6 @@ export async function editProduct(_formProduct: ProductToEditServer): Promise<Ad
                     },
                     update: {
                         currentPrice_cents: productData.current_price_cents,
-                        originalPrice_cents: productData.original_price_cents,
                         isFeatured: false
                     },
                     create: {
@@ -198,7 +196,6 @@ export async function editProduct(_formProduct: ProductToEditServer): Promise<Ad
                             }
                         },
                         currentPrice_cents: productData.current_price_cents,
-                        originalPrice_cents: productData.original_price_cents,
                         isFeatured: false
                     }
                 })

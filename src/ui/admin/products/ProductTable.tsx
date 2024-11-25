@@ -8,6 +8,7 @@ import {formatPrice} from "@/util/formatUtils";
 import DeleteButton from "@/ui/admin/products/DeleteButton";
 import {Button} from "@nextui-org/button";
 import Link from "next/link";
+import {currentPrice} from "@/util/productUtils";
 
 export default function ProductTable({ products }: {products: AdminProduct[]}) {
     return (
@@ -20,7 +21,7 @@ export default function ProductTable({ products }: {products: AdminProduct[]}) {
                             <div className="grid gap-2">
                                 <div className="font-medium mt-4">{product.name}</div>
                                 <div className="flex flex-col items-start justify-start">
-                                    <div><p className="text-tiny md:text-md font-bold">{<s>{ product.originalPrice_cents != product.currentPrice_cents ? <s>{formatPrice(product.originalPrice_cents)}<br /></s> : null }</s>}{formatPrice(product.currentPrice_cents)}</p></div>
+                                    <div><p className="text-tiny md:text-md font-bold">{<s>{ product.originalPrice_cents != currentPrice(product) ? <s>{formatPrice(product.originalPrice_cents)}<br /></s> : null }</s>}{formatPrice(currentPrice(product))}</p></div>
                                     <div className="text-gray-500">Purchases: {product.purchases.length}</div>
                                 </div>
                                 <div className="flex items-center gap-2">
@@ -52,7 +53,7 @@ export default function ProductTable({ products }: {products: AdminProduct[]}) {
                                     <Image src={product.coverImage.url} alt={product.coverImage.alt} width={100} height={80} className="rounded-md select-none" />
                                 </TableCell>
                                 <TableCell className="font-medium">{product.name}</TableCell>
-                                <TableCell>{<s>{ product.originalPrice_cents != product.currentPrice_cents ? <s>{formatPrice(product.originalPrice_cents)}<br /></s> : null }</s>}{formatPrice(product.currentPrice_cents)}</TableCell>
+                                <TableCell>{<s>{ product.originalPrice_cents != currentPrice(product) ? <s>{formatPrice(product.originalPrice_cents)}<br /></s> : null }</s>}{formatPrice(currentPrice(product))}</TableCell>
                                 <TableCell>{product.purchases.length}</TableCell>
                                 <TableCell>
                                     <div className="flex items-center gap-2">

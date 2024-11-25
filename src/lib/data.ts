@@ -2,7 +2,6 @@ import "server-only";
 import prisma from './prisma';
 import {
     AdminProduct,
-    FeaturedProductSaleWithProduct,
     FeaturedProductWithProduct,
     FeaturedTagWithTagAndImage,
     ProductForDetail,
@@ -40,6 +39,7 @@ export async function fetchFeaturedProducts() {
         include: {
             product: {
                 include: {
+                    sale: true,
                     tags: {
                         include: {
                             tag: true
@@ -91,6 +91,7 @@ export async function fetchFeaturedSales() {
         include: {
             product: {
                 include: {
+                    sale: true,
                     tags: {
                         include: {
                             tag: true
@@ -141,6 +142,7 @@ export async function fetchByGenre(tagId: number, page: number) {
             }
         },
         include: {
+            sale: true,
             coverImage: true,
             tags: {
                 include: {
@@ -175,7 +177,8 @@ export async function fetchCartProducts(): Promise<ProductWithCoverImage[]> {
                 orderBy: {
                     order: 'asc'
                 }
-            }
+            },
+            sale: true
         }
     })
     return data
@@ -217,41 +220,54 @@ export async function fetchAllTags() {
 
 export async function fetchTags(query: string, filter: number[], priceRange: number[], onSale: boolean) {
     const data = await prisma.tag.findMany(
-        {
-            where: {
-                productTags: {
-                    some: {
-                        product: {
-                            available: true,
-                            name: {
-                                contains: query,
-                                mode: 'insensitive'
-                            },
-                            currentPrice_cents: {
-                                gte: priceRange[0] * 100,
-                                lte: priceRange[1] * 100
-                            },
-                            AND: filter.map((tagId) => ({
-                                tags: {
-                                    some: {
-                                        tag: {
-                                            id: tagId
+            {
+                where: {
+                    productTags: {
+                        some: {
+                            product: {
+                                available: true,
+                                name: {
+                                    contains: query,
+                                    mode: 'insensitive'
+                                },
+                                OR: [
+                                    {
+                                        sale: null,
+                                        originalPrice_cents: {
+                                            gte: priceRange[0] * 100,
+                                            lte: priceRange[1] * 100
+                                        }
+                                    }, {
+                                        sale: {
+                                            currentPrice_cents: {
+                                                gte: priceRange[0] * 100,
+                                                lte: priceRange[1] * 100
+                                            }
                                         }
                                     }
-                                }
-                            })),
-                            sale: onSale ? {isNot: null} : {},
+                                ],
+                                AND: filter.map((tagId) => ({
+                                    tags: {
+                                        some: {
+                                            tag: {
+                                                id: tagId
+                                            }
+                                        }
+                                    }
+                                })),
+                                sale: onSale ? {isNot: null} : {},
+                            }
                         }
                     }
                 }
             }
-        }
-    );
+        )
+    ;
     return data
 }
 
 export async function fetchSaleSearch(query: string) {
-    const data: FeaturedProductSaleWithProduct[] = await prisma.productSale.findMany({
+    const data: ProductSaleWithProduct[] = await prisma.productSale.findMany({
         where: {
             product: {
                 name: {
@@ -263,6 +279,7 @@ export async function fetchSaleSearch(query: string) {
         include: {
             product: {
                 include: {
+                    sale: true,
                     coverImage: true,
                     tags: {
                         include: {
@@ -292,11 +309,22 @@ export async function fetchSearch(query: string, page: number, filter: number[],
                 contains: query,
                 mode: 'insensitive'
             },
-            currentPrice_cents: {
-                gte: priceRange[0] * 100,
-                lte: priceRange[1] * 100
-            },
-            AND: filter.map((tagId) => ({
+            OR: [
+                {
+                    sale: null,
+                    originalPrice_cents: {
+                        gte: priceRange[0] * 100,
+                        lte: priceRange[1] * 100
+                    }
+                }, {
+                    sale: {
+                        currentPrice_cents: {
+                            gte: priceRange[0] * 100,
+                            lte: priceRange[1] * 100
+                        }
+                    }
+                }
+            ], AND: filter.map((tagId) => ({
                 tags: {
                     some: {
                         tag: {
@@ -308,6 +336,7 @@ export async function fetchSearch(query: string, page: number, filter: number[],
             sale: onSale ? {isNot: null} : {},
         },
         include: {
+            sale: true,
             coverImage: true,
             tags: {
                 include: {
@@ -332,10 +361,22 @@ export async function fetchSearchPages(query: string, filter: number[], priceRan
                 contains: query,
                 mode: 'insensitive'
             },
-            currentPrice_cents: {
-                gte: priceRange[0] * 100,
-                lte: priceRange[1] * 100
-            },
+            OR: [
+                {
+                    sale: null,
+                    originalPrice_cents: {
+                        gte: priceRange[0] * 100,
+                        lte: priceRange[1] * 100
+                    }
+                }, {
+                    sale: {
+                        currentPrice_cents: {
+                            gte: priceRange[0] * 100,
+                            lte: priceRange[1] * 100
+                        }
+                    }
+                }
+            ],
             AND: filter.map((tagId) => ({
                 tags: {
                     some: {
@@ -360,6 +401,7 @@ export async function fetchMostSold(currentPage: number) {
             },
         },
         include: {
+            sale: true,
             coverImage: true,
             tags: {
                 include: {
@@ -414,6 +456,7 @@ export async function fetchProduct(id: number): Promise<ProductForDetail | null>
             available: true,
         },
         include: {
+            sale: true,
             coverImage: true,
             publishers: true,
             developers: true,
@@ -461,6 +504,7 @@ export async function fetchProducts(page: number, query: string) {
             }
         },
         include: {
+            sale: true,
             coverImage: true,
             tags: {
                 include: {
@@ -509,6 +553,7 @@ export async function fetchPurchase(id: number) {
                 include: {
                     product: {
                         include: {
+                            sale: true,
                             coverImage: true
                         }
                     }

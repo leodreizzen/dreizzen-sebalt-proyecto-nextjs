@@ -10,6 +10,7 @@ import {ProductWithCoverImage} from "@/lib/definitions";
 import RemoveFromCartPageButton from "@/ui/video/RemoveFromCartPageButton";
 import {Link as NextUILink} from "@nextui-org/link";
 import {Metadata} from "next";
+import {currentPrice} from "@/util/productUtils";
 
 export const metadata: Metadata = {
     title: "Cart",
@@ -30,7 +31,7 @@ export default async function CartPage({}) {
 }
 
 function CartWithItemsPage({products, className}: { products: ProductWithCoverImage[], className?: String }) {
-    const total = products.reduce((acc, product) => acc + product.currentPrice_cents, 0);
+    const total = products.reduce((acc, product) => acc + currentPrice(product), 0);
 
     return (
         <div className={clsx("flex flex-col", className)}>
@@ -56,7 +57,7 @@ function CartWithItemsPage({products, className}: { products: ProductWithCoverIm
                                     </MarqueeOnOverflow>
                                 </div>
                                 <div className="flex items-center xs:mr-1 max-xs:justify-self-end">
-                                    <p>{formatPrice(product.currentPrice_cents)}</p>
+                                    <p>{formatPrice(currentPrice(product))}</p>
                                 </div>
                                 <RemoveFromCartPageButton productId={product.id}/>
                             </div>

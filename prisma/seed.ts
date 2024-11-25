@@ -2,6 +2,7 @@ import { PrismaClient, Product, VideoSource } from "@prisma/client";
 import bcrypt from 'bcrypt';
 import fs from 'fs';
 import {randomUUID} from "node:crypto";
+import {currentPrice} from "@/util/productUtils";
 
 const prisma = new PrismaClient();
 
@@ -67,7 +68,6 @@ async function createProducts(){
             data: {
                 name: product.name,
                 originalPrice_cents: randomPrice,
-                currentPrice_cents: randomPrice,
                 launchDate: new Date(product.released),
                 coverImage: {
                     create: {
@@ -174,6 +174,8 @@ async function createPurchases(){
             const productObject = await prisma.product.findFirstOrThrow({
                 where: {
                     name: game
+                }, include: {
+                    sale: true
                 }
             });
             productObjects.push(productObject)
@@ -208,7 +210,7 @@ async function createPurchases(){
                     productId: productObject.id,
                     purchaseId: purchaseObject.id,
                     originalPrice_cents: productObject.originalPrice_cents,
-                    currentPrice_cents: productObject.currentPrice_cents
+                    currentPrice_cents: currentPrice(productObject),
                 }
             })
         }
@@ -222,23 +224,18 @@ async function createProductSales(){
         const productObject = await prisma.product.findFirstOrThrow({
             where: {
                 name: productSale.game
+            }, include: {
+                sale: true
             }
         });
         await prisma.productSale.create({
             data: {
                 productId: productObject.id,
-                originalPrice_cents: productObject.originalPrice_cents,
-                currentPrice_cents: Math.floor(productObject.currentPrice_cents * ((100 - productSale.discount) / 100)),
+                currentPrice_cents: Math.floor(currentPrice(productObject) * ((100 - productSale.discount) / 100)),
                 isFeatured: productSale.isFeatured,
             }
         })
         console.log(`Created product sale with id: ${productObject.id}`)
-        await prisma.product.update({
-            where: { id: productObject.id },
-            data: {
-                currentPrice_cents: Math.floor(productObject.currentPrice_cents * ((100 - productSale.discount) / 100))
-            }
-        })
     }
 
 }

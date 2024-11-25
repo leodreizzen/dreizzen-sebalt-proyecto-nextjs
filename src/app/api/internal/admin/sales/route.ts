@@ -28,6 +28,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<AdminSales
             include: {
                 product:{
                     include:{
+                        sale: true,
                         coverImage: true,
                         tags: {
                             include:{
