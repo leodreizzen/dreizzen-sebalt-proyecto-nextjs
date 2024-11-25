@@ -43,7 +43,7 @@ function CartWithItemsPage({products, className}: { products: ProductWithCoverIm
                                 key={product.id}>
                                 <div
                                     className="max-xs:w-5/12 xs:h-full max-xs:col-span-2 max-xs:rounded-xl max-xs:overflow-clip  max-xs:justify-self-center">
-                                    <Link href={`/product/${product.id}`} className="size-full aspect-video relative inline-block">
+                                    <Link href={`/product/${product.id}`} className="size-full aspect-video relative inline-block select-none">
                                         <Image src={product.coverImage.url} alt={product.coverImage.alt} fill/>
                                     </Link>
                                 </div>
@@ -55,7 +55,7 @@ function CartWithItemsPage({products, className}: { products: ProductWithCoverIm
                                             className="ml-1 mr-1 align-middle text-nowrap">{product.name}</span></NextUILink>
                                     </MarqueeOnOverflow>
                                 </div>
-                                <div className="flex items-center xs:mr-1  max-xs:justify-self-end">
+                                <div className="flex items-center xs:mr-1 max-xs:justify-self-end">
                                     <p>{formatPrice(product.currentPrice_cents)}</p>
                                 </div>
                                 <RemoveFromCartPageButton productId={product.id}/>
@@ -68,7 +68,7 @@ function CartWithItemsPage({products, className}: { products: ProductWithCoverIm
                 <span>Total:</span>
                 <span className="pl-2 pr-4">{formatPrice(total)}</span>
                 <Button as={Link} href="/purchase"
-                        className="font-bold bg-transparent text-foreground border-foreground border" size="md"
+                        className="font-bold bg-transparent text-foreground border-foreground border select-text" size="md"
                 >Buy now</Button>
             </div>
         </div>
@@ -82,7 +82,7 @@ function EmptyCartPage({className}: { className?: String }) {
                 <BsCartX className="size-full"/>
             </div>
             <p className="pt-3 text-center">Your cart is empty. Add products to buy them.</p>
-            <Button as={Link} href="/" className="text-center bg-primary text-foreground mt-2">Choose products</Button>
+            <Button as={Link} href="/" className="text-center bg-primary text-foreground mt-2 select-text">Choose products</Button>
         </div>
     )
 }

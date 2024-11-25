@@ -21,7 +21,7 @@ export default function BaseGenreCard({className, genre, isPressable, onPress}: 
                         as={NextImage}
                         removeWrapper
                         alt={genre.image.alt}
-                        className="z-0 object-fill"
+                        className="z-0 object-fill select-none"
                         src={genre.image.url}
                         fill
                     />

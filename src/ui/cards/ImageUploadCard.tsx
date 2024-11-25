@@ -18,7 +18,7 @@ export default function ImageUploadCard({imageUrl, className, onClose} : {imageU
                 <RemoveCardButton onPress={onClose}/>
             </div>
             <div className={clsx("gap-3 @container", className)}>
-            <Card isFooterBlurred className={"w-full h-full"} onPress={onPress} isPressable={isPressable}>
+            <Card isFooterBlurred className={"w-full h-full select-none"} onPress={onPress} isPressable={isPressable}>
                     <div className="gap-3 aspect-video h-full w-full">
                         <Image src={imageUrl} alt={"Image preview"} fill={true}/>
                     </div>

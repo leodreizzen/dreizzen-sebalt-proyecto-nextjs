@@ -42,7 +42,7 @@ export default async function Home() {
                                 )
                             }
                             <span className="px-16 w-full">
-                  <Button as={Link} className="w-full bg-content1 text-white border border-borders"
+                  <Button as={Link} className="w-full bg-content1 text-white border border-borders select-text"
                           href="/products/topsellers">See more</Button>
                 </span>
                         </div>

@@ -89,7 +89,7 @@ export default async function PurchasePage({params}: { params: { id: string } })
                                                 className="w-6/12 @xs:w-[revert] h-full rounded-xl @xs:rounded-none overflow-clip justify-self-center">
                                                 <Link href={`/product/${purchaseItem.productId}`}
                                                       className="size-full aspect-video relative inline-block">
-                                                    <Image src={purchaseItem.product.coverImage.url}
+                                                    <Image src={purchaseItem.product.coverImage.url} className="select-none"
                                                            alt={purchaseItem.product.coverImage.alt} fill/>
                                                 </Link>
                                             </div>

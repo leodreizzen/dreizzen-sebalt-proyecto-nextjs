@@ -21,7 +21,7 @@ function BaseFeaturedProductCard({product, className, isPressable, onPress, show
     return (
         <div className={clsx("gap-3 @container", className)} ref={ref}>
             <Card isFooterBlurred className={"w-full h-full"} onPress={onPress} isPressable={isPressable}>
-                <div className="gap-3 aspect-video h-full w-full">
+                <div className="gap-3 aspect-video h-full w-full select-none">
                     <Image src={product.coverImage.url} alt={product.coverImage.alt} fill={true}/>
                 </div>
                 <CardFooter className="bg-black/60 border-default-600 dark:border-default-100 h-1/6 p-3 px-5">

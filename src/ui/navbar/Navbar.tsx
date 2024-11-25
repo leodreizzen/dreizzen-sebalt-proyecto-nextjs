@@ -127,7 +127,7 @@ function NavbarItemComponent({ item, selected }: { item: MenuItem, selected: boo
   else return (
     <Dropdown>
       <DropdownTrigger>
-        <Button className={clsx("p-0 bg-transparent text-medium min-w-0", { "text-primary": selected, "text-foreground": !selected })}>
+        <Button className={clsx("p-0 bg-transparent text-medium min-w-0 select-text", { "text-primary": selected, "text-foreground": !selected })}>
           {item.name}
         </Button>
       </DropdownTrigger>

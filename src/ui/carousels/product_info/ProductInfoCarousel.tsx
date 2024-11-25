@@ -53,7 +53,7 @@ export default function ProductInfoCarousel({ className, product }: { className?
   }
 
   return (
-    <div className={clsx("p-2 sm:p-3 lg:p-4 flex flex-col productInfoCarousel", className, { "loading": !initialized })}>
+    <div className={clsx("p-2 sm:p-3 lg:p-4 flex flex-col select-none productInfoCarousel", className, { "loading": !initialized })}>
       <div className='flex w-full items-center'>
         <SwiperLeftButton id={`${uniqueId}-swiper-button-prev`} enabled={activeSlide !== 0} className="mr-1" />
 

@@ -352,7 +352,7 @@ export default function AdminProductForm({initialData}: {
                         className="grid grid-cols-[auto_1fr] grid-rows-[repeat(2,auto)] col-start-2 gap-x-3 md:gap-x-4 lg:gap-x-2">
                         <Switch size={"sm"} isSelected={isOnSale} onValueChange={setIsOnSale}
                                 className="row-start-2 !flex-row-reverse gap-x-2 max-lg:!flex-col-reverse gap-y-2">
-                            <p className={"text-white"}>On sale</p>
+                            <p className={"text-white select-text"}>On sale</p>
                         </Switch>
 
                         <label htmlFor="current_price" className="col-start-2">Current price</label>

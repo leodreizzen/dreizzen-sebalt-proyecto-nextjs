@@ -29,7 +29,7 @@ export default function ListCard({ product, className }: { product: ProductWithT
                     <div className="relative col-span-4 md:col-span-3 w-7/12 @2xs:w-[revert] @2xs:h-full aspect-video mt-2 mb-1 @2xs:my-0">
                         <Image
                             alt={product.coverImage.alt}
-                            className="object-cover rounded-lg"
+                            className="object-cover rounded-lg select-none"
                             src={product.coverImage.url}
                             fill
                         />

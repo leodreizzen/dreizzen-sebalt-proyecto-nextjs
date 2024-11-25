@@ -16,7 +16,7 @@ export default function ProductTable({ products }: {products: AdminProduct[]}) {
                 {products.map((product) => (
                     <Card key={product.id} className="dark">
                         <CardContent className="grid grid-cols-[80px_1fr] gap-4 items-center">
-                            <Image src={product.coverImage.url} alt={product.coverImage.alt} width={240} height={190} className="rounded-md mt-4" />
+                            <Image src={product.coverImage.url} alt={product.coverImage.alt} width={240} height={190} className="rounded-md mt-4 select-none" />
                             <div className="grid gap-2">
                                 <div className="font-medium mt-4">{product.name}</div>
                                 <div className="flex flex-col items-start justify-start">
@@ -49,7 +49,7 @@ export default function ProductTable({ products }: {products: AdminProduct[]}) {
                         {products.map((product) => (
                             <TableRow key={product.id} className={"hover:bg-slate-100/50 dark:hover:bg-slate-800/50"}>
                                 <TableCell>
-                                    <Image src={product.coverImage.url} alt={product.coverImage.alt} width={100} height={80} className="rounded-md" />
+                                    <Image src={product.coverImage.url} alt={product.coverImage.alt} width={100} height={80} className="rounded-md select-none" />
                                 </TableCell>
                                 <TableCell className="font-medium">{product.name}</TableCell>
                                 <TableCell>{<s>{ product.originalPrice_cents != product.currentPrice_cents ? <s>{formatPrice(product.originalPrice_cents)}<br /></s> : null }</s>}{formatPrice(product.currentPrice_cents)}</TableCell>

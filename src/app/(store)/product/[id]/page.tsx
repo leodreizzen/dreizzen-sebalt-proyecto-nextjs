@@ -56,7 +56,7 @@ export default async function ProductInfoPage({params}: { params: { id: string }
                 <div
                     className="w-full md:w-4/12 mt-2 pt-2 md:pt-0 mb-4 md:mb-0 md:mt-0 bg-content1 flex flex-col flex-grow justify-between rounded-xl md:rounded-l-none overflow-clip">
                     <div className="flex-grow flex flex-col overflow-hidden">
-                        <div className="overflow-clip w-8/12 md:w-full mt-2 md:mt-0 mx-auto aspect-video relative">
+                        <div className="overflow-clip w-8/12 md:w-full mt-2 md:mt-0 mx-auto aspect-video relative select-none">
                             <Image src={product.coverImage.url} alt={product.coverImage.alt} fill/>
                         </div>
                         <div className="md:min-h-0 flex-grow md:basis-0 md:mb-4 inline-block text-ellipsis">
