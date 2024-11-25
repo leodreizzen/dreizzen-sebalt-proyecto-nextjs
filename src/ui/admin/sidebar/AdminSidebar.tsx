@@ -95,7 +95,7 @@ export default function AdminSidebar({collapsed, className, initialized, fullScr
     ]
 
     return (
-        <div className={clsx(className, collapsed && "max-sm:hidden", fullScreen && !collapsed && "w-full", "h-full bg-black", collapsed? "w-20": "w-80")}>
+        <div className={clsx(className, collapsed && "max-sm:hidden", fullScreen && !collapsed && "w-full", "h-full", collapsed? "w-20": "w-80")}>
             {initialized ? (
                 <Sidebar backgroundColor={'black'} collapsed={collapsed}
                          width={"100%"}
