@@ -3,7 +3,7 @@ import {useFormState} from "react-dom";
 import {MdAlternateEmail} from "react-icons/md";
 import {PiKey} from "react-icons/pi";
 import {Button} from "@nextui-org/button";
-import VaporLogo from "@/ui/icons/VaporLogo";
+import WebLogo from "@/ui/icons/WebLogo";
 import React from "react";
 import {authenticate} from "@/lib/actions/auth";
 
@@ -12,7 +12,7 @@ export default function LoginForm() {
     return (
             <div className="flex flex-col m-auto">
                 <div className="inline-block mx-auto bg-transparent">
-                    <VaporLogo className={"fill-white mr-1"} h={"80px"} w={"170px"}/>
+                    <WebLogo className={"fill-white mr-1"} h={"80px"} w={"170px"}/>
                 </div>
                 <h1 className="text-3xl font-bold text-center mt-5 mb-4">Sign in</h1>
                 <div className="flex flex-col items-center">

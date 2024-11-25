@@ -22,6 +22,7 @@ import {formatPrice} from "@/util/formatUtils";
 const tailwindConfigResolved = resolveConfig(tailwindConfig)
 import clsx from "clsx";
 import resolveConfig from "tailwindcss/resolveConfig";
+import {BASE_URL, WEB_NAME} from "@/constants";
 
 
 export interface EmailProduct extends ProductWithCoverImage {
@@ -65,11 +66,11 @@ export default function PurchaseEmail(props:
                 <EmailBodyFix className="bg-background text-foreground">
                     <Container className="p-1">
                         <Section align="center">
-                            <Heading as="h1" mx="auto"><Link href="https://vaporstore.vercel.app"
-                                                             className="text-foreground no-underline text-center">Vapor</Link></Heading>
+                            <Heading as="h1" mx="auto"><Link href={`${BASE_URL}`}
+                                                             className="text-foreground no-underline text-center">{WEB_NAME}</Link></Heading>
                             <Heading className="!mb-2" as="h2" mx="auto">Thanks for purchasing</Heading>
                             <Text className="!mb-0">Hello, {purchase.invoiceData.firstName}:</Text>
-                            <Text className="!mt-0">Thanks for your purchase in Vapor. Below you will find a summary of
+                            <Text className="!mt-0">Thanks for your purchase in {WEB_NAME}. Below you will find a summary of
                                 your order and the download links for your products.</Text>
                             <Text>Purchase ID: #{purchase.id}</Text>
                             <Section align="center">

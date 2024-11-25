@@ -5,7 +5,7 @@ import {ShoppingCartBoldIcon} from "@nextui-org/shared-icons";
 import Link from "next/link";
 import clsx from "clsx";
 import {usePathname} from "next/navigation";
-import VaporLogo from "@/ui/icons/VaporLogo";
+import WebLogo from "@/ui/icons/WebLogo";
 import {manageLogout} from "@/ui/admin/sidebar/logout";
 import {LogOutIcon} from "lucide-react";
 import {Link as NextUILink} from "@nextui-org/link";
@@ -126,7 +126,7 @@ export default function AdminSidebar({collapsed, className, initialized, fullScr
                         <div className={"flex flex-row items-center mt-3 mb-3 justify-between relative"}>
                             <NextUILink as={Link} href="/" aria-label="Ir a home"
                                         className="absoulute left-1/2 -translate-x-1/2">
-                                <VaporLogo className={"fill-white mr-1"} cropped={collapsed} h={"80px"} w={"140px"}/>
+                                <WebLogo className={"fill-white mr-1"} cropped={collapsed} h={"80px"} w={"140px"}/>
                             </NextUILink>
                             <SidebarCollapseButton className="sm:hidden justify-self-end !w-fit pr-3"
                                                    collapsed={collapsed}

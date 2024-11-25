@@ -1,7 +1,7 @@
 import clsx from "clsx";
 
 
-export default function VaporLogo({className, cropped, h, w}: {className?: string, cropped?: boolean, h?: string, w?: string}) {
+export default function WebLogo({className, cropped, h, w}: {className?: string, cropped?: boolean, h?: string, w?: string}) {
     const isCropped = cropped || false;
     return (
         <div className={clsx(className)}>

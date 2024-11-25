@@ -22,6 +22,7 @@ import {randomUUID} from "node:crypto";
 
 import { Resend } from 'resend';
 import {clearCart} from "@/lib/actions/cart";
+import {EMAIL_DOMAIN, WEB_NAME} from "@/constants";
 if (!process.env.RESEND_API_KEY)
     throw new Error("RESEND_API_KEY not set")
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -70,9 +71,9 @@ async function sendEmail(cartProducts: ProductWithCoverImage[], purchase: Purcha
         downloadLink: `https://bit.ly/3XpvyDR`
     }))
     const { error} = await resend.emails.send({
-            from: 'Vapor <order@vaporgames.tech>',
+            from: `${WEB_NAME} <order@${EMAIL_DOMAIN}>`,
             to: [emailData.email],
-            subject: `Thanks for purchasing in Vapor (#${purchase.id})`,
+            subject: `Thanks for purchasing in ${WEB_NAME} (#${purchase.id})`,
             react: PurchaseEmail({products: emailProducts, total_cents: amount_cents, purchase: purchase}),
         }
     )
@@ -197,7 +198,7 @@ async function processPayment(paymentData: purchasePaymentDataFieldsCoerced, car
     const payments = new Payment(mercadoPago)
     return await payments.create({
         body: {
-            description: `Payment for purchase #${purchaseId} in Vapor`,
+            description: `Payment for purchase #${purchaseId} in ${WEB_NAME}`,
             installments: paymentData.installments,
             issuer_id: paymentData.issuer_id,
             payment_method_id: paymentData.payment_method_id,

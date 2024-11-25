@@ -16,7 +16,7 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import {Tag} from "@prisma/client";
 import ShoppingCartButton from "@/ui/navbar/ShoppingCartButton";
-import VaporLogo from "@/ui/icons/VaporLogo";
+import WebLogo from "@/ui/icons/WebLogo";
 
 type NormalMenuItem = {
   name: string;
@@ -78,7 +78,7 @@ export default function Navbar({ className, dropdownTags }: { className?: string
           className="sm:hidden"
         />
         <NavbarBrand>
-          <NextUILink as={Link} href="/" aria-label="Go to home"><VaporLogo className={"fill-white mr-1"} h={"51.2px"} w={"110px"}/></NextUILink>
+          <NextUILink as={Link} href="/" aria-label="Go to home"><WebLogo className={"fill-white mr-1"} h={"51.2px"} w={"110px"}/></NextUILink>
         </NavbarBrand>
 
       </NavbarContent>
