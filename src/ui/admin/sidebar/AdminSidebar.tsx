@@ -124,7 +124,7 @@ export default function AdminSidebar({collapsed, className, initialized, fullScr
                         }
                     >
                         <div className={"flex flex-row items-center mt-3 mb-3 justify-between relative"}>
-                            <NextUILink as={Link} href="/" aria-label="Ir a home"
+                            <NextUILink as={Link} href="/admin" aria-label="Ir a home"
                                         className="absoulute left-1/2 -translate-x-1/2">
                                 <WebLogo className={"fill-white mr-1"} cropped={collapsed} h={"80px"} w={"140px"}/>
                             </NextUILink>
