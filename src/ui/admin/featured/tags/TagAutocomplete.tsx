@@ -1,5 +1,5 @@
 import {Autocomplete, AutocompleteItem} from "@nextui-org/autocomplete";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useDebouncedCallback} from "use-debounce";
 import clsx from "clsx";
 import {Key} from "react-aria";
@@ -15,6 +15,8 @@ export default function TagAutocomplete({className, value, onValueChange}: {
     const [loading, setLoading] = useState(true)
     const [tags, setTags] = useState<Tag[]>([])
     const getTagsDebounced = useDebouncedCallback(getTags, 500)
+    const ref= useRef<HTMLInputElement | null>(null);
+
 
     useEffect(() => {
         getTagsDebounced("")
@@ -48,9 +50,16 @@ export default function TagAutocomplete({className, value, onValueChange}: {
         getTagsDebounced(value)
     }
 
+    function handleOpenChange(isOpen: boolean) {
+        if (isOpen) {
+            setTimeout(() => ref.current?.focus(), 50); // needed due to a bug in NextUI
+        }
+    }
+
+
     return (
         <Autocomplete className={clsx(className)} classNames={{popoverContent: "border-2 border-borders"}} inputValue={input} onInputChange={handleInputChange} listboxProps={{emptyContent: ""}}
-                      onSelectionChange={handleSelectionChange} label={"Select a tag"} color={"primary"} disabledKeys={["loading"]}>
+                      onSelectionChange={handleSelectionChange} label={"Select a tag"} color={"primary"} disabledKeys={["loading"]} onOpenChange={handleOpenChange} ref={ref}>
             { !loading? tags.map(tag =>
                 <AutocompleteItem key={tag.id} value={tag.name}>{tag.name}</AutocompleteItem>
             ):

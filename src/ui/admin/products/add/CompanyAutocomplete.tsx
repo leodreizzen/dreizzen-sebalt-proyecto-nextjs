@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useDebouncedCallback} from "use-debounce";
 import {Key} from "react-aria";
 import {Autocomplete, AutocompleteItem} from "@nextui-org/autocomplete";
@@ -14,11 +14,11 @@ export default function CompanyAutocomplete({className, onValueChange}: {
     const [loading, setLoading] = useState(true)
     const [companies, setCompanies] = useState<CompanyItem[]>([])
     const getCompaniesDebounced = useDebouncedCallback(getCompanies, 500)
+    const ref= useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
         getCompaniesDebounced("")
     }, [getCompaniesDebounced])
-
     function getCompanies(query: string) {
         fetch(`/api/internal/admin/companies?q=${query}`).then(async (res) => {
             if (res.ok) {
@@ -54,11 +54,18 @@ export default function CompanyAutocomplete({className, onValueChange}: {
         getCompaniesDebounced(value)
     }
 
+    function handleOpenChange(isOpen: boolean) {
+        if (isOpen) {
+            setTimeout(() => ref.current?.focus(), 50); // needed due to a bug in NextUI
+        }
+    }
+
+
     return (
         <Autocomplete className={clsx(className)} classNames={{popoverContent: "border-2 border-borders"}}
                       onInputChange={handleInputChange} listboxProps={{emptyContent: ""}}
                       onSelectionChange={handleSelectionChange} label={"Select a company"} color={"primary"}
-                      disabledKeys={["loading"]} autoFocus>
+                      disabledKeys={["loading"]} autoFocus ref={ref} onOpenChange={handleOpenChange}>
             {!loading ? companies.map(company => {
                         const text = company.isNew ? `Create company "${company.name}"` : company.name
                         return <AutocompleteItem key={company.isNew ? -1 : company.id}

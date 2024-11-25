@@ -45,7 +45,7 @@ export default function RAWGModal({className, onSubmit}: {
 
     return (
         <>
-            <Button onClick={onOpen}>Choose existing game</Button>
+            <Button onClick={onOpen}>Choose from RAWG</Button>
             <Modal className={clsx(className)} isOpen={isOpen} onOpenChange={onOpenChange} placement="center">
                 <ModalContent>{
                     (onClose) => (

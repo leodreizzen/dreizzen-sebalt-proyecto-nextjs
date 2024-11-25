@@ -1,5 +1,5 @@
 import {Autocomplete, AutocompleteItem} from "@nextui-org/autocomplete";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useDebouncedCallback} from "use-debounce";
 import clsx from "clsx";
 import {ProductSaleWithProduct} from "@/lib/definitions";
@@ -14,6 +14,7 @@ export default function SaleAutocomplete({className, onValueChange}: {
     const [loading, setLoading] = useState(true)
     const [sales, setSales] = useState<ProductSaleWithProduct[]>([])
     const getProductsDebounced = useDebouncedCallback(getSales, 500)
+    const ref= useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
         getProductsDebounced("")
@@ -46,9 +47,16 @@ export default function SaleAutocomplete({className, onValueChange}: {
         getProductsDebounced(value)
     }
 
+    function handleOpenChange(isOpen: boolean) {
+        if (isOpen) {
+            setTimeout(() => ref.current?.focus(), 50); // needed due to a bug in NextUI
+        }
+    }
+
+
     return (
         <Autocomplete className={clsx(className)} classNames={{popoverContent: "border-2 border-borders"}} onInputChange={handleInputChange} listboxProps={{emptyContent: ""}}
-                      onSelectionChange={handleSelectionChange} label={"Select a product"} color={"primary"} disabledKeys={["loading"]} autoFocus>
+                      onSelectionChange={handleSelectionChange} label={"Select a product"} color={"primary"} disabledKeys={["loading"]} autoFocus ref={ref} onOpenChange={handleOpenChange}>
             { !loading? sales.map(sale =>
                     <AutocompleteItem key={sale.id} value={sale.product.name}>{`${sale.product.name} (${formatDiscountPercent(sale.product.originalPrice_cents, sale.product.currentPrice_cents)})`}</AutocompleteItem>
                 ):
