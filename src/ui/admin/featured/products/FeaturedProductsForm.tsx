@@ -5,13 +5,13 @@ import {ProductWithTagsAndCoverImage} from "@/lib/definitions";
 import React, {useEffect, useState} from "react";
 import AdminFeaturedProductCard from "@/ui/admin/featured/AdminFeaturedProductCard";
 import AddFeaturedProductModal from "@/ui/admin/featured/products/AddFeaturedProductModal";
-import {saveFeaturedProducts} from "@/lib/actions";
 import {AwesomeButtonProgress} from "@leodreizzen/react-awesome-button";
 import '@leodreizzen/react-awesome-button/dist/styles.css';
 import AwesomeButtonStyles from '../buttonProgress.module.scss';
 import {useToast} from "@/ui/shadcn/use-toast";
 import SortableList from "@/ui/admin/featured/SortableList";
 import {itemsDifferCheckOrder} from "@/ui/admin/featured/utils";
+import {saveFeaturedProducts} from "@/lib/actions/featured";
 
 export default function FeaturedProductsForm({className, featuredProducts: savedFeaturedProducts}: {
     featuredProducts: ProductWithTagsAndCoverImage[],

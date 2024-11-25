@@ -3,8 +3,8 @@ import {Button} from "@nextui-org/button";
 import {FaStar} from "react-icons/fa";
 import React from "react";
 import {useToast} from "@/ui/shadcn/use-toast";
-import {setTagDropdown} from "@/lib/actions";
 import {Tooltip} from "@nextui-org/tooltip";
+import {setTagDropdown} from "@/lib/actions/tags";
 
 export default function PutInDropdownButton({tagId}: { tagId: number }) {
 

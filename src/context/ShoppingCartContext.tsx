@@ -1,8 +1,8 @@
 "use client"
 import {ShoppingCart} from "@/lib/definitions";
 import {createContext, ReactNode, useContext, useEffect, useState} from "react"
-import {addToCart, removeFromCart} from "@/lib/actions";
 import {CartApiResponse} from "@/app/api/internal/cart/types";
+import {addToCart, removeFromCart} from "@/lib/actions/cart";
 
 
 export const ShoppingCardContext = createContext<ShoppingCartContextValue | null>(null)

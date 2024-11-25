@@ -4,8 +4,9 @@ import { useDisclosure } from "@nextui-org/modal";
 import {FaTrash} from "react-icons/fa";
 import React from "react";
 import {Button} from "@nextui-org/button";
-import {deleteProduct} from "@/lib/actions";
 import {useToast} from "@/ui/shadcn/use-toast";
+
+import {deleteProduct} from "@/lib/actions/products/delete-product";
 
 
 export default function DeleteButton({ productId }: { productId: number}) {

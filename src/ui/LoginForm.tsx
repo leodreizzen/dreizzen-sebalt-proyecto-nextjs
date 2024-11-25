@@ -1,11 +1,11 @@
 "use client"
 import {useFormState} from "react-dom";
-import {authenticate} from "@/lib/actions";
 import {MdAlternateEmail} from "react-icons/md";
 import {PiKey} from "react-icons/pi";
 import {Button} from "@nextui-org/button";
 import VaporLogo from "@/ui/icons/VaporLogo";
 import React from "react";
+import {authenticate} from "@/lib/actions/auth";
 
 export default function LoginForm() {
     const [errorMessage, login] = useFormState(authenticate, undefined)

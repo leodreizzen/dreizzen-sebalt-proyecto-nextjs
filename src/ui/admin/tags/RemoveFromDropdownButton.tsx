@@ -2,9 +2,9 @@ import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure}
 import {Button} from "@nextui-org/button";
 import React from "react";
 import {FaRegStar} from "react-icons/fa6";
-import {setTagDropdown} from "@/lib/actions";
 import {useToast} from "@/ui/shadcn/use-toast";
 import {Tooltip} from "@nextui-org/tooltip";
+import {setTagDropdown} from "@/lib/actions/tags";
 
 export default function RemoveFromDropdownButton({tagId}: { tagId: number }) {
     const {toast} = useToast();

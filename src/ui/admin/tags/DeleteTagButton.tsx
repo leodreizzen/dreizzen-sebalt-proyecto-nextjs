@@ -3,8 +3,8 @@ import {Button} from "@nextui-org/button";
 import {FaTrash} from "react-icons/fa";
 import React from "react";
 import {useToast} from "@/ui/shadcn/use-toast";
-import {deleteTag, setTagDropdown} from "@/lib/actions";
 import {Tooltip} from "@nextui-org/tooltip";
+import {deleteTag, setTagDropdown} from "@/lib/actions/tags";
 
 export default function DeleteTagButton({tagId}: { tagId: number }) {
 

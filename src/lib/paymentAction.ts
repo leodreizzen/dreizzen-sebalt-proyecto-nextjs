@@ -16,12 +16,12 @@ import {ProductWithCoverImage, PurchaseError, PurchaseResult, PurchaseWithInvoic
 import {PaymentResponse} from "mercadopago/dist/clients/payment/commonTypes";
 import {Payment, PaymentRefund} from "mercadopago";
 import {v4 as uuidv4} from "uuid";
-import {clearCart} from "@/lib/actions";
 import prisma from "@/lib/prisma";
 import PurchaseEmail, {EmailProduct} from '@/../emails/PurchaseEmail'
 import {randomUUID} from "node:crypto";
 
 import { Resend } from 'resend';
+import {clearCart} from "@/lib/actions/cart";
 if (!process.env.RESEND_API_KEY)
     throw new Error("RESEND_API_KEY not set")
 const resend = new Resend(process.env.RESEND_API_KEY);

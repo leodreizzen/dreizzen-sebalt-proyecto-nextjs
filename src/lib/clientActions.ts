@@ -1,22 +1,20 @@
 import {Tag} from "@prisma/client";
 
 import {ArrayElement} from "@/lib/definitions";
-import {
-    addProduct,
-    authorizeFeaturedTagImageUpload,
-    authorizeProductImageUpload,
-    authorizeProductVideoUpload,
-    editProduct,
-    ProductImageToSave,
-    ProductToAddServer,
-    ProductVideoToSave,
-    saveFeaturedTags,
-    SaveFeaturedTagsImage,
-    UploadData
-} from "@/lib/actions";
 import axios from "axios";
 import {ImageItem, NewImage, NewVideo, VideoItem} from "@/ui/admin/products/add/AddProductForm";
 import {uploadVideo} from "@/lib/videoUpload";
+import {
+    authorizeFeaturedTagImageUpload,
+    authorizeProductImageUpload,
+    authorizeProductVideoUpload, UploadData
+} from "@/lib/actions/uploads";
+import {saveFeaturedTags, SaveFeaturedTagsImage} from "@/lib/actions/featured";
+import {
+    addProduct
+} from "@/lib/actions/products/add-product";
+import {ProductImageToSave, ProductToAddServer, ProductVideoToSave} from "@/lib/actions/products/models";
+import {editProduct} from "@/lib/actions/products/edit-product";
 
 type FeaturedUploadImageResult = {
     success: true

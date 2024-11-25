@@ -4,7 +4,6 @@ import clsx from "clsx";
 import {ProductSaleWithProduct} from "@/lib/definitions";
 import React, {useEffect, useState} from "react";
 import AdminFeaturedProductCard from "@/ui/admin/featured/AdminFeaturedProductCard";
-import {saveFeaturedSales} from "@/lib/actions";
 import {AwesomeButtonProgress} from "@leodreizzen/react-awesome-button";
 import '@leodreizzen/react-awesome-button/dist/styles.css';
 import AwesomeButtonStyles from '../buttonProgress.module.scss';
@@ -13,6 +12,7 @@ import {itemsDifferIgnoreOrder} from "@/ui/admin/featured/utils";
 import {IoMdAddCircle} from "react-icons/io";
 import AddFeaturedSaleModal from "@/ui/admin/featured/sales/AddFeaturedSaleModal";
 import {MAX_FEATURED_SALES} from "@/lib/config";
+import {saveFeaturedSales} from "@/lib/actions/featured";
 
 export default function FeaturedSalesForm({className, featuredSales: savedFeaturedSales}: {
     featuredSales: ProductSaleWithProduct[],
