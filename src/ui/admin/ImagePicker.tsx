@@ -2,6 +2,7 @@ import FileDropzone from "@/ui/FileDropzone";
 import ImageCropper from "@/ui/ImageCropper";
 import React from "react";
 import clsx from "clsx";
+import {allowedImages} from "@/lib/filetypes";
 
 export function ImagePicker({className, file, onFileChange, alt, onAltChange, url}: {
     className?: string,
@@ -12,8 +13,8 @@ export function ImagePicker({className, file, onFileChange, alt, onAltChange, ur
     onAltChange: (alt: string) => void,
 }) {
 
-    function handleFileChange(file: File[]) {
-        onFileChange(file[0]);
+    function handleFileChange(file: File) {
+        onFileChange(file);
     }
 
     function handleCrop(blob: Blob) {
@@ -23,7 +24,7 @@ export function ImagePicker({className, file, onFileChange, alt, onAltChange, ur
 
     return <div className={clsx(className,"flex flex-col items-center gap-2")}>
         <div className="flex items-center justify-center w-full border-1 border-borders m-2">
-            {!file && <FileDropzone drop={handleFileChange}/>}
+            {!file && <FileDropzone drop={handleFileChange} accept={allowedImages}/>}
             {file && url && <ImageCropper className="max-h-96" src={url} onCrop={handleCrop}/>}
 
         </div>

@@ -1,6 +1,6 @@
 
 import React, {useMemo} from 'react'
-import {useDropzone} from 'react-dropzone'
+import {Accept, useDropzone} from 'react-dropzone'
 
 
 const baseStyle = {
@@ -30,10 +30,18 @@ const rejectStyle = {
     borderColor: '#ff1744'
 };
 
-export default function FileDropzone({drop}: {drop: (files: File[]) => void}) {
+export default function FileDropzone({drop, accept}: {drop: (files: File) => void, accept: Accept}) {
+    const allowedExtensions = Object.values(accept).flat();
 
 
-    const {getRootProps, getInputProps, isFocused, isDragAccept, isDragReject, isDragActive} = useDropzone({onDrop: files => drop(files)})
+    function onDrop(files: File[]) {
+        const allowedFiles = files.filter(file => allowedExtensions.includes("." + file.name.split('.').pop()!))
+        console.log(files.map(file=>"." + file.name.split('.').pop()!))
+        if(allowedFiles.length > 0)
+            drop(allowedFiles[0])
+    }
+
+    const {getRootProps, getInputProps, isFocused, isDragAccept, isDragReject, isDragActive} = useDropzone({onDropAccepted: files => onDrop(files), accept: accept})
 
     const style = useMemo(() => ({
         ...baseStyle,

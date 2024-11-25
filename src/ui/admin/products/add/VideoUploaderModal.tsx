@@ -6,6 +6,7 @@ import FileDropzone from "@/ui/FileDropzone";
 import {Radio, RadioGroup} from "@nextui-org/radio";
 import {generateVideoThumbnails} from "@rajesh896/video-thumbnails-generator";
 import {NewVideo} from "@/ui/admin/products/add/AddProductForm";
+import {allowedVideos} from "@/lib/filetypes";
 
 function VideoUploaderModalContent({onClose, onSubmit}: {
     onClose: () => void,
@@ -49,9 +50,9 @@ function VideoUploaderModalContent({onClose, onSubmit}: {
         }
     }
 
-    function handleFileChange(file: File[]) {
-        setVideoUrl(URL.createObjectURL(file[0]));
-        setVideoFile(file[0]);
+    function handleFileChange(file: File) {
+        setVideoUrl(URL.createObjectURL(file));
+        setVideoFile(file);
     }
 
     function onAltChange(alt: string) {
@@ -89,7 +90,7 @@ function VideoUploaderModalContent({onClose, onSubmit}: {
                     </RadioGroup>}
                 <div className={"flex flex-col items-center gap-2"}>
                     <div className="flex items-center justify-center w-full border-1 border-borders m-2">
-                        {radioValue === "file" && !videoUrl && <FileDropzone drop={handleFileChange}/>}
+                        {radioValue === "file" && !videoUrl && <FileDropzone drop={handleFileChange} accept={allowedVideos}/>}
                         {radioValue === "youtube" && <input type={"text"} placeholder={"Youtube URL"}
                                                             onChange={e => setVideoUrl(e.target.value)}
                                                             className={"border-1 border-borders rounded-2xl p-2 text-black"}/>}

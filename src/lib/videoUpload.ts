@@ -26,6 +26,7 @@ export async function uploadVideo(videoFile: File, thumbnail: ProductImageToSave
         formData.append("public_id", uploadData.id)
         formData.append("timestamp", uploadData.timestamp.toString())
         formData.append("signature", uploadData.signature)
+        formData.append("allowed_format", uploadData.allowed_formats)
         formData.append("folder", uploadData.folder)
         const contentRange = `bytes ${start}-${end - 1}/${videoFile.size}`;
 

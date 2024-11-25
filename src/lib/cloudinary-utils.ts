@@ -13,8 +13,9 @@ if (!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME) {
 const cloudinaryCloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
 
 
-export function signUploadRequest(timestamp: number, folder: string, id: `${string}-${string}-${string}-${string}-${string}`) {
+export function signUploadRequest(timestamp: number, folder: string, id: `${string}-${string}-${string}-${string}-${string}`, allowedFormats: string): string {
     const signature = cloudinaryV2.utils.api_sign_request({
+        allowed_formats: allowedFormats,
         timestamp: timestamp,
         folder: folder,
         public_id: id

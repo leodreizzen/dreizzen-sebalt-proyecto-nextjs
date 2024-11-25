@@ -15,6 +15,7 @@ import {
 } from "@/lib/actions/products/add-product";
 import {ProductImageToSave, ProductToAddServer, ProductVideoToSave} from "@/lib/actions/products/models";
 import {editProduct} from "@/lib/actions/products/edit-product";
+import {allowedImages} from "@/lib/filetypes";
 
 type FeaturedUploadImageResult = {
     success: true
@@ -115,6 +116,7 @@ async function uploadImage(image: File, alt: string, uploadData: UploadData): Pr
     }
 } | { success: false })> {
     const data = new FormData()
+    data.append("allowed_formats", uploadData.allowed_formats)
     data.append("api_key", cloudinaryApiKey)
     data.append("public_id", uploadData.id)
     data.append("timestamp", uploadData.timestamp.toString())
