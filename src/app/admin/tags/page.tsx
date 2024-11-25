@@ -10,8 +10,10 @@ export const metadata: Metadata = {
 
 export default async function AdminPurchasesPage({searchParams}: {searchParams: { page?: string, q?: string }}){
     const currentPage = searchParams.page ? parseInt(searchParams.page) : 1
-    const tags = await fetchTagsAdmin(currentPage)
-    const totalPages = await fetchTagsAdminPages();
+    const tagsPromise = fetchTagsAdmin(currentPage)
+    const totalPagesPromise = fetchTagsAdminPages();
+
+    const [tags, totalPages] = await Promise.all([tagsPromise, totalPagesPromise]);
 
     return (
         <div>

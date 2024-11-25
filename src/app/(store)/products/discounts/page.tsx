@@ -14,13 +14,13 @@ export const metadata: Metadata = {
 }
 
 export default async function Page({ searchParams }: { searchParams: { q?: string; page?: string, filter?: string, priceRange?: string } }) {
-    const featuredSales = await fetchFeaturedSales();
     const currentPage = Number(searchParams?.page) || 1;
     const query = searchParams?.q || "";
     const filter = searchParams?.filter || "";
 
-    const allTags = await fetchAllTags();
-
+    const featuredSalesPromise = fetchFeaturedSales();
+    const allTagsPromise = fetchAllTags();
+    const [featuredSales, allTags] = await Promise.all([featuredSalesPromise, allTagsPromise]);
     let filterArray = filter.split(",").map((tag) => parseInt(tag));
     if (filter === "") filterArray = [];
     const filteredArray = filterArray.filter((tag) => allTags.map(genre => genre.id).includes(tag));
@@ -39,16 +39,14 @@ export default async function Page({ searchParams }: { searchParams: { q?: strin
         priceRangeArray = [minPrice, maxPrice];
     }
 
-    const totalPages = await fetchSearchPages(query, filterArray, priceRangeArray, true);
-    let hidden = false;
-
-    if (totalPages === 0) hidden = true;
-
-    const tags = await fetchTags(query, filterArray, priceRangeArray, true);
+    const totalPagesPromise = fetchSearchPages(query, filterArray, priceRangeArray, true);
+    const tagsPromise = fetchTags(query, filterArray, priceRangeArray, true);
+    const productsPromise = fetchSearch(query, currentPage, filterArray, priceRangeArray, true);
+    const [totalPages, tags, products] = await Promise.all([totalPagesPromise, tagsPromise, productsPromise]);
 
     const selectedTags = allTags.filter((tag) => filterArray.includes(tag.id));
-    
-    const products = await fetchSearch(query, currentPage, filterArray, priceRangeArray, true);
+
+    const hidden = totalPages === 0;
 
     return (
         <div className="items-center justify-center px-1">

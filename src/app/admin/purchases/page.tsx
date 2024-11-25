@@ -9,8 +9,10 @@ export const metadata = {
 
 export default async function AdminPurchasesPage({searchParams}: {searchParams: { page?: string, q?: string }}){
     const currentPage = searchParams.page ? parseInt(searchParams.page) : 1
-    const purchases = await fetchPurchases(currentPage)
-    const totalPages = await fetchPurchasesPages();
+    const purchasesPromise = fetchPurchases(currentPage);
+    const totalPagesPromise = fetchPurchasesPages();
+
+    const [purchases, totalPages] = await Promise.all([purchasesPromise, totalPagesPromise]);
     return (
         <div>
             <div className={"justify-center items-center flex flex-col"}>

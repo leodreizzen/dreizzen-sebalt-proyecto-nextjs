@@ -12,13 +12,12 @@ export default async function Page({ searchParams }: { searchParams: { page?: st
 
     const currentPage = searchParams.page ? Number(searchParams.page) : 1;
 
+    const totalPagesPromise = fetchMostSoldPages();
+    const productsPromise = fetchMostSold(currentPage);
+    const [totalPages, products] = await Promise.all([totalPagesPromise, productsPromise]);
 
-    const totalPages = await fetchMostSoldPages();
     let hidden = false;
-
     if (totalPages === 0) hidden = true;
-
-    const products = await fetchMostSold(currentPage);
 
     return (
         <div className="items-center justify-center px-1">

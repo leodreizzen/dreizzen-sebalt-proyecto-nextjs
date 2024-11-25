@@ -6,9 +6,11 @@ import Link from "next/link";
 import {fetchFeaturedProducts, fetchFeaturedTags, fetchMostSold} from "@/lib/data";
 
 export default async function Home() {
-    const topSellers = await fetchMostSold(1);
-    const featuredProducts = await fetchFeaturedProducts();
-    const featuredTags = await fetchFeaturedTags();
+    const topSellersPromise = fetchMostSold(1);
+    const featuredProductsPromise = fetchFeaturedProducts();
+    const featuredTagsPromise = fetchFeaturedTags();
+
+    const [topSellers, featuredProducts, featuredTags] = await Promise.all([topSellersPromise, featuredProductsPromise, featuredTagsPromise]);
 
     return (
         <main className="w-full flex flex-col items-center pt-4">

@@ -28,9 +28,10 @@ export default async function AdminProductsPage({searchParams}: { searchParams: 
     const currentPage = searchParams.page ? parseInt(searchParams.page) : 1
     const query = searchParams.q || ""
 
-    const products = await fetchProducts(currentPage, query)
+    const productsPromise = fetchProducts(currentPage, query);
+    const totalPagesPromise = fetchProductPages(query);
 
-    const totalPages = await fetchProductPages(query);
+    const [products, totalPages] = await Promise.all([productsPromise, totalPagesPromise]);
 
     let hidden = false;
 

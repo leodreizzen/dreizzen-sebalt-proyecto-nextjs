@@ -34,10 +34,10 @@ export default async function Page({ params: { tagId }, searchParams }: { params
 
     if (totalPages === 0) hidden = true;
 
-    const products = await fetchByGenre(Number(tagId), currentPage);
+    const productsPromise = fetchByGenre(Number(tagId), currentPage);
+    const tagPromise = fetchTagName(Number(tagId));
 
-
-    const tag = await fetchTagName(Number(tagId));
+    const [products, tag] = await Promise.all([productsPromise, tagPromise]);
 
     return (
         <div className="items-center justify-center px-1">

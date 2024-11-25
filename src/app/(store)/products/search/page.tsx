@@ -58,16 +58,17 @@ export default async function Page({ searchParams }: { searchParams: { q?: strin
     }
 
 
-    const totalPages = await fetchSearchPages(query, filterArray, priceRangeArray, saleBoolean);
-    let hidden = false;
+    const totalPagesPromise = fetchSearchPages(query, filterArray, priceRangeArray, saleBoolean);
+    const tagsPromise = fetchTags(query, filterArray, priceRangeArray, saleBoolean);
+    const productsPromise = fetchSearch(query, currentPage, filterArray, priceRangeArray, saleBoolean);
 
-    if (totalPages === 0) hidden = true;
-
-    const tags = await fetchTags(query, filterArray, priceRangeArray, saleBoolean);
+    const [totalPages, tags, products] = await Promise.all([totalPagesPromise, tagsPromise, productsPromise]);
 
     const selectedTags = allTags.filter((tag) => filterArray.includes(tag.id));
 
-    const products = await fetchSearch(query, currentPage, filterArray, priceRangeArray, saleBoolean);
+    let hidden = false;
+
+    if (totalPages === 0) hidden = true;
 
     return (
         <div className="flex flex-col items-center justify-center 2xl:w-3/4 mx-auto gap-6 mt-3 mb-3 p-0 border border-borders rounded-3xl">
