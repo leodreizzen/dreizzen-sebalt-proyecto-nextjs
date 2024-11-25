@@ -28,6 +28,14 @@ export async function deleteProduct(_formID: number) {
                 }
             })
             revalidatePath("/", "layout");
+
+            revalidatePath("/", "layout");
+            revalidatePath("/api/internal/admin/sales");
+            revalidatePath("/api/internal/admin/products");
+            revalidatePath("/api/public/products");
+            revalidatePath("/api/public/discounts");
+            revalidatePath("/api/public/topsellers");
+            
             return {success: true}
         } catch (e) {
             console.error(e)

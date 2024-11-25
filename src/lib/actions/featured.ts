@@ -126,6 +126,7 @@ export async function saveFeaturedSales(_formSales: ProductSale[]): Promise<Admi
                 , {isolationLevel: "Serializable"})
             if (res.success) {
                 revalidatePath("/admin/featured/sales");
+                revalidatePath("/api/public/discounts")
                 revalidatePath("/products/discounts");
             }
             return res;

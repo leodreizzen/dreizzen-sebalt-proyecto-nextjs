@@ -183,6 +183,16 @@ export async function addProduct(_formProduct: ProductToAddServer): Promise<Admi
                 })
             }
             revalidatePath("/", "layout");
+            if(newDevelopers.length > 0 || newPublishers.length > 0)
+                revalidatePath("/api/internal/admin/companies");
+            if(newTags.length > 0)
+                revalidatePath("/api/internal/admin/tags");
+
+            revalidatePath("/api/internal/admin/sales");
+            revalidatePath("/api/internal/admin/products");
+            revalidatePath("/api/public/products");
+            revalidatePath("/api/public/discounts");
+            revalidatePath("/api/public/topsellers");
             return {success: true}
         }, {isolationLevel: "Serializable", maxWait: 10000, timeout: 30000})
     } catch (e) {
