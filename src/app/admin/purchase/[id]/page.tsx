@@ -98,7 +98,7 @@ export default async function PurchasePage({params}: { params: { id: string } })
                     </div>
                     <div className="flex self-center @xs:self-end text-lg items-center mx-3">
                         {purchase.paymentId ? <span className="pl-2 pr-4">Payment ID: {purchase.paymentId}</span> :
-                            <span><FaExclamationTriangle/> This payment is pending approval</span>}
+                            <span className="flex items-center gap-x-2"><FaExclamationTriangle/> The payment is pending approval</span>}
                     </div>
                     </div>
                 </div>

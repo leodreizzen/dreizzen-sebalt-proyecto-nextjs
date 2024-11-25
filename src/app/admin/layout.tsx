@@ -35,8 +35,8 @@ export default function AdminLayout({children}: { children: React.ReactNode }) {
                 <div
                     className={clsx("flex-grow w-full bg-background overflow-auto", fullScreenNavbar && !collapsed && "hidden")}>
                     <Suspense fallback={<div/>}>
-                        <div className="flex flex-col h-full">
-                            <div className="px-6 h-full">
+                        <div className="flex flex-col min-h-full">
+                            <div className="px-6 h-full flex-grow">
                                 {children}
                             </div>
                             <Footer/>
