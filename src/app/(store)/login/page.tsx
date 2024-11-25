@@ -1,6 +1,7 @@
 import {auth, signOut} from "@/auth";
 import LoginForm from "@/ui/LoginForm";
 import {redirect} from "next/navigation";
+import {LogoutHelper} from "@/lib/logout-helper";
 
 export default async function LoginPage() {
     const session = await auth()
@@ -8,7 +9,7 @@ export default async function LoginPage() {
         if(session.user.isAdmin)
             redirect("/admin")
         else
-            await signOut()  // For now, non-admin users are not supported
+            return <LogoutHelper/>  // For now, non-admin users are not supported
     }
 
     return (

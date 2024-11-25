@@ -2,6 +2,6 @@
 import {signOut} from "@/auth";
 
 
-export async function manageLogout() {
-    await signOut();
+export async function manageLogout(redirect: boolean = true) {
+    await signOut({redirect: redirect});
 }

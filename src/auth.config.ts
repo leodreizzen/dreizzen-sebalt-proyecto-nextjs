@@ -22,15 +22,15 @@ export const authConfig = {
             return token
         },
         redirect({url, baseUrl}) {
+            // Allows relative callback URLs
+            if (url.startsWith("/")) return `${baseUrl}${url}`
+
             const urlObject = new URL(url)
             const callbackUrl = urlObject.searchParams.get('callbackUrl')
             if (callbackUrl) {
                 url = callbackUrl
             }
 
-            // default behavior
-            // Allows relative callback URLs
-            if (url.startsWith("/")) return `${baseUrl}${url}`
             // Allows callback URLs on the same origin
             else if (new URL(url).origin === baseUrl) return url
             return baseUrl
