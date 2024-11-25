@@ -1,14 +1,17 @@
 import {fetchTagsAdminPages, fetchTagsAdmin} from "@/lib/data";
 import Pagination from "@/ui/pagination/pagination";
 import TagTable from "@/ui/admin/tags/TagTable";
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+    title: "Tags",
+    description: "Manage tags",
+}
+
 export default async function AdminPurchasesPage({searchParams}: {searchParams: { page?: string, q?: string }}){
     const currentPage = searchParams.page ? parseInt(searchParams.page) : 1
     const tags = await fetchTagsAdmin(currentPage)
     const totalPages = await fetchTagsAdminPages();
-
-    function onDelete(id: number){
-        console.log("Delete tag with id: ", id)
-    }
 
     return (
         <div>

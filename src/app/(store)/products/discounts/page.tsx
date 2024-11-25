@@ -6,7 +6,12 @@ import SearchBoxFilters from "@/ui/search/SearchBoxFilters";
 import SearchBoxList from "@/ui/search/SearchBoxList";
 import { redirect } from "next/navigation";
 import { fetchSearch } from "@/lib/data";
+import {Metadata} from "next";
 
+export const metadata: Metadata = {
+    title: "Sales",
+    description: "Find our featured sales"
+}
 
 export default async function Page({ searchParams }: { searchParams: { q?: string; page?: string, filter?: string, priceRange?: string } }) {
     const featuredSales = await fetchFeaturedSales();

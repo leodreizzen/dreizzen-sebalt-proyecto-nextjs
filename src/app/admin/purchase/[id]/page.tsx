@@ -6,7 +6,24 @@ import MarqueeOnOverflow from "@/ui/MarqueeOnOverflow";
 import {Link as NextUILink} from "@nextui-org/link";
 import {formatPrice} from "@/util/formatUtils";
 import {FaExclamationTriangle} from "react-icons/fa";
+import {Metadata} from "next";
 
+type Props = {
+    params: Promise<{ id: string }>
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+
+export async function generateMetadata({params}: Props): Promise<Metadata> {
+    const id = (await params).id;
+    if (!id || !parseInt(id))
+        notFound();
+    return {
+        title: `Purchase #${id}`,
+        description: `View purchase details for purchase #${id}`
+    }
+
+}
 
 export default async function PurchasePage({params}: { params: { id: string } }) {
     const {id: strId} = params;

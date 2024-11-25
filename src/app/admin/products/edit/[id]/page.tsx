@@ -1,6 +1,31 @@
 import AdminProductForm, {InitialDataType} from "@/ui/admin/products/add/AddProductForm";
-import {fetchProduct} from "@/lib/data";
+import {fetchProduct, fetchProductCached} from "@/lib/data";
 import {notFound} from "next/navigation";
+import {Metadata} from "next";
+
+type Props = {
+    params: Promise<{ id: string }>
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export async function generateMetadata({params}: Props): Promise<Metadata> {
+    const id = (await params).id;
+    const product = await fetchProductCached(parseInt(id));
+    if (!product)
+        notFound();
+    return {
+        title: `Edit "${product.name}"`,
+        description: `Edit product "${product.name}"`,
+        openGraph: {
+            images: [
+                {
+                    url: product.coverImage.url,
+                    alt: product.coverImage.alt
+                }
+            ]
+        }
+    }
+}
 
 
 export default async function EditProductPage({params} : {params: {id: string}}){

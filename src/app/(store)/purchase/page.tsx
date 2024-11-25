@@ -1,5 +1,11 @@
 import {fetchCartProducts} from "@/lib/data";
 import PurchaseForm from "@/ui/purchase/PurchaseForm";
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+    title: "Purchase",
+    description: "Finish your purchase"
+}
 
 export default async function Page() {
     const cartItems = await fetchCartProducts()

@@ -4,8 +4,27 @@ import SearchBoxBar from "@/ui/search/SearchBoxBar";
 import Pagination from "@/ui/pagination/pagination";
 import {Button} from "@nextui-org/button";
 import Link from "next/link";
+import {Metadata} from "next";
 
-export default async function AdminProductsPage({ searchParams }: { searchParams: { page?: string, q?: string } }){
+type Props = {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+
+export async function generateMetadata({searchParams}: Props): Promise<Metadata> {
+    const q = (await searchParams).q
+    if (q && q.length > 0)
+        return {
+            title: "Products",
+            description: `Manage products - search by "${q}"`,
+        }
+    return {
+        title: "Products",
+        description: "Manage products",
+    }
+}
+
+export default async function AdminProductsPage({searchParams}: { searchParams: { page?: string, q?: string } }) {
     const currentPage = searchParams.page ? parseInt(searchParams.page) : 1
     const query = searchParams.q || ""
 

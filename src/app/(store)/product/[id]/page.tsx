@@ -1,4 +1,4 @@
-import {fetchProduct} from "@/lib/data";
+import {fetchProduct, fetchProductCached} from "@/lib/data";
 import AddToCartButton from "@/ui/AddToCartButton";
 import FadeOnOverflowY from "@/ui/FadeOnOverflowY";
 import MarqueeOnOverflow from "@/ui/MarqueeOnOverflow";
@@ -12,6 +12,33 @@ import {Company} from "@prisma/client";
 import pluralize from "pluralize"
 import {GoDotFill} from "react-icons/go";
 import Link from "next/link";
+
+import type {Metadata} from 'next'
+
+type Props = {
+    params: Promise<{ id: string }>
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export async function generateMetadata({params}: Props): Promise<Metadata> {
+    const id = (await params).id;
+    const product = await fetchProductCached(parseInt(id));
+    if (!product)
+        notFound();
+    return {
+        title: product.name,
+        description: `Buy ${product.name} on Vapor`,
+
+        openGraph: {
+            images: [
+                {
+                    url: product.coverImage.url,
+                    alt: product.coverImage.alt
+                }
+            ]
+        }
+    }
+}
 
 export default async function ProductInfoPage({params}: { params: { id: string } }) {
     const {id: strId} = params;

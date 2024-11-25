@@ -16,6 +16,7 @@ import {
 } from "./definitions";
 import {getCart} from "@/lib/session-data";
 import {Tag} from "@prisma/client";
+import {cache} from "react";
 
 const TOTAL_ITEMS_PER_PAGE = 6;
 const PURCHASE_ITEMS_PER_PAGE = 8;
@@ -534,3 +535,5 @@ export async function fetchTagsAdminPages() {
     const data = await prisma.tag.count()
     return Math.ceil(data / TOTAL_ITEMS_PER_PAGE)
 }
+
+export const fetchProductCached = cache(fetchProduct);

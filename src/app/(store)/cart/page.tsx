@@ -9,6 +9,13 @@ import {fetchCartProducts} from "@/lib/data";
 import {ProductWithCoverImage} from "@/lib/definitions";
 import RemoveFromCartPageButton from "@/ui/video/RemoveFromCartPageButton";
 import {Link as NextUILink} from "@nextui-org/link";
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+    title: "Cart",
+    description: "Your shopping cart"
+}
+
 export default async function CartPage({}) {
     const products = await fetchCartProducts()
     return (
@@ -18,8 +25,6 @@ export default async function CartPage({}) {
                 <CartWithItemsPage products={products} className="w-full sm:w-10/12 gap-4 mb-4 sm:px-4"/>
                 : <EmptyCartPage className="w-full sm:w-10/12 gap-4 mb-4 sm:px-4"/>
             }
-
-
         </main>
     )
 }

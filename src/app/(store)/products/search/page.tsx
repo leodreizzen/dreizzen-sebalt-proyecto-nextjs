@@ -2,8 +2,27 @@ import SearchBoxBar from "@/ui/search/SearchBoxBar";
 import SearchBoxFilters from "@/ui/search/SearchBoxFilters";
 import SearchBoxList from "@/ui/search/SearchBoxList";
 import Pagination from "@/ui/pagination/pagination";
-import { redirect } from "next/navigation";
+import {notFound, redirect} from "next/navigation";
 import { fetchSearch, fetchAllTags, fetchSearchPages, fetchTags } from "@/lib/data";
+import type {Metadata} from "next";
+type Props = {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export async function generateMetadata({searchParams}: Props): Promise<Metadata> {
+   const q = (await searchParams).q;
+   if(q && q.length > 0) {
+         return {
+              title: `Search "${q}"`,
+              description: `Search products for "${q}"`
+         }
+   }
+   else
+        return {
+            title: `Search`,
+            description: `Search products`
+        }
+}
 
  
 export default async function Page({ searchParams }: { searchParams: { q?: string; page?: string, filter?: string, priceRange?: string, onSale?: string } }) {

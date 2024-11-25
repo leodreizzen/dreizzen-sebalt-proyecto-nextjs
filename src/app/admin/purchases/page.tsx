@@ -1,6 +1,12 @@
 import {fetchPurchases, fetchPurchasesPages} from "@/lib/data";
 import Pagination from "@/ui/pagination/pagination";
 import PurchaseTable from "@/ui/admin/purchases/PurchaseTable";
+
+export const metadata = {
+    title: "Purchases",
+    description: "View purchases",
+}
+
 export default async function AdminPurchasesPage({searchParams}: {searchParams: { page?: string, q?: string }}){
     const currentPage = searchParams.page ? parseInt(searchParams.page) : 1
     const purchases = await fetchPurchases(currentPage)

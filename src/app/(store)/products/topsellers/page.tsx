@@ -1,6 +1,12 @@
 import { fetchMostSold, fetchMostSoldPages } from "@/lib/data";
 import FeaturedBoxList from "@/ui/featuredlist/FeaturedBoxList";
 import Pagination from "@/ui/pagination/pagination";
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+    title: "Top sellers",
+    description: "Find the most sold products"
+}
 
 export default async function Page({ searchParams }: { searchParams: { page?: string } }) {
 

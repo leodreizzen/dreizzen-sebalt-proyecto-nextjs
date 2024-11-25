@@ -1,6 +1,28 @@
 import { fetchByGenre, fetchGenrePages, fetchTagName } from "@/lib/data";
 import FeaturedBoxList from "@/ui/featuredlist/FeaturedBoxList";
 import Pagination from "@/ui/pagination/pagination";
+import type {Metadata} from "next";
+import {notFound} from "next/navigation";
+import {cache} from "react";
+import capitalize from "capitalize";
+
+type Props = {
+    params: Promise<{ tagId: string }>
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+const fetchTagNameCached = cache(fetchTagName);
+
+export async function generateMetadata({params}: Props): Promise<Metadata> {
+    const tagId = (await params).tagId;
+    const tag = await fetchTagNameCached(parseInt(tagId));
+    if (!tag)
+        notFound();
+    return {
+        title: capitalize.words(tag.name),
+        description: `Find products for tag "${capitalize.words(tag.name)}"`,
+    }
+}
 
 export default async function Page({ params: { tagId }, searchParams }: { params: { tagId: string }, searchParams: { page?: string } }) {
 

@@ -1,5 +1,11 @@
 import {fetchFeaturedSales} from "@/lib/data";
 import FeaturedSalesForm from "@/ui/admin/featured/sales/FeaturedSalesForm";
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+    title: "Featured sales",
+    description: "Manage featured sales"
+}
 
 export default async function AdminFeaturedSalesPage() {
     const featuredSales = await fetchFeaturedSales()
