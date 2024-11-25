@@ -26,7 +26,6 @@ export default function useHTMLTextEditor(initialHtml?: string) {
     }, [editor, initialHtml]);
 
     const parseHtml = useCallback(async (html: string) => {
-        console.log(editor, html)
         if (!editor)
             return null
         else {

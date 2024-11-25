@@ -53,7 +53,6 @@ export async function uploadVideo(videoFile: File, thumbnail: ProductImageToSave
                 return await uploadChunk(nextStart, nextEnd);
             } else {
                 const fetchResponse = await response.json();
-                console.log(fetchResponse)
                 return fetchResponse;
             }
     };

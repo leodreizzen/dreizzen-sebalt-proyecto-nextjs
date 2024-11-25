@@ -251,7 +251,6 @@ export async function saveFeaturedTags(_formTags: SaveFeaturedTagsParam): Promis
 
             for (let i = 0; i < tagsData.length; i++) {
                 const t = tagsData[i];
-                console.log(i)
                 await tx.featuredTag.create({
                     data: {
                         tag: {
