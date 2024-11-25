@@ -1,4 +1,5 @@
 import {z} from "zod";
+import DOMPurify from "isomorphic-dompurify";
 
 export const ProductImageToSaveModel = z.union([
     z.object({
@@ -54,7 +55,7 @@ export const TagModel = z.union([
 ])
 export const ProductToAddModel = z.object({
     name: z.string().min(1),
-    description: z.string().min(1),
+    description: z.string().min(1).transform(description => DOMPurify.sanitize(description)),
     current_price_cents: z.number().int().positive(),
     original_price_cents: z.number().int().positive(),
     shortDescription: z.string().optional(),
