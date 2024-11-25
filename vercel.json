@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/internal/refresh-kv",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}
