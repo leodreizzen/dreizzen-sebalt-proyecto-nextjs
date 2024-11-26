@@ -12,6 +12,8 @@ import {
     Tag,
     Video
 } from "@prisma/client";
+import prisma from "@/lib/prisma";
+import {ITXClientDenyList} from "@prisma/client/runtime/library";
 
 export function removeReadOnlyForNumArray(arr: readonly number[]): number[] {
     return arr as number[]
@@ -119,3 +121,5 @@ export type PurchaseResult = {
     error: PurchaseError
 }
 export type AdminOperationResult = { success: true } | { success: false, error: string }
+
+export type TransactionPrismaClient = Omit<typeof prisma, ITXClientDenyList>
