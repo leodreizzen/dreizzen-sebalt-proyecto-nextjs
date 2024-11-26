@@ -3,8 +3,16 @@ import {ProductToEditModel, ProductToEditServer} from "@/lib/actions/products/mo
 import {AdminOperationResult, ArrayElement} from "@/lib/definitions";
 import {auth} from "@/auth";
 import prisma from "@/lib/prisma";
-import {getProductImageUrl, mapVideoSource} from "@/lib/actions/products/utils";
+import {
+    asyncSome,
+    getProductImageUrl,
+    imageExists,
+    mapVideoSource,
+    urlExists,
+    videoExists
+} from "@/lib/actions/products/utils";
 import {revalidatePath} from "next/cache";
+import {PRODUCT_IMAGE_FOLDER, PRODUCT_VIDEO_FOLDER} from "@/lib/config";
 
 export async function editProduct(_formProduct: ProductToEditServer): Promise<AdminOperationResult> {
     const isAuthorized = (await auth())?.user?.isAdmin;
@@ -46,6 +54,10 @@ export async function editProduct(_formProduct: ProductToEditServer): Promise<Ad
         isNew: true
     }) []
 
+    const existingTags = productData.tags.filter(t => !t.isNew) as (ArrayElement<typeof productData.tags> & {
+        isNew: false
+    })[]
+
     const newImages = productData.images.filter(i => i.isNew) as (ArrayElement<typeof productData.images> & {
         isNew: true
     })[]
@@ -62,13 +74,51 @@ export async function editProduct(_formProduct: ProductToEditServer): Promise<Ad
         isNew: false
     })[]
 
+    const newFileImages = newImages.filter(i => i.type == "file") as (ArrayElement<typeof newImages> & {
+        type: "file"
+    })[]
+
+    const newUrlImages = newImages.filter(i => i.type == "url") as (ArrayElement<typeof newImages> & {
+        type: "url"
+    })[]
+
+
+    if (await asyncSome(newFileImages, async i => !await imageExists(i.folder, i.publicId)))
+        return {
+            success: false,
+            error: "One of the new images does not exist in the server"
+        }
+    if (newFileImages.some(i => i.folder !== PRODUCT_IMAGE_FOLDER))
+        return {
+            success: false,
+            error: "One of the new images is in the wrong folder"
+        }
+
+    if(await asyncSome(newUrlImages, async i => !await urlExists(i.url))){
+        return {
+            success: false,
+            error: "One of the new url images does not exist"
+        }
+    }
+
+    if(await asyncSome(newVideos, async v => !await videoExists(v))){
+        return {
+            success: false,
+            error: "One of the new videos does not exist in the server"
+        }
+    }
+
+
+    const cloudinaryVideos = newVideos.filter(v => v.source === "Cloudinary") as (ArrayElement<typeof newVideos> & {
+        source: "Cloudinary"
+    })[]
 
     try {
         return await prisma.$transaction(async tx => {
-
             const existingProduct = await tx.product.findUnique({
                 where: {
-                    id: productData.id
+                    id: productData.id,
+                    available: true
                 }
             })
 
@@ -76,6 +126,48 @@ export async function editProduct(_formProduct: ProductToEditServer): Promise<Ad
                 return {
                     success: false,
                     error: "The product does not exist"
+                }
+
+            const foundTags = await tx.tag.findMany({
+                where: {
+                    id: {
+                        in: existingTags.map(t => t.id)
+                    }
+                }
+            });
+            if(foundTags.length !== existingTags.length)
+                return {
+                    success: false,
+                    error: "One of the existing tags is invalid"
+                }
+
+            const validPendingImageCount = await tx.pendingMedia.count({
+                    where: {
+                        OR: newFileImages.map(i => ({
+                            publicId: i.publicId,
+                            folder: i.folder
+                        }))
+                    }
+                }
+            )
+            if (validPendingImageCount !== newFileImages.length)
+                return {
+                    success: false,
+                    error: "One of the new images is invalid"
+                }
+
+            const validPendingVideoCount = await tx.pendingMedia.count({
+                where: {
+                    OR: cloudinaryVideos.map(v => ({
+                        publicId: v.sourceId,
+                        folder: PRODUCT_VIDEO_FOLDER
+                    }))
+                }
+            });
+            if(validPendingVideoCount !== cloudinaryVideos.length)
+                return {
+                    success: false,
+                    error: "One of the new videos is invalid"
                 }
 
             await tx.product.update({
@@ -187,7 +279,6 @@ export async function editProduct(_formProduct: ProductToEditServer): Promise<Ad
                     },
                     update: {
                         currentPrice_cents: productData.current_price_cents,
-                        isFeatured: false
                     },
                     create: {
                         product: {
@@ -200,7 +291,7 @@ export async function editProduct(_formProduct: ProductToEditServer): Promise<Ad
                     }
                 })
             else
-                await prisma.productSale.deleteMany({
+                await tx.productSale.deleteMany({
                     where: {
                         productId: productData.id
                     }
@@ -237,6 +328,25 @@ export async function editProduct(_formProduct: ProductToEditServer): Promise<Ad
                     }
                 })
             }
+
+
+            await tx.pendingMedia.deleteMany({
+                where: {
+                    OR: newFileImages.map(i => ({
+                        publicId: i.publicId,
+                        folder: i.folder
+                    }))
+            }})
+
+            await tx.pendingMedia.deleteMany({
+                where: {
+                    OR: cloudinaryVideos.map(v => ({
+                        publicId: v.sourceId,
+                        folder: PRODUCT_VIDEO_FOLDER
+                    }))
+                }
+            })
+
             revalidatePath("/", "layout");
             if(newDevelopers.length > 0 || newPublishers.length > 0)
                 revalidatePath("/api/internal/admin/companies");

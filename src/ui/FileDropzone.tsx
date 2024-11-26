@@ -36,7 +36,6 @@ export default function FileDropzone({drop, accept}: {drop: (files: File) => voi
 
     function onDrop(files: File[]) {
         const allowedFiles = files.filter(file => allowedExtensions.includes("." + file.name.split('.').pop()!))
-        console.log(files.map(file=>"." + file.name.split('.').pop()!))
         if(allowedFiles.length > 0)
             drop(allowedFiles[0])
     }

@@ -7,6 +7,7 @@ import {FEATURED_TAG_IMAGE_FOLDER, MAX_FEATURED_SALES, MAX_FEATURED_TAGS} from "
 import prisma from "@/lib/prisma";
 import {revalidatePath} from "next/cache";
 import {getImageUrl} from "@/lib/cloudinary-utils";
+import {asyncSome, imageExists} from "@/lib/actions/products/utils";
 
 export async function saveFeaturedProducts(_formProducts: Product[]): Promise<AdminOperationResult> {
     const isAuthorized = (await auth())?.user?.isAdmin;
@@ -295,15 +296,3 @@ export async function saveFeaturedTags(_formTags: SaveFeaturedTagsParam): Promis
     }
 }
 
-async function imageExists(folder: string, publicId: string): Promise<boolean> {
-    const url = getImageUrl(folder, publicId)
-    const res = await fetch(url, {method: "HEAD"});
-    return res.ok;
-}
-
-async function asyncSome<T>(arr: T[], predicate: (el: T) => Promise<boolean>) {
-    for (let e of arr) {
-        if (await predicate(e)) return true;
-    }
-    return false;
-}

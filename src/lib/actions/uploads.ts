@@ -63,7 +63,7 @@ export async function _internalAuthorizeVideoUpload(folder: string): Promise<Aut
         const signature = signUploadRequest(timestamp, folder, id, allowed_formats);
         await prisma.pendingMedia.create({
             data: {
-                publicId: id,
+                publicId: `${folder}/${id}`,
                 folder,
                 type: PendingMediaType.VIDEO,
                 source: PendingMediaSource.CLOUDINARY
@@ -84,7 +84,6 @@ async function _internalAuthorizeImageUpload(folder: string): Promise<AuthorizeM
     try {
         const formatsWithoutDot = Object.values(allowedImages).flat().map(format => format.replace(".", ""));
         const allowed_formats = formatsWithoutDot.join(",");
-        console.log(allowed_formats)
         const signature = signUploadRequest(timestamp, folder, id, allowed_formats);
         await prisma.pendingMedia.create({
             data: {

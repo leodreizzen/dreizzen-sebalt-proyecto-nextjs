@@ -85,8 +85,6 @@ model Video {
   sourceId    String
   product     Product?    @relation(fields: [productId], references: [id])
   thumbnail   Image?      @relation(fields: [thumbnailId], references: [id])
-
-  @@unique([source, sourceId])
 }
 
 model Image {
