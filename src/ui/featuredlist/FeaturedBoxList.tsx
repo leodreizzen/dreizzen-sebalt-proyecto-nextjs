@@ -9,7 +9,7 @@ export default function FeaturedBoxList({
 
   
     return (
-            <div className = "border-2 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 border-borders rounded-lg w-full p-6 xl:py-6 items-center justify-center gap-6 h-full">
+            <div className = "border-2 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 border-borders rounded-lg w-full p-6 xl:py-6 items-center justify-center gap-6 h-full gap-x-8 px-10">
                 {products.map(product => (<div key = {product.id} className = "flex flex-col">
                                             <FeaturedProductCard key={product.id} product = {product} className = "w-full h-full" />
                                           </div>

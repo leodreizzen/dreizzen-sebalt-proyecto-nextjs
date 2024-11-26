@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     description: "Find the most sold products"
 }
 
-export default async function Page({ searchParams }: { searchParams: { page?: string } }) {
+export default async function TopSellersPage({ searchParams }: { searchParams: { page?: string } }) {
 
     const currentPage = searchParams.page ? Number(searchParams.page) : 1;
 
@@ -22,7 +22,7 @@ export default async function Page({ searchParams }: { searchParams: { page?: st
     return (
         <div className="items-center justify-center px-1">
             <h1 className="text-3xl font-bold mt-6 mb-3 text-center">Top sellers</h1>
-            <div className="p-3 2xl:px-64">
+            <div className="p-3 2xl:px-[calc(35%-22rem)]">
                 <FeaturedBoxList products={products} />
                 <div className={hidden ? "hidden" : "flex justify-center mt-2"}>
                     <Pagination totalPages={totalPages} />
