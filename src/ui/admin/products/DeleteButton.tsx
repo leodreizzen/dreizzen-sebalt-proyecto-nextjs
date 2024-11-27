@@ -7,6 +7,8 @@ import {Button} from "@nextui-org/button";
 import {useToast} from "@/ui/shadcn/use-toast";
 
 import {deleteProduct} from "@/lib/actions/products/delete-product";
+import {AwesomeButtonProgress} from "@leodreizzen/react-awesome-button";
+import AwesomeButtonStyles from "@/ui/admin/products/deleteButtonProgress.module.scss";
 
 
 export default function DeleteButton({ productId }: { productId: number}) {
@@ -17,11 +19,21 @@ export default function DeleteButton({ productId }: { productId: number}) {
     const {toast} = useToast();
 
 
-    async function handleDelete() {
+    async function handleDelete(
+        _: React.MouseEvent<Element, MouseEvent>,
+        next: (endState?: (boolean | undefined), errorLabel?: (string | null | undefined)) => void
+    ) {
         const result = await deleteProduct(productId)
-        if(!result.success)
+        if(result.success) {
+            next(true)
+        }
+        if(!result.success) {
             toast({title: "Error deleting product", description: result.error, duration: 5000, variant: "destructive"})
-        onClose()
+            next(false, "Error");
+        }
+        setTimeout(() => {
+            onClose();
+        }, 1000) // allow animation to finish
     }
 
     return (
@@ -47,9 +59,8 @@ export default function DeleteButton({ productId }: { productId: number}) {
                                 <Button color="danger" variant="light" onPress={onClose}>
                                     Cancel
                                 </Button>
-                                <Button color="primary" onPress={handleDelete}>
-                                    Delete
-                                </Button>
+                                <AwesomeButtonProgress type="primary" onPress={handleDelete} loadingLabel="Deleting..."
+                                                       cssModule={AwesomeButtonStyles}>Delete</AwesomeButtonProgress>
                             </ModalFooter>
                         </>
                     )}

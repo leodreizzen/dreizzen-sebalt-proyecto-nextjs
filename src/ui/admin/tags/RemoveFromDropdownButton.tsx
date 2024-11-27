@@ -5,21 +5,34 @@ import {FaRegStar} from "react-icons/fa6";
 import {useToast} from "@/ui/shadcn/use-toast";
 import {Tooltip} from "@nextui-org/tooltip";
 import {setTagDropdown} from "@/lib/actions/tags";
+import {AwesomeButtonProgress} from "@leodreizzen/react-awesome-button";
+import AwesomeButtonStyles from "@/ui/admin/tags/removeButtonProgress.module.scss";
 
 export default function RemoveFromDropdownButton({tagId}: { tagId: number }) {
     const {toast} = useToast();
     const {isOpen, onOpen, onClose, onOpenChange} = useDisclosure();
-    const removeFromDropdown = async () => {
+    async function removeFromDropdown(
+        _: React.MouseEvent<Element, MouseEvent>,
+        next: (endState?: (boolean | undefined), errorLabel?: (string | null | undefined)) => void
+    ){
         const result = await setTagDropdown(tagId, false)
-        if (!result.success)
+
+        if(result.success) {
+            next(true)
+        }
+        if(!result.success) {
             toast({
                 title: "Error removing product from dropdown",
                 description: result.error,
                 duration: 5000,
                 variant: "destructive"
             })
-        onClose()
-    };
+            next(false, "Error");
+        }
+        setTimeout(() => {
+            onClose();
+        }, 1000) // allow animation to finish
+    }
 
     return (
         <>
@@ -46,9 +59,8 @@ export default function RemoveFromDropdownButton({tagId}: { tagId: number }) {
                                 <Button color="danger" variant="light" onPress={onClose}>
                                     Cancel
                                 </Button>
-                                <Button color="primary" onPress={removeFromDropdown}>
-                                    Remove
-                                </Button>
+                                <AwesomeButtonProgress type="primary" onPress={removeFromDropdown} loadingLabel="Removing..."
+                                                       cssModule={AwesomeButtonStyles}>Remove</AwesomeButtonProgress>
                             </ModalFooter>
                         </>
                     )}

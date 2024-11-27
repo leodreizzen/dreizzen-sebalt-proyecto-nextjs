@@ -18,6 +18,8 @@ import {useToast} from "@/ui/shadcn/use-toast";
 import {useRouter} from "next/navigation";
 import AddTagForm from "@/ui/admin/products/add/AddTagForm";
 import {ActionResult} from "next/dist/server/app-render/types";
+import {AwesomeButtonProgress} from "@leodreizzen/react-awesome-button";
+import AwesomeButtonStyles from "@/ui/admin/products/add/buttonProgress.module.scss";
 
 export type ExistingImage = {
     isNew: false,
@@ -293,7 +295,10 @@ export default function AdminProductForm({initialData}: {
     }
 
 
-    async function onSavePress() {
+    async function onSavePress(
+        _: React.MouseEvent<Element, MouseEvent>,
+        next: (endState?: (boolean | undefined), errorLabel?: (string | null | undefined)) => void
+    ) {
         const validationResult = validateData();
         if (!validationResult.success) {
             toast({
@@ -302,6 +307,7 @@ export default function AdminProductForm({initialData}: {
                 variant: "destructive",
                 duration: 5000
             })
+            next(false, "Invalid data");
             return
         }
 
@@ -318,6 +324,7 @@ export default function AdminProductForm({initialData}: {
                 variant: "destructive",
                 duration: 5000
             })
+            next(false, "Invalid data");
             return
         }
 
@@ -328,18 +335,20 @@ export default function AdminProductForm({initialData}: {
                 variant: "destructive",
                 duration: 5000
             })
+            next(false, "Invalid data");
             return
         }
         const htmlDocument = new DOMParser().parseFromString(html, "text/html");
         const text = htmlDocument.body.textContent;
         const imgs = htmlDocument.querySelectorAll("img");
-        if((!text || text.length == 0) && imgs.length == 0) {
+        if ((!text || text.length == 0) && imgs.length == 0) {
             toast({
                 title: "Error",
                 description: "Description is required",
                 variant: "destructive",
                 duration: 5000
             })
+            next(false, "Invalid data");
             return
         }
 
@@ -375,15 +384,20 @@ export default function AdminProductForm({initialData}: {
                 videos: videos,
                 tags: tags
             })
-        if (result.success)
-            router.push("/admin/products")
-        else
+        if (result.success) {
+            next(true);
+            setTimeout(() => {
+                router.push("/admin/products");
+            }, 1000) // allow animation to finish
+        } else {
+            next(false, "Error");
             toast({
                 title: "Error saving tags",
                 description: result.error,
                 variant: "destructive",
                 duration: 5000
             })
+        }
 
     }
 
@@ -397,7 +411,8 @@ export default function AdminProductForm({initialData}: {
                 <h1 className={"mx-2 justify-center text-2xl font-bold text-center"}>{initialData ? "Edit product" : "Add product"}</h1>
                 <div className="flex gap-4 justify-center w-full @sm:w-[revert]">
                     <RAWGModal className="" onSubmit={handleRawgSubmit}/>
-                    <Button color="primary" onPress={onSavePress}>Save</Button>
+                    <AwesomeButtonProgress type="primary" onPress={onSavePress} loadingLabel="Saving..."
+                                           cssModule={AwesomeButtonStyles}>Save</AwesomeButtonProgress>
                 </div>
             </div>
             <div

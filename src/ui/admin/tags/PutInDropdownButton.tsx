@@ -5,21 +5,32 @@ import React from "react";
 import {useToast} from "@/ui/shadcn/use-toast";
 import {Tooltip} from "@nextui-org/tooltip";
 import {setTagDropdown} from "@/lib/actions/tags";
-
+import {AwesomeButtonProgress} from "@leodreizzen/react-awesome-button";
+import AwesomeButtonStyles from "@/ui/admin/tags/addButtonProgress.module.scss";
 export default function PutInDropdownButton({tagId}: { tagId: number }) {
 
     const {toast} = useToast();
     const {isOpen, onOpen, onClose, onOpenChange} = useDisclosure();
-    const putInDropdown = async () => {
+    const putInDropdown = async (
+        _: React.MouseEvent<Element, MouseEvent>,
+        next: (endState?: (boolean | undefined), errorLabel?: (string | null | undefined)) => void
+    ) => {
         const result = await setTagDropdown(tagId, true)
-        if (!result.success)
+        if(result.success) {
+            next(true)
+        }
+        if (!result.success) {
             toast({
                 title: "Error putting product in dropdown",
                 description: result.error,
                 duration: 5000,
                 variant: "destructive"
             })
-        onClose()
+            next(false, "Error");
+        }
+        setTimeout(() => {
+            onClose();
+        }, 1000) // allow animation to finish
     };
 
 
@@ -48,9 +59,8 @@ export default function PutInDropdownButton({tagId}: { tagId: number }) {
                                 <Button color="danger" variant="light" onPress={onClose}>
                                     Cancel
                                 </Button>
-                                <Button color="primary" onPress={putInDropdown}>
-                                    Add
-                                </Button>
+                                <AwesomeButtonProgress type="primary" onPress={putInDropdown} loadingLabel="Adding..."
+                                                       cssModule={AwesomeButtonStyles}>Add</AwesomeButtonProgress>
                             </ModalFooter>
                         </>
                     )}
