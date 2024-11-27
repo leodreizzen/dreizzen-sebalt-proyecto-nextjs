@@ -98,7 +98,10 @@ export default function FeaturedSalesForm({className, featuredSales: savedFeatur
                     }
                     {sales.map((sale, index) => (
                             <AdminFeaturedProductCard product={sale.product} removable key={sale.id}
-                                                      onRemove={() => handleRemove(sale.id)}/>
+                                                      onRemove={() => handleRemove(sale.id)}
+                                                      imgSizes="(max-width: 639px) 68vw, (max-width: 674px) 63vw, (max-width: 913px) 33vw, (max-width: 1535px) 23vw, 25vw"
+                                                      priority={index == 0}
+                            />
                     ))}
                 </div>
 

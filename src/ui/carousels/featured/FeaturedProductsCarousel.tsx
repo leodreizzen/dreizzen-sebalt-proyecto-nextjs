@@ -12,7 +12,7 @@ import SwiperLeftButton from "../SwiperLeftButton";
 import SwiperRightButton from "../SwiperRightButton";
 import { FeaturedProductWithProduct } from "@/lib/definitions";
 
-export default function FeaturedProductsCarousel({ className, products }: { className?: string, products: FeaturedProductWithProduct[] }) {
+export default function FeaturedProductsCarousel({ className, products, imgSizes, priority }: { className?: string, products: FeaturedProductWithProduct[], imgSizes?: string, priority?: boolean }) {
     const uniqueId = useId().replaceAll(":", "")
     return (
         <div className={clsx(className, "flex flex-col")}>
@@ -53,9 +53,9 @@ export default function FeaturedProductsCarousel({ className, products }: { clas
                     className="h-full w-full"
                     wrapperClass="h-full w-full"
                 >
-                    {products.map((product) => (
+                    {products.map((product, index) => (
                         <SwiperSlide key={product.product.id}>
-                            <FeaturedProductCard product={product.product} className="h-full w-full" />
+                            <FeaturedProductCard product={product.product} className="h-full w-full" imgSizes={imgSizes} priority={index == 0 && priority} />
                         </SwiperSlide>
                     ))
                     }

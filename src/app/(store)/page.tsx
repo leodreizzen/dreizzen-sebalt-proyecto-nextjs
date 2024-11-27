@@ -22,8 +22,8 @@ export default async function Home() {
                         </div>
 
                         <div className="sm:border border-borders px-2 pt-4 rounded-3xl mb-4">
-                            <FeaturedProductsCarousel products={featuredProducts}
-                                                      className="mx-auto lg:w-11/12 xl:w-10/12 2xl:w-9/12 mb-10"/>
+                            <FeaturedProductsCarousel products={featuredProducts} priority
+                                                      className="mx-auto lg:w-11/12 xl:w-10/12 2xl:w-9/12 mb-10" imgSizes="(max-width: 639px) 100vw, (max-width: 1023px) 79vw, (max-width: 1279px) 69vw, (max-width: 1535px) 50vw, 40vw"/>
                         </div>
                     </>
                 }
@@ -31,7 +31,7 @@ export default async function Home() {
                     <h2 className="text-center pb-1 text-large">Featured tags</h2>
                     <div
                         className="flex flex-col sm:grid sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-2 lg:gap-4 border border-borders px-4 sm:px-8 md:px-10 pb-4 pt-5 rounded-3xl">
-                        {featuredTags.map(tag => <GenreCard key={tag.order} genre={tag}/>)}
+                        {featuredTags.map(tag => <GenreCard key={tag.order} genre={tag} imgSizes="(max-width: 639px) 100vw, (max-width: 1023px) 35vw, (max-width: 1279px) 31vw, (max-width: 1535px) 18vw, 16.5vw"/>)}
                     </div>
                 </div>
                 <div className="p-2 mt-8">

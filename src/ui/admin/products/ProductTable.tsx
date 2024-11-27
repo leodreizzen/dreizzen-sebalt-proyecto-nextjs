@@ -17,7 +17,8 @@ export default function ProductTable({ products }: {products: AdminProduct[]}) {
                 {products.map((product) => (
                     <Card key={product.id} className="dark">
                         <CardContent className="grid grid-cols-[80px_1fr] gap-4 items-center">
-                            <Image src={product.coverImage.url} alt={product.coverImage.alt} width={240} height={190} className="rounded-md mt-4 select-none" />
+                            <Image src={product.coverImage.url} alt={product.coverImage.alt} width={240} height={190} className="rounded-md mt-4 select-none" sizes="(max-width: 639px) 80px, 88px"
+                            />
                             <div className="grid gap-2">
                                 <div className="font-medium mt-4">{product.name}</div>
                                 <div className="flex flex-col items-start justify-start">

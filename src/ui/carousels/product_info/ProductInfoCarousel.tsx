@@ -24,7 +24,7 @@ import { ProductForDetail } from '@/lib/definitions';
 const tailwindConfig = resolveConfig(taiwindConfig)
 
 
-export default function ProductInfoCarousel({ className, product }: { className?: string, product: ProductForDetail }) {
+export default function ProductInfoCarousel({ className, product, priority, slideSizes, thumbnailSizes }: { className?: string, product: ProductForDetail, priority?: boolean, slideSizes?: string, thumbnailSizes?:string }) {
   const uniqueId = useId().replaceAll(":", "")
 
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
@@ -74,14 +74,14 @@ export default function ProductInfoCarousel({ className, product }: { className?
           {
             product.videos.map((video, i) => (
               <SwiperSlide key={video.id}>
-                <VideoPlayer video={video} className='h-full w-full overflow-clip' active={i === activeSlide} /> {/* TODO add sizes*/}
+                <VideoPlayer video={video} className='h-full w-full overflow-clip' active={i === activeSlide} />
               </SwiperSlide>
             ))
           }
 
-          {product.descriptionImages.map((image) => (
+          {product.descriptionImages.map((image, index) => (
             <SwiperSlide key={image.id} className='relative'>
-              <Image src={image.url} alt={image.alt} fill={true} /> {/* TODO add sizes*/}
+              <Image src={image.url} alt={image.alt} fill={true} priority={priority && product.videos.length == 0 && index == 0} sizes={slideSizes} />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -105,13 +105,13 @@ export default function ProductInfoCarousel({ className, product }: { className?
               <div className='z-10 absolute aspect-square bg-[rgba(0,0,0,0.5)] rounded-full h-1/2 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
                 <PiPlayCircleLight className='text-slate-300 w-full h-full' />
               </div>
-              <Image src={video.thumbnail?.url || genericThumbnail} alt={"Miniatura: " + video.thumbnail?.alt || "Generic thumbnail."} fill={true} className='z-0' /> {/* TODO add sizes*/}
+              <Image src={video.thumbnail?.url || genericThumbnail} alt={"Miniatura: " + video.thumbnail?.alt || "Generic thumbnail."} fill={true} className='z-0' sizes={thumbnailSizes} />
             </SwiperSlide>
           ))
         }
         {product.descriptionImages.map((image) => (
           <SwiperSlide key={image.id} className={clsx({ "!hidden": !initialized }, "border border-borders aspect-video relative")}>
-            <Image src={image.url} alt={"Miniatura: " + image.alt} fill={true} /> {/* TODO add sizes*/}
+            <Image src={image.url} alt={"Miniatura: " + image.alt} fill={true} sizes={thumbnailSizes}/>
           </SwiperSlide>
         ))}
 

@@ -90,9 +90,9 @@ export default function FeaturedProductsForm({className, featuredProducts: saved
             <div className="flex flex-col items-center w-5/6 mx-auto">
                 <p className="w-full my-2 font-bold">Drag the cards to change their order in the home page</p>
                 <SortableList className="grid grid-cols-1 @lg:grid-cols-2 @3xl:grid-cols-3 gap-6 w-full auto-rows-[1fr]" items={products} onItemsOrderChange={p=>setProducts(p)} onAddPress={handleAddPress}>
-                    {(product) => (
-                            <AdminFeaturedProductCard product={product} removable
-                                                      onRemove={() => handleRemove(product.id)}/>
+                    {(product, index) => (
+                            <AdminFeaturedProductCard product={product} removable imgSizes="(max-width: 639px) 68vw, (max-width: 674px) 63vw, (max-width: 913px) 33vw, (max-width: 1535px) 23vw, 25vw"
+                                                      onRemove={() => handleRemove(product.id)} priority={index == 0}/>
                     )}
                 </SortableList>
 

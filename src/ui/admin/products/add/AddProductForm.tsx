@@ -515,7 +515,8 @@ export default function AdminProductForm({initialData}: {
                     <div
                         className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full auto-rows-[1fr] rounded-2xl p-3"}>
                         {!coverImage && <ImageUploaderModal onSubmit={handleCoverImageAdd}/>}
-                        {coverImage && <ImageUploadCard imageUrl={coverImage.url} onClose={handleCoverImageClose}/>}
+                        {coverImage && <ImageUploadCard imageUrl={coverImage.url} onClose={handleCoverImageClose}
+                        imgSizes="(max-width: 767px) 100vw, (max-width: 1023) 50vw, 33vw"/>}
 
                     </div>
                 </div>
@@ -526,7 +527,8 @@ export default function AdminProductForm({initialData}: {
                         className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full auto-rows-[1fr] rounded-2xl p-3"}>
                         <ImageUploaderModal onSubmit={handleImageAdd}/>
                         {images.map((img, index) => (
-                            <ImageUploadCard imageUrl={img.url} key={index} onClose={() => handleImageClose(index)}/>
+                            <ImageUploadCard imageUrl={img.url} key={index} onClose={() => handleImageClose(index)}
+                                             imgSizes="(max-width: 767px) 100vw, (max-width: 1023) 50vw, 33vw"/>
                         ))}
                     </div>
                 </div>
@@ -541,7 +543,8 @@ export default function AdminProductForm({initialData}: {
                                 imageUrl={video.thumbnail?.url || "https://static-00.iconduck.com/assets.00/image-x-generic-symbolic-icon-512x512-39rql7k5.png"}
                                 key={index}
                                 onClose={() => handleVideoClose(index)}
-                            />
+                                imgSizes="(max-width: 767px) 100vw, (max-width: 1023) 50vw, 33vw"
+                        />
                         ))}
                     </div>
                 </div>

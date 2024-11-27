@@ -45,7 +45,7 @@ function CartWithItemsPage({products, className}: { products: ProductWithCoverIm
                                 <div
                                     className="max-xs:w-5/12 xs:h-full max-xs:col-span-2 max-xs:rounded-xl max-xs:overflow-clip  max-xs:justify-self-center">
                                     <Link href={`/product/${product.id}`} className="size-full aspect-video relative inline-block select-none">
-                                        <Image src={product.coverImage.url} alt={product.coverImage.alt} fill/>
+                                        <Image src={product.coverImage.url} alt={product.coverImage.alt} fill sizes="(max-width: 359px) 132px, (max-width: 639px) 111px, 140px"/>
                                     </Link>
                                 </div>
                                 <div

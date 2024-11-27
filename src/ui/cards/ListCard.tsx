@@ -11,7 +11,7 @@ import MarqueeOnOverflow from "../MarqueeOnOverflow";
 import { ProductWithTagsAndCoverImage } from "@/lib/definitions";
 import {currentPrice} from "@/util/productUtils";
 
-export default function ListCard({ product, className }: { product: ProductWithTagsAndCoverImage, className?: string }) {
+export default function ListCard({ product, className, priority }: { product: ProductWithTagsAndCoverImage, className?: string, priority?: boolean }) {
     const router = useRouter();
 
     function handleCardPress() {
@@ -32,7 +32,9 @@ export default function ListCard({ product, className }: { product: ProductWithT
                             alt={product.coverImage.alt}
                             className="object-cover rounded-lg select-none"
                             src={product.coverImage.url}
+                            sizes="140px"
                             fill
+                            priority={priority}
                         />
                     </div>
                     <div className="flex-grow ml-2 min-w-0 grid grid-cols-[1fr_auto] grid-rows-[1fr_min-content_min-content] grid-flow-col p-1 @xs:p-0 @xd:ml-0 @xs:mr-2">

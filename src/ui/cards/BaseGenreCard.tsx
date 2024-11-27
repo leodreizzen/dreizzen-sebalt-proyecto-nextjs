@@ -12,18 +12,20 @@ export interface TagProp {
     image: { url: string, alt: string }
 }
 
-export default function BaseGenreCard({className, genre, isPressable, onPress}: { className?: string, genre: TagProp, isPressable: boolean, onPress?: () => void }) {
+export default function BaseGenreCard({className, genre, isPressable, onPress, imgSizes, priority}: { className?: string, genre: TagProp, isPressable: boolean, onPress?: () => void, imgSizes?: string, priority?: boolean}) {
     return (
-        <div className={clsx("gap-3 p-2", className)}>
+        <div className={clsx("gap-3 p-2 relative", className)}>
             <Card isPressable={isPressable} onPress={onPress} className="w-full col-span-12 sm:col-span-7">
-                <div className="w-full aspect-video">
+                <div className="w-full aspect-video relative">
                     <Image
+                        sizes={imgSizes}
                         as={NextImage}
                         removeWrapper
                         alt={genre.image.alt}
                         className="z-0 object-fill select-none"
                         src={genre.image.url}
                         fill
+                        priority={priority}
                     />
                 </div>
                 <CardFooter

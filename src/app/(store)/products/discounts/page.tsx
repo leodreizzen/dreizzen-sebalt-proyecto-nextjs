@@ -47,14 +47,13 @@ export default async function Page({ searchParams }: { searchParams: { q?: strin
     const selectedTags = allTags.filter((tag) => filterArray.includes(tag.id));
 
     const hidden = totalPages === 0;
-
     return (
         <div className="items-center justify-center px-1">
             <h1 className="text-3xl font-bold mt-6 mb-3 text-center">Featured sales</h1>
             <div className="p-3 2xl:px-64">
                 <div className="border-2 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 border-borders rounded-lg w-full p-6 xl:py-6 items-center justify-center gap-6 h-full">
-                    {featuredSales.map((sale) => (<div key={sale.product.id} className="flex flex-col">
-                                                <FeaturedProductCard key={sale.product.id} product = {sale.product} className="w-full h-full" />
+                    {featuredSales.map((sale, index) => (<div key={sale.product.id} className="flex flex-col">
+                                                <FeaturedProductCard key={sale.product.id} product = {sale.product} className="w-full full" priority={index == 0} imgSizes="(max-width: 449px) 78vw, (max-width: 639px) 84vw, (max-width: 767px) 87vw, (max-width: 1279px) 45vw, (max-width: 1535px) 30vw, 23vw" />
                                             </div>
                     ))}
                 </div>
@@ -68,7 +67,7 @@ export default async function Page({ searchParams }: { searchParams: { q?: strin
                     </div>
                     <div className="flex flex-col justify-center w-full px-1">
                         <div className="w-full mr-4">
-                            <SearchBoxList products={products} />
+                            <SearchBoxList products={products} priority={featuredSales.length == 0}/>
                         </div>
                         <div className={hidden ? "hidden" : "flex justify-center mb-2"}>
                             <Pagination totalPages={totalPages} />

@@ -53,12 +53,15 @@ export default async function ProductInfoPage({params}: { params: { id: string }
             <h1 className="text-3xl font-bold text-center md:text-start md:pt-5 md:pb-2 lg:pb-3 ">{product.name}</h1>
             <div className="w-full flex flex-col-reverse md:flex-row items-center md:items-stretch">
                 <ProductInfoCarousel product={product}
-                                     className=" w-full md:w-8/12 border md:border-r-0 rounded-xl md:rounded-r-none border-borders"/>
+                                     className=" w-full md:w-8/12 border md:border-r-0 rounded-xl md:rounded-r-none border-borders" priority
+                                     slideSizes="(max-width: 449px) 78.5vw, (max-width: 639px) 84.5vw, (max-width: 767px) 70vw, (max-width: 1279px) 53vw, (max-width: 1535px) 48vw, 20vw"
+                                     thumbnailSizes="(max-width: 767px) 28vw, (max-width: 1279px) 19vw, (max-width: 1535px) 10vw, 8vw"
+                />
                 <div
                     className="w-full md:w-4/12 mt-2 pt-2 md:pt-0 mb-4 md:mb-0 md:mt-0 bg-content1 flex flex-col flex-grow justify-between rounded-xl md:rounded-l-none overflow-clip">
                     <div className="flex-grow flex flex-col overflow-hidden">
                         <div className="overflow-clip w-8/12 md:w-full mt-2 md:mt-0 mx-auto aspect-video relative select-none">
-                            <Image src={product.coverImage.url} alt={product.coverImage.alt} fill/>
+                            <Image src={product.coverImage.url} alt={product.coverImage.alt} fill sizes="(max-width: 639px) 63.5vw, (max-width: 767px) 52vw, (max-width: 1279px) 32vw, 27vw"/>
                         </div>
                         <div className="md:min-h-0 flex-grow md:basis-0 md:mb-4 inline-block text-ellipsis">
                             {

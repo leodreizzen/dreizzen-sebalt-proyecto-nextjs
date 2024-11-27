@@ -23,7 +23,7 @@ export default async function TopSellersPage({ searchParams }: { searchParams: {
         <div className="items-center justify-center px-1">
             <h1 className="text-3xl font-bold mt-6 mb-3 text-center">Top sellers</h1>
             <div className="p-3 2xl:px-[calc(35%-22rem)]">
-                <FeaturedBoxList products={products} />
+                <FeaturedBoxList products={products} imgSizes="(max-width: 639px) 79vw, (max-width: 767px) 82vw, (max-width: 1279px) 44vw, (max-width: 1535px) 25vw, 20vw" priority/>
                 <div className={hidden ? "hidden" : "flex justify-center mt-2"}>
                     <Pagination totalPages={totalPages} />
                 </div>

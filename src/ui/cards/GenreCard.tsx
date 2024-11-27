@@ -10,7 +10,7 @@ interface TagProp {
     image: { url: string, alt: string }
 }
 
-export default function GenreCard({className, genre}: { className?: string, genre: TagProp }) {
+export default function GenreCard({className, genre, imgSizes}: { className?: string, genre: TagProp, imgSizes?: string }) {
     const router = useRouter();
 
     function handlePress() {
@@ -18,7 +18,7 @@ export default function GenreCard({className, genre}: { className?: string, genr
     }
 
     return (
-        <BaseGenreCard isPressable={true} className={clsx("gap-3 p-2", className)} genre={genre} onPress={handlePress}/>
+        <BaseGenreCard isPressable={true} className={clsx("gap-3 p-2", className)} genre={genre} onPress={handlePress} imgSizes={imgSizes}/>
     );
 }
 

@@ -98,6 +98,7 @@ export default function FeaturedTagsForm({className, featuredTags: savedFeatured
                 <SortableList className="grid grid-cols-1 @lg:grid-cols-2 @3xl:grid-cols-3 gap-4 @4xl:gap-6 w-full auto-rows-[1fr]" items={tags} onItemsOrderChange={setTags} onAddPress={handleAddPress} maxCount={MAX_FEATURED_TAGS}>
                     {(tag, index) => (
                             <AdminFeaturedTagCard tag={tag} removable
+                                                  imgSizes="(max-width: 577px) 68.5vw, (max-width: 639px) 37.5vw, (max-width: 657px) 60vw, (max-width: 913px) 36vw, (max-width: 1535px) 25vw, 22.5vw"
                                                       onRemove={() => handleRemove(index)}/>
                     )}
                 </SortableList>

@@ -12,20 +12,22 @@ import {PressEvent} from "react-aria";
 import {forwardRef, Ref} from "react";
 import {currentPrice} from "@/util/productUtils";
 
-function BaseFeaturedProductCard({product, className, isPressable, onPress, showCartButton}: {
+function BaseFeaturedProductCard({product, className, isPressable, onPress, showCartButton, imgSizes, priority}: {
     product: ProductWithTagsAndCoverImage;
     className?: string,
     isPressable: boolean,
     showCartButton: boolean
     onPress?: ((e: PressEvent) => void) | undefined,
+    imgSizes?: string
+    priority?: boolean
 }, ref: Ref<HTMLDivElement> | undefined) {
     return (
         <div className={clsx("gap-3 @container", className)} ref={ref}>
-            <Card isFooterBlurred className={"w-full h-full"} onPress={onPress} isPressable={isPressable}>
-                <div className="gap-3 aspect-video h-full w-full select-none">
-                    <Image src={product.coverImage.url} alt={product.coverImage.alt} fill={true}/>
+            <Card className={"w-full h-full"} onPress={onPress} isPressable={isPressable}>
+                <div className="gap-3 aspect-video h-full w-full select-none relative">
+                    <Image src={product.coverImage.url} alt={product.coverImage.alt} fill={true} sizes={imgSizes} priority={priority}/>
                 </div>
-                <CardFooter className="bg-black/60 border-default-600 dark:border-default-100 h-1/6 p-3 px-5">
+                <CardFooter className="bg-black/60 border-default-600 dark:border-default-100 h-1/6 p-3 px-5 bg-content1">
                     <div className="flex flex-grow gap-2 items-center min-w-0 mr-1">
                         <div className="flex flex-col justify-start items-start min-w-0 flex-grow">
                             <div className="flex flex-wrap gap-2 h-[30px] overflow-y-hidden mt-1 flex-grow">
