@@ -32,7 +32,7 @@ export const authConfig = {
             }
 
             // Allows callback URLs on the same origin
-            else if (new URL(url).origin === baseUrl) return url
+            if (new URL(url).origin === baseUrl) return url
             return baseUrl
 
         }
