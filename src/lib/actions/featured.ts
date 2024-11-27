@@ -8,6 +8,7 @@ import prisma from "@/lib/prisma";
 import {revalidatePath} from "next/cache";
 import {getImageUrl} from "@/lib/cloudinary-utils";
 import {asyncSome, imageExists} from "@/lib/actions/products/utils";
+import {garbageCollectImage} from "@/lib/actions/media-garbarge-collection";
 
 export async function saveFeaturedProducts(_formProducts: Product[]): Promise<AdminOperationResult> {
     const isAuthorized = (await auth())?.user?.isAdmin;
@@ -249,6 +250,15 @@ export async function saveFeaturedTags(_formTags: SaveFeaturedTagsParam): Promis
                     error: "One of the new images is invalid"
                 }
 
+            const existingFeaturedTags = await tx.featuredTag.findMany({
+                include: {
+                    image: true
+                }
+            });
+            const imagesToDelete = existingFeaturedTags
+                .map(t => t.image)
+                .filter(i => !tagsData.some(t => !t.image.isNew && t.image.id === i.id))
+
             await tx.featuredTag.deleteMany({})
 
             for (let i = 0; i < tagsData.length; i++) {
@@ -283,6 +293,19 @@ export async function saveFeaturedTags(_formTags: SaveFeaturedTagsParam): Promis
                     }))
                 }
             })
+
+            try{
+                for(const i of imagesToDelete){
+                    const res = await garbageCollectImage(i, tx);
+                    if(!res.success){
+                        console.error("Error garbage collecting image: " + res.error)
+                    }
+                }
+            } catch (e){
+                console.error(e) // Garbage collection is not vital
+                throw e // debug
+            }
+
             revalidatePath("/")
             revalidatePath("/admin/featured/tags")
             return {success: true}
