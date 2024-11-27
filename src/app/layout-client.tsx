@@ -23,7 +23,7 @@ export default function AdminLayoutClient({children}: { children: React.ReactNod
         }
     }, [sidebarInitialized, width])
 
-    const fullScreenNavbar = width != null && width <= Number(tailwindConfig.theme.screens.sm.replace('px', ''));
+    const fullScreenNavbar = width != null && width < Number(tailwindConfig.theme.screens.sm.replace('px', ''));
 
     return (
         <div className="flex w-screen h-dvh bg-background">
