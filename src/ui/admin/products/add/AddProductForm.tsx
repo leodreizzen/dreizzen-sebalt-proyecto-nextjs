@@ -17,6 +17,7 @@ import {createProductClient, editProductClient} from "@/lib/clientActions";
 import {useToast} from "@/ui/shadcn/use-toast";
 import {useRouter} from "next/navigation";
 import AddTagForm from "@/ui/admin/products/add/AddTagForm";
+import {ActionResult} from "next/dist/server/app-render/types";
 
 export type ExistingImage = {
     isNew: false,
@@ -247,56 +248,129 @@ export default function AdminProductForm({initialData}: {
         setCoverImage(null);
     }
 
+    type ValidationResult = {
+        success: true, data: {
+            inputsState: {
+                name: string,
+                launchDate: CalendarDate,
+                originalPrice: number,
+                currentPrice: number | null,
+                shortDescription: string,
+            },
+            coverImage: ImageItem
+        }
+    } | {
+        success: false, error: string
+    }
+
+    function validateData(): ValidationResult {
+        if (!inputsState.name)
+            return {success: false, error: "Name is required"}
+        if (!inputsState.launchDate)
+            return {success: false, error: "Launch date is required"}
+        if (!coverImage)
+            return {success: false, error: "Cover image is required"}
+        if (!inputsState.originalPrice)
+            return {success: false, error: "Original price is required"}
+        if (isOnSale && (!inputsState.currentPrice || inputsState.currentPrice >= inputsState.originalPrice))
+            return {
+                success: false,
+                error: "If product is on sale, current price is required and must be lower than original price"
+            }
+        const a = inputsState.launchDate
+        return {
+            success: true,
+            data: {
+                inputsState: {
+                    name: inputsState.name,
+                    launchDate: inputsState.launchDate,
+                    originalPrice: inputsState.originalPrice,
+                    currentPrice: inputsState.currentPrice,
+                    shortDescription: inputsState.shortDescription
+                }, coverImage: coverImage
+            }
+        }
+    }
+
+
     async function onSavePress() {
-        if (!inputsState.name || !inputsState.launchDate || !inputsState.shortDescription || !coverImage || !inputsState.originalPrice || isOnSale && ( !inputsState.currentPrice || inputsState.currentPrice > inputsState.originalPrice)){
+        const validationResult = validateData();
+        if (!validationResult.success) {
             toast({
                 title: "Error",
-                description: "Check your data",
+                description: validationResult.error,
                 variant: "destructive",
                 duration: 5000
             })
             return
         }
+
+        const {inputsState: validatedInputsState, coverImage: validatedCoverImage} = validationResult.data
+
         let html: string | null = null
-        try{
+        try {
             html = await getHtml();
-        } catch(e){
+        } catch (e) {
             console.error(e)
+            toast({
+                title: "Error",
+                description: "Error getting description. Please try again later",
+                variant: "destructive",
+                duration: 5000
+            })
             return
         }
 
-        if(!html)
+        if (!html) {
+            toast({
+                title: "Error",
+                description: "Description is required",
+                variant: "destructive",
+                duration: 5000
+            })
             return
+        }
+        const htmlDocument = new DOMParser().parseFromString(html, "text/html");
+        const text = htmlDocument.body.textContent;
+        const imgs = htmlDocument.querySelectorAll("img");
+        if((!text || text.length == 0) && imgs.length == 0) {
+            toast({
+                title: "Error",
+                description: "Description is required",
+                variant: "destructive",
+                duration: 5000
+            })
+            return
+        }
 
         let result;
         if (!initialData) {
             result = await createProductClient({
-                original_price_cents: Math.floor(inputsState.originalPrice * 100),
-                current_price_cents: Math.floor((isOnSale && inputsState.currentPrice) ? inputsState.currentPrice * 100 : inputsState.originalPrice * 100),
+                original_price_cents: Math.floor(validatedInputsState.originalPrice * 100),
+                current_price_cents: Math.floor((isOnSale && validatedInputsState.currentPrice) ? validatedInputsState.currentPrice * 100 : validatedInputsState.originalPrice * 100),
                 publishers: publishers,
                 developers: developers,
-                name: inputsState.name,
-                launchDate: inputsState.launchDate.toString(),
-                shortDescription: inputsState.shortDescription,
+                name: validatedInputsState.name,
+                launchDate: validatedInputsState.launchDate.toString(),
+                shortDescription: validatedInputsState.shortDescription,
                 description: html,
-                coverImage: coverImage!,
+                coverImage: validatedCoverImage,
                 images: images,
                 videos: videos,
                 tags: tags
             })
-        }
-        else
+        } else
             result = await editProductClient({
                 id: initialData.id,
-                original_price_cents: Math.floor(inputsState.originalPrice * 100),
-                current_price_cents: Math.floor((isOnSale && inputsState.currentPrice) ? inputsState.currentPrice * 100 : inputsState.originalPrice * 100),
+                original_price_cents: Math.floor(validatedInputsState.originalPrice * 100),
+                current_price_cents: Math.floor((isOnSale && validatedInputsState.currentPrice) ? validatedInputsState.currentPrice * 100 : validatedInputsState.originalPrice * 100),
                 publishers: publishers,
                 developers: developers,
-                name: inputsState.name,
-                launchDate: inputsState.launchDate.toString(),
-                shortDescription: inputsState.shortDescription,
+                name: validatedInputsState.name,
+                launchDate: validatedInputsState.launchDate.toString(),
+                shortDescription: validatedInputsState.shortDescription,
                 description: html,
-                coverImage: coverImage!,
+                coverImage: validatedCoverImage,
                 images: images,
                 videos: videos,
                 tags: tags
@@ -340,7 +414,8 @@ export default function AdminProductForm({initialData}: {
                         <label htmlFor="launch_date">Launch date</label>
                         <DateInput id="launch_date" aria-label="Launch date" value={inputsState.launchDate}
                                    onChange={handleDateChange}
-                                   className="flex-grow !text-black rounded-2xl" classNames={{segment:"!text-black"}}></DateInput>
+                                   className="flex-grow !text-black rounded-2xl"
+                                   classNames={{segment: "!text-black"}}></DateInput>
                     </div>
                     <div className="flex flex-col gap-2">
                         <label htmlFor="original_price">Original price</label>
@@ -447,8 +522,10 @@ export default function AdminProductForm({initialData}: {
                         className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full auto-rows-[1fr] rounded-2xl p-3"}>
                         <VideoUploaderModal onSubmit={handleVideoAdd}/>
                         {videos.map((video, index) => (
-                            <ImageUploadCard imageUrl={video.thumbnail?.url || "https://static-00.iconduck.com/assets.00/image-x-generic-symbolic-icon-512x512-39rql7k5.png"} key={index}
-                                             onClose={() => handleVideoClose(index)}
+                            <ImageUploadCard
+                                imageUrl={video.thumbnail?.url || "https://static-00.iconduck.com/assets.00/image-x-generic-symbolic-icon-512x512-39rql7k5.png"}
+                                key={index}
+                                onClose={() => handleVideoClose(index)}
                             />
                         ))}
                     </div>
