@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "/api/internal/refresh-kv",
+      "path": "/api/internal/cron",
       "schedule": "0 0 * * *"
     }
   ]

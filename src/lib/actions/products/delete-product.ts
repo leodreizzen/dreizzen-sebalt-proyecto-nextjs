@@ -76,7 +76,7 @@ export async function deleteProduct(_formID: number) {
                 revalidatePath("/api/public/discounts");
                 revalidatePath("/api/public/topsellers");
                 return {success: true}
-            }, {maxWait: 200000, timeout: 200000})
+            }, {maxWait: 20000, timeout: 20000})
 
         } catch (e) {
             console.error(e)

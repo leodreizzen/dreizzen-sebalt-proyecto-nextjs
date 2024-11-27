@@ -1,4 +1,5 @@
 import {kv} from "@vercel/kv";
+import {garbageCollectPending} from "@/lib/actions/media-garbarge-collection";
 
 export const dynamic = 'force-dynamic';
 
@@ -10,6 +11,7 @@ export async function GET(request: Request) {
         });
     }
     await kv.set("refresh", crypto.randomUUID());
+    await garbageCollectPending();
 
     return Response.json({ success: true });
 }

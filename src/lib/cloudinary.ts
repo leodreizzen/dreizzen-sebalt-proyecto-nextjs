@@ -17,11 +17,15 @@ v2.config({
 
 export async function deleteImageFromCloudinary(image: Image) {
     const publicId = extractPublicId(image.url).split('?')[0];
-    const res = await v2.uploader.destroy(publicId, {resource_type:"image", invalidate: true}) as {
+    return await deleteImageFromCloudinaryByPublicId(publicId);
+}
+
+export async function deleteImageFromCloudinaryByPublicId(publicId: string) {
+    const res = await v2.uploader.destroy(publicId, {resource_type: "image", invalidate: true}) as {
         result: string
     }
     if (res.result === "not found") {
-        console.warn("Image not found in cloudinary: " + image.url)
+        console.warn("Image not found in cloudinary: " + publicId)
         return {
             success: true
         }
@@ -29,40 +33,44 @@ export async function deleteImageFromCloudinary(image: Image) {
         return {
             success: true
         }
-    }else {
+    } else {
         console.error("Error deleting image" + res.result)
         return {
             success: false,
             error: res.result
         }
     }
-
 }
+
 
 export async function deleteVideoFromCloudinary(video: Video) {
     if (video.source === "CLOUDINARY") {
         const publicId = video.sourceId;
-        const res = await v2.uploader.destroy(publicId, {resource_type: "video", invalidate: true}) as {
-            result: string
-        }
-        if (res.result === "not found") {
-            console.warn("Video not found in cloudinary: " + video.sourceId)
-            return {
-                success: true
-            }
-        } else if (res.result == "ok") {
-            return {
-                success: true
-            }
-        }else {
-            console.error("Error deleting Video" + res.result)
-            return {
-                success: false,
-                error: res.result
-            }
-        }
+        return await deleteVideoFromCloudinaryByPublicId(publicId);
     }
     return {
         success: true
+    }
+}
+
+export async function deleteVideoFromCloudinaryByPublicId(publicId: string) {
+    const res = await v2.uploader.destroy(publicId, {resource_type: "video", invalidate: true}) as {
+        result: string
+    }
+    if (res.result === "not found") {
+        console.warn("Video not found in cloudinary: " + publicId)
+        return {
+            success: true
+        }
+    } else if (res.result == "ok") {
+        return {
+            success: true
+        }
+    } else {
+        console.error("Error deleting Video" + res.result)
+        return {
+            success: false,
+            error: res.result
+        }
     }
 }
