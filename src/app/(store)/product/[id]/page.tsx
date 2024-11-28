@@ -54,7 +54,7 @@ export default async function ProductInfoPage({params}: { params: { id: string }
             <div className="w-full flex flex-col-reverse md:flex-row items-center md:items-stretch">
                 <ProductInfoCarousel product={product}
                                      className=" w-full md:w-8/12 border md:border-r-0 rounded-xl md:rounded-r-none border-borders" priority
-                                     slideSizes="(max-width: 449px) 78.5vw, (max-width: 639px) 84.5vw, (max-width: 767px) 70vw, (max-width: 1279px) 53vw, (max-width: 1535px) 48vw, 20vw"
+                                     slideSizes="(max-width: 449px) 78.5vw, (max-width: 639px) 84.5vw, (max-width: 767px) 70vw, (max-width: 1279px) 53vw, (max-width: 1535px) 48vw, 40vw"
                                      thumbnailSizes="(max-width: 767px) 28vw, (max-width: 1279px) 19vw, (max-width: 1535px) 10vw, 8vw"
                 />
                 <div
