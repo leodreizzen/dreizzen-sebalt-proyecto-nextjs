@@ -285,7 +285,7 @@ export async function saveFeaturedTags(_formTags: SaveFeaturedTagsParam): Promis
                     }
                 })
             }
-            tx.pendingMedia.deleteMany({
+            await tx.pendingMedia.deleteMany({
                 where: {
                     OR: newImages.map(i => ({
                         publicId: i.publicId,
